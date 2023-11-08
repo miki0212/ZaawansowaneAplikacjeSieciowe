@@ -1,7 +1,7 @@
 {
     "questions":[
         {
-            "question" : "Kto ma najwięcej złotych butów",
+            "question" : "Kto ma najwięcej złotych butów?",
             "answerOne" : "Lionel Messi",
             "answerTwo" : "Cristiano Ronaldo",
             "answerThree" : "Marc Andre Ter Stegen",
@@ -9,7 +9,7 @@
             "correctAnswer " : "Lionel Messi"
         },
         {
-            "question" : "Kto ma najwięcej złotych piłek",
+            "question" : "Kto ma najwięcej złotych piłek?",
             "answerOne" : "Cristiano Ronaldo",
             "answerTwo" : "Lionel Messi",
             "answerThree" : "Michael Plattini",
@@ -17,7 +17,7 @@
             "correctAnswer " : "Lionel Messi"
         },
         {
-            "question" : "Kto wygrał najwięcej razy mundial",
+            "question" : "Kto wygrał najwięcej razy mundial?",
             "answerOne" : "Argentyna",
             "answerTwo" : "Polska",
             "answerThree" : "Niemcy",
@@ -25,7 +25,7 @@
             "correctAnswer " : "Brazylia"
         },
         {
-            "question" : "Kto wygrał pierwszy mundial",
+            "question" : "Kto wygrał pierwszy mundial?",
             "answerOne" : "Argentyna",
             "answerTwo" : "Niemcy",
             "answerThree" : "Urugwaj",
@@ -33,7 +33,7 @@
             "correctAnswer " : "Urugwaj"
         },
         {
-            "question" : "Kto wygrał mundial w 2022 roku",
+            "question" : "Kto wygrał mundial w 2022 roku?",
             "answerOne" : "Francja",
             "answerTwo" : "Rosja",
             "answerThree" : "Chorwacja",
@@ -41,7 +41,7 @@
             "correctAnswer " : "Argentyna"
         },
         {
-            "question" : "Kto strzelił najwięcej goli w ElClassico",
+            "question" : "Kto strzelił najwięcej goli w ElClassico?",
             "answerOne" : "Lionel Messi",
             "answerTwo" : "Cristiano Ronaldo",
             "answerThree" : "Neymar Jr",
@@ -49,14 +49,13 @@
             "correctAnswer " : "Lionel Messi"
         },
         {
-            "question" : "Kto wygrał kobiecą ligę mistrzyń w sezonie 2022/2023",
+            "question" : "Kto wygrał kobiecą ligę mistrzyń w sezonie 2022/2023?",
             "answerOne" : "Real Madryt",
             "answerTwo" : "PSG",
             "answerThree" : "VLF Wolfsburg",
-            "answerFour" : "Fc Barcelona",
-            "correctAnswer " : "Fc Barcelona"
+            "answerFour" : "FC Barcelona",
+            "correctAnswer " : "FC Barcelona"
         }
 
-    ]
-        
+    ]    
 }
