@@ -1,0 +1,78 @@
+body {
+  background-color: #6b6cab;
+  font-family:Georgia, 'Times New Roman', Times, serif
+}
+
+#test-title {
+  text-align: center;
+  margin: 20px;
+}
+
+#question-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#question-elements {
+  width: 60%;
+  height: 100%;
+  padding: 20px;
+  margin: 20px;
+  /*background-color: #c2d9ff;*/
+  background-color: #b9bade;
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+}
+
+#question-container #question-title {
+  text-align: center;
+}
+
+#answers {
+  text-align: left;
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  margin: 10px;
+}
+
+#button-container {
+  display: block;
+  padding: 20px;
+}
+
+#back {
+  background-color: #fff;
+  cursor: pointer;
+  border: 1px solid black;
+}
+#back:hover {
+  background-color: #9152b4;
+}
+
+#next {
+  background-color: #fff;
+  cursor: pointer;
+  border: 1px solid black;
+}
+#next:hover {
+  background-color: #9152b4;
+}
+
+#end {
+  background-color: #fff;
+  cursor: pointer;
+  border: 1px solid black;
+}
+#end:hover {
+  background-color: #9152b4;
+}
+
+#question-time-section {
+}
+
+#total-time-section {
+}
