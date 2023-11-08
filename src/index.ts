@@ -1,5 +1,32 @@
 import { Answer, Question } from "./data/data";
 import testData from "./data/test-data.js";
+import { IQuestions } from './interface/IQuestions';
+
+// import testDane from './test.json';
+// import * as testDane from './testData/test.json';   
+
+// const dataPerson : IQuestions = testDane;
+
+// console.log(dataPerson.questions[0].answerOne);
+let questionsA : IQuestions;
+const response = fetch('./testData/test.json')
+  .then(response => response.json())
+  .then(data => {
+    const questions : IQuestions = data;
+        console.log(questions)
+        return questions;
+    })
+  .catch(error => {
+    console.error('Błąd podczas pobierania pliku JSON', error);
+  });
+
+  response.then((data )=>{
+    questionsA = data as IQuestions;
+  })
+
+  function setData(questions: IQuestions){
+    console.log(questions.questions[0].answerOne)
+  }
 
 const titleNode: HTMLHeadElement = document.querySelector("#test-title") as HTMLHeadElement
 const questionNode: HTMLSpanElement = document.querySelector("#question")!
