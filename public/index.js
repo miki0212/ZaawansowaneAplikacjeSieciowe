@@ -1,25 +1,4 @@
 import testData from "./data/test-data.js";
-// import testDane from './test.json';
-// import * as testDane from './testData/test.json';   
-// const dataPerson : IQuestions = testDane;
-// console.log(dataPerson.questions[0].answerOne);
-let questionsA;
-const response = fetch('./testData/test.json')
-    .then(response => response.json())
-    .then(data => {
-    const questions = data;
-    console.log(questions);
-    return questions;
-})
-    .catch(error => {
-    console.error('Błąd podczas pobierania pliku JSON', error);
-});
-response.then((data) => {
-    questionsA = data;
-});
-function setData(questions) {
-    console.log(questions.questions[0].answerOne);
-}
 const titleNode = document.querySelector("#test-title");
 const questionNode = document.querySelector("#question");
 const answersNode = document.querySelector("#answers");
@@ -28,6 +7,9 @@ const nextNode = document.querySelector("#next");
 const endNode = document.querySelector("#end");
 const questionTimeNode = document.querySelector("#question-time");
 const totalTimeNode = document.querySelector("#total-time");
+const totalAnswer = 2;
+let answer = 0;
+localStorage.clear();
 // console.log(testData)
 titleNode.innerHTML = testData.title;
 let currentIntervalId;
@@ -51,28 +33,59 @@ const displayQuestion = () => {
     startCounter();
 };
 const displayAnswers = (answers) => {
-    const answersRadio = answers.map(answer => {
-        return `<div>
-        <input type="radio" name="answer" id="${answer.id}" value="${answer.content}" />
+    const currentIdx = parseInt(localStorage.getItem("current-question-idx"));
+    let answerC = '';
+    if (localStorage.getItem(`${currentIdx}answer`)) {
+        answerC = localStorage.getItem(`${currentIdx}answer`).toString();
+    }
+    const answersRadio = answers.map((answer, index) => {
+        return `<div ${answer.content === answerC ? 'class="choose"' : ''}>
+        <input type="radio" name="answer" id="${answer.id}"  value="${answer.content}" ${answer.content === answerC ? 'checked' : ''}/>
         <label  for="${answer.id}">${answer.content}</label>
     </div>`;
     });
     answersNode.innerHTML = answersRadio.join("");
+    answersNode.querySelectorAll('input').forEach((e, index, data) => {
+        e.addEventListener('click', () => {
+            data.forEach(e => {
+                var _a;
+                (_a = e.parentElement) === null || _a === void 0 ? void 0 : _a.classList.remove('choose');
+            });
+            if (!localStorage.getItem(`${currentIdx}answer`)) {
+                answer++;
+            }
+            if (totalAnswer == answer) {
+                console.log("Answers : " + answer);
+                endNode.style.display = 'flex';
+            }
+            localStorage.setItem(`${currentIdx}answer`, e.value);
+            const actualAnswer = localStorage.getItem(`${currentIdx}answer`);
+            if (actualAnswer === e.value) {
+                e.parentElement.classList.add('choose');
+            }
+        });
+    });
 };
 nextNode.addEventListener("click", (e) => {
+    //get selected answer
+    const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+    const selectedValue = selectedAnswer ? selectedAnswer.value : null;
+    const currentIdx = parseInt(localStorage.getItem("current-question-idx"));
+    // localStorage.setItem(`${currentIdx}`,`${selectedValue}`)
+    console.log(selectedValue);
     e.preventDefault();
     e.stopPropagation();
     stopCounter();
-    const currentIdx = parseInt(localStorage.getItem("current-question-idx"));
     localStorage.setItem("current-question-idx", `${currentIdx + 1}`);
     displayQuestion();
 });
 backNode.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    stopCounter();
     const currentIdx = parseInt(localStorage.getItem("current-question-idx"));
+    stopCounter();
     localStorage.setItem("current-question-idx", `${currentIdx - 1}`);
     displayQuestion();
 });
+endNode.style.display = 'none';
 displayQuestion();
