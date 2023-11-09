@@ -1,5 +1,3 @@
-//Działanie przycisku "Zakończ" teraz trzeba zrobić :)
-
 import { Answer, Question } from "./data/data";
 import testData from "./data/test-data.js";
 
@@ -22,7 +20,6 @@ titleNode.innerHTML = testData.title;
 
 document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.querySelector("#start") as HTMLButtonElement;
-
 
     backNode.style.display = 'inline';
     nextNode.style.display = 'inline';

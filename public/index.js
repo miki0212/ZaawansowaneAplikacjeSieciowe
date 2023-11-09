@@ -1,4 +1,3 @@
-//Działanie przycisku "Zakończ" teraz trzeba zrobić :)
 import testData from "./data/test-data.js";
 const titleNode = document.querySelector("#test-title");
 const questionNode = document.querySelector("#question");
