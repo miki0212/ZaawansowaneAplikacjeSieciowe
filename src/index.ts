@@ -39,6 +39,13 @@ const displayQuestion = (): void => {
     const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!)
     const currentQuestion: Question = JSON.parse(localStorage.getItem("test-data")!).questions[currentIdx]
     questionNode.innerHTML = currentQuestion.question;
+  
+    const isAtStart: boolean = currentIdx === 0;
+    const isAtEnd: boolean = currentIdx === testData.questions.length - 1;
+  
+    backNode.disabled = isAtStart;
+    nextNode.disabled = isAtEnd;
+  
     displayAnswers(currentQuestion.answers);
     startCounter()
 }
@@ -97,22 +104,25 @@ nextNode.addEventListener("click", (e)=> {
 
     e.preventDefault();
     e.stopPropagation();
-    stopCounter()
-    localStorage.setItem("current-question-idx", `${currentIdx + 1}`)
-    
-
-    displayQuestion()
+    if (currentIdx < testData.questions.length - 1) { // Sprawdzenie, czy nie jesteśmy na ostatnim pytaniu
+        stopCounter();
+        localStorage.setItem("current-question-idx", `${currentIdx + 1}`);
+        displayQuestion();
+      }
 })
 
-backNode.addEventListener("click", (e)=> {
+backNode.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!)
-
-    stopCounter()
-    localStorage.setItem("current-question-idx", `${currentIdx - 1}`)
-    displayQuestion()
-})
+    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!);
+  
+    if (currentIdx > 0) { // Sprawdzenie, czy nie jesteśmy na pierwszym pytaniu
+      stopCounter();
+      localStorage.setItem("current-question-idx", `${currentIdx - 1}`);
+      displayQuestion();
+    }
+  });
+  
 
 endNode.style.display = 'none';
 
