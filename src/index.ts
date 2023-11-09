@@ -23,6 +23,17 @@ let currentIntervalId: number
 localStorage.setItem("current-question-idx", "0")
 localStorage.setItem("test-data", JSON.stringify(testData))
 
+document.addEventListener('DOMContentLoaded', () => {
+    const startButton: HTMLButtonElement = document.querySelector("#start") as HTMLButtonElement;
+    
+    startButton.addEventListener("click", () => {
+        displayQuestion(); // Wyświetl pytanie
+        startCounter();    // Rozpocznij odliczanie
+        startButton.style.display = 'none'; // Ukryj przycisk startu
+    });
+});
+
+
 const startCounter = (): void => {
     let time: number = 0;
     currentIntervalId = setInterval(()=> {
@@ -126,4 +137,4 @@ backNode.addEventListener("click", (e) => {
 
 endNode.style.display = 'none';
 
-displayQuestion()
+// displayQuestion()
