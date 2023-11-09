@@ -1,3 +1,4 @@
+//Działanie przycisku "Zakończ" teraz trzeba zrobić :)
 import testData from "./data/test-data.js";
 const titleNode = document.querySelector("#test-title");
 const questionNode = document.querySelector("#question");
@@ -33,6 +34,7 @@ const startCounter = (currentIdx) => {
         time++;
         questionTimeNode.innerHTML = `${time}`;
         localStorage.setItem(`question-time-${currentIdx}`, time.toString());
+        updateTotalTime();
     }, 1000);
 };
 const stopCounter = () => {
@@ -40,6 +42,15 @@ const stopCounter = () => {
         clearInterval(currentIntervalId);
         currentIntervalId = null;
     }
+};
+const updateTotalTime = () => {
+    const testData = JSON.parse(localStorage.getItem("test-data"));
+    const totalTimes = testData.questions.map((_, index) => {
+        return parseInt(localStorage.getItem(`question-time-${index}`) || '0', 10);
+    });
+    const totalTime = totalTimes.reduce((a, b) => a + b, 0);
+    totalTimeNode.innerHTML = totalTime.toString();
+    localStorage.setItem("total-time", totalTime.toString());
 };
 const displayQuestion = () => {
     const currentIdx = parseInt(localStorage.getItem("current-question-idx"));
@@ -49,6 +60,7 @@ const displayQuestion = () => {
     nextNode.disabled = currentIdx === testData.questions.length - 1;
     displayAnswers(currentQuestion.answers);
     startCounter(currentIdx);
+    updateTotalTime();
 };
 const displayAnswers = (answers) => {
     const currentIdx = parseInt(localStorage.getItem("current-question-idx"));
@@ -91,5 +103,5 @@ nextNode.addEventListener("click", () => {
 });
 endNode.addEventListener("click", () => {
     stopCounter();
-    // Trzeba dodac kiedy Panie Michale
+    updateTotalTime();
 });

@@ -1,3 +1,5 @@
+//Działanie przycisku "Zakończ" teraz trzeba zrobić :)
+
 import { Answer, Question } from "./data/data";
 import testData from "./data/test-data.js";
 
@@ -11,7 +13,6 @@ const endNode = document.querySelector("#end") as HTMLButtonElement;
 const questionTimeNode = document.querySelector("#question-time") as HTMLSpanElement;
 const totalTimeNode = document.querySelector("#total-time") as HTMLSpanElement;
 
-
 localStorage.clear();
 localStorage.setItem("current-question-idx", "0");
 localStorage.setItem("test-data", JSON.stringify(testData));
@@ -22,7 +23,7 @@ titleNode.innerHTML = testData.title;
 document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.querySelector("#start") as HTMLButtonElement;
 
-   
+
     backNode.style.display = 'inline';
     nextNode.style.display = 'inline';
     endNode.style.display = 'none';
@@ -48,8 +49,10 @@ const startCounter = (currentIdx: number): void => {
         time++;
         questionTimeNode.innerHTML = `${time}`;
         localStorage.setItem(`question-time-${currentIdx}`, time.toString());
+        updateTotalTime(); 
     }, 1000);
 }
+
 
 const stopCounter = (): void => {
     if (currentIntervalId !== null) {
@@ -57,6 +60,21 @@ const stopCounter = (): void => {
         currentIntervalId = null; 
     }
 }
+
+const updateTotalTime = (): void => {
+    const testData = JSON.parse(localStorage.getItem("test-data")!);
+    const totalTimes = testData.questions.map((_: Question, index: number) => {
+        return parseInt(localStorage.getItem(`question-time-${index}`) || '0', 10);
+    });
+    const totalTime = totalTimes.reduce((a: number, b: number) => a + b, 0);
+
+    totalTimeNode.innerHTML = totalTime.toString();
+
+
+    localStorage.setItem("total-time", totalTime.toString());
+};
+
+
 
 const displayQuestion = (): void => {
     const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!);
@@ -69,6 +87,8 @@ const displayQuestion = (): void => {
   
     displayAnswers(currentQuestion.answers);
     startCounter(currentIdx); 
+    updateTotalTime();
+
 }
 
 const displayAnswers = (answers: Answer[]): void => {
@@ -99,7 +119,6 @@ const displayAnswers = (answers: Answer[]): void => {
 
 const checkAllAnswered = (): boolean => {
     const testData = JSON.parse(localStorage.getItem("test-data")!);
-   
     return testData.questions.every((_: Question, index: number) => localStorage.getItem(`${index}-answer`) !== null);
   };
   
@@ -121,7 +140,8 @@ nextNode.addEventListener("click", () => {
 
 endNode.addEventListener("click", () => {
     stopCounter();
-    // Trzeba dodac kiedy Panie Michale
-    
+    updateTotalTime();
+
 });
+
 
