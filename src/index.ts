@@ -1,140 +1,127 @@
 import { Answer, Question } from "./data/data";
 import testData from "./data/test-data.js";
-import { IQuestions } from './interface/IQuestions';
 
-const titleNode: HTMLHeadElement = document.querySelector("#test-title") as HTMLHeadElement
-const questionNode: HTMLSpanElement = document.querySelector("#question")!
-const answersNode: HTMLDivElement = document.querySelector("#answers")!
-const backNode: HTMLButtonElement = document.querySelector("#back")!
-const nextNode: HTMLButtonElement = document.querySelector("#next")!
-const endNode: HTMLButtonElement = document.querySelector("#end")!
-const questionTimeNode: HTMLSpanElement = document.querySelector("#question-time")!
-const totalTimeNode: HTMLSpanElement = document.querySelector("#total-time")!
 
-const totalAnswer = 2;
-let answer = 0;
+const titleNode = document.querySelector("#test-title") as HTMLHeadElement;
+const questionNode = document.querySelector("#question") as HTMLSpanElement;
+const answersNode = document.querySelector("#answers") as HTMLDivElement;
+const backNode = document.querySelector("#back") as HTMLButtonElement;
+const nextNode = document.querySelector("#next") as HTMLButtonElement;
+const endNode = document.querySelector("#end") as HTMLButtonElement;
+const questionTimeNode = document.querySelector("#question-time") as HTMLSpanElement;
+const totalTimeNode = document.querySelector("#total-time") as HTMLSpanElement;
+
+
 localStorage.clear();
-// console.log(testData)
+localStorage.setItem("current-question-idx", "0");
+localStorage.setItem("test-data", JSON.stringify(testData));
+
 
 titleNode.innerHTML = testData.title;
 
-let currentIntervalId: number
-
-localStorage.setItem("current-question-idx", "0")
-localStorage.setItem("test-data", JSON.stringify(testData))
-
 document.addEventListener('DOMContentLoaded', () => {
-    const startButton: HTMLButtonElement = document.querySelector("#start") as HTMLButtonElement;
+    const startButton = document.querySelector("#start") as HTMLButtonElement;
+
+   
+    backNode.style.display = 'inline';
+    nextNode.style.display = 'inline';
+    endNode.style.display = 'none';
     
     startButton.addEventListener("click", () => {
-        displayQuestion(); // Wyświetl pytanie
-        startCounter();    // Rozpocznij odliczanie
-        startButton.style.display = 'none'; // Ukryj przycisk startu
+        displayQuestion();
+        startCounter(parseInt(localStorage.getItem("current-question-idx")!));
+        startButton.style.display = 'none';
     });
 });
 
+let currentIntervalId: number | null = null; 
 
-const startCounter = (): void => {
-    let time: number = 0;
-    currentIntervalId = setInterval(()=> {
-        questionTimeNode.innerHTML = `${++time}`
-    }, 1000)
+const startCounter = (currentIdx: number): void => {
+    if (currentIntervalId !== null) {
+        clearInterval(currentIntervalId); 
+    }
+
+    let time: number = parseInt(localStorage.getItem(`question-time-${currentIdx}`) || '0', 10);
+    questionTimeNode.innerHTML = `${time}`;
+
+    currentIntervalId = window.setInterval(() => {
+        time++;
+        questionTimeNode.innerHTML = `${time}`;
+        localStorage.setItem(`question-time-${currentIdx}`, time.toString());
+    }, 1000);
 }
 
-const stopCounter = ():void => {
-    clearInterval(currentIntervalId);
-    questionTimeNode.innerHTML = '0'
+const stopCounter = (): void => {
+    if (currentIntervalId !== null) {
+        clearInterval(currentIntervalId);
+        currentIntervalId = null; 
+    }
 }
 
 const displayQuestion = (): void => {
-    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!)
-    const currentQuestion: Question = JSON.parse(localStorage.getItem("test-data")!).questions[currentIdx]
+    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!);
+    const currentQuestion: Question = JSON.parse(localStorage.getItem("test-data")!).questions[currentIdx];
+
     questionNode.innerHTML = currentQuestion.question;
   
-    const isAtStart: boolean = currentIdx === 0;
-    const isAtEnd: boolean = currentIdx === testData.questions.length - 1;
-  
-    backNode.disabled = isAtStart;
-    nextNode.disabled = isAtEnd;
+    backNode.disabled = currentIdx === 0;
+    nextNode.disabled = currentIdx === testData.questions.length - 1;
   
     displayAnswers(currentQuestion.answers);
-    startCounter()
+    startCounter(currentIdx); 
 }
 
 const displayAnswers = (answers: Answer[]): void => {
-    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!)
-    let answerC : string = '';
+    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!);
+    let answerC: string = localStorage.getItem(`${currentIdx}-answer`) || '';
 
-    if(localStorage.getItem(`${currentIdx}answer`)){
-        answerC = localStorage.getItem(`${currentIdx}answer`)!.toString();
-    }
-    
-    const answersRadio = answers.map((answer,index) => {
-    
-        return `<div ${answer.content === answerC ? 'class="choose"' : ''}>
-        <input type="radio" name="answer" id="${answer.id}"  value="${answer.content}" ${answer.content === answerC ? 'checked' : ''}/>
-        <label  for="${answer.id}">${answer.content}</label>
-    </div>`
-  })
+    let answersMarkup = answers.map((answer) => {
+        const isChecked = answer.content === answerC;
+        return `
+            <div ${isChecked ? 'class="selected"' : ''}>
+                <input type="radio" name="answer" id="answer${answer.id}" value="${answer.content}" ${isChecked ? 'checked' : ''} />
+                <label for="answer${answer.id}">${answer.content}</label>
+            </div>
+        `;
+    }).join("");
 
-  answersNode.innerHTML = answersRadio.join("");
+    answersNode.innerHTML = answersMarkup;
 
-  answersNode.querySelectorAll('input').forEach((e : HTMLInputElement,index,data)=>{
-    e.addEventListener('click',()=>{
-        data.forEach(e=>{
-            e.parentElement?.classList.remove('choose')
-        })
-
-        if(!localStorage.getItem(`${currentIdx}answer`)){
-            answer++;
-        }
-
-        if(totalAnswer == answer){
-            console.log("Answers : "+answer)
-            endNode.style.display = 'flex'
-        }
-        
-        localStorage.setItem(`${currentIdx}answer`,e.value);
-        const actualAnswer = localStorage.getItem(`${currentIdx}answer`);
-        if(actualAnswer === e.value){
-            (e.parentElement as HTMLDivElement).classList.add('choose');
-        }
-    })
-  })
+    answersNode.querySelectorAll('input').forEach((inputElement) => {
+        inputElement.addEventListener('click', () => {
+            answersNode.querySelectorAll('div').forEach(div => div.classList.remove('selected'));
+            inputElement.parentElement!.classList.add('selected');
+            localStorage.setItem(`${currentIdx}-answer`, inputElement.value);
+            updateEndButtonVisibility();
+        });
+    });
 }
 
-nextNode.addEventListener("click", (e)=> {
-
-    //get selected answer
-    const selectedAnswer = document.querySelector('input[name="answer"]:checked') as HTMLInputElement;
-    const selectedValue = selectedAnswer ? selectedAnswer.value : null;
-    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!)
-
-    // localStorage.setItem(`${currentIdx}`,`${selectedValue}`)
-    console.log(selectedValue)
-
-    e.preventDefault();
-    e.stopPropagation();
-    if (currentIdx < testData.questions.length - 1) { // Sprawdzenie, czy nie jesteśmy na ostatnim pytaniu
-        stopCounter();
-        localStorage.setItem("current-question-idx", `${currentIdx + 1}`);
-        displayQuestion();
-      }
-})
-
-backNode.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!);
+const checkAllAnswered = (): boolean => {
+    const testData = JSON.parse(localStorage.getItem("test-data")!);
+   
+    return testData.questions.every((_: Question, index: number) => localStorage.getItem(`${index}-answer`) !== null);
+  };
   
-    if (currentIdx > 0) { // Sprawdzenie, czy nie jesteśmy na pierwszym pytaniu
-      stopCounter();
-      localStorage.setItem("current-question-idx", `${currentIdx - 1}`);
-      displayQuestion();
-    }
-  });
-  
+const updateEndButtonVisibility = (): void => {
+    endNode.style.display = checkAllAnswered() ? 'inline' : 'none';
+};
 
-endNode.style.display = 'none';
+backNode.addEventListener("click", () => {
+    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!, 10);
+    localStorage.setItem("current-question-idx", (currentIdx - 1).toString());
+    displayQuestion();
+});
 
-// displayQuestion()
+nextNode.addEventListener("click", () => {
+    const currentIdx: number = parseInt(localStorage.getItem("current-question-idx")!, 10);
+    localStorage.setItem("current-question-idx", (currentIdx + 1).toString());
+    displayQuestion();
+});
+
+endNode.addEventListener("click", () => {
+    stopCounter();
+    // Trzeba dodac kiedy Panie Michale
+    
+});
+

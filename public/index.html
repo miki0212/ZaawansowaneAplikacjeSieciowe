@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="pl">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Test sample</title>
     <link rel="stylesheet" href="./style/style.css" />
-  </head>
-
-  <body>
+</head>
+<body>
     <div id="wrapper">
       <h1 id="test-title"></h1>
     </div>
@@ -19,9 +18,9 @@
       </div>
       <div id="button-container">
         <button id="start" style="cursor: pointer">Zacznij</button>
-        <button id="back" style="cursor: pointer">Poprzednie</button>
-        <button id="next" style="cursor: pointer">Następne</button>
-        <button id="end" style="cursor: pointer">Zakończ</button>
+        <button id="back" style="cursor: pointer" disabled>Poprzednie</button>
+        <button id="next" style="cursor: pointer" disabled>Następne</button>
+        <button id="end" style="cursor: pointer" disabled>Zakończ</button>
 
         <h4 id="question-time-section">Czas: <span id="question-time">0</span></h4>
         <h5 id="total-time-section">Czas całkowity: <span id="total-time">0</span></h5>
@@ -29,5 +28,5 @@
     </div>
 
     <script type="module" src="./index.js"></script>
-  </body>
+</body>
 </html>
