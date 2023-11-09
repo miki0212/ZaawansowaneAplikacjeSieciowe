@@ -9,7 +9,6 @@ body {
 }
 
 
-
 #question-container {
   display: flex;
   flex-direction: column;
@@ -17,8 +16,15 @@ body {
   align-items: center;
 }
 
+.container-start-btn{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #question-elements {
-  width: 60%;
+  width: 450px;
   height: 100%;
   padding: 20px;
   margin: 20px;
@@ -32,6 +38,7 @@ body {
 }
 
 #question-container #question-title {
+  background-color: #9b9cbd;
   text-align: center;
 }
 
@@ -45,37 +52,92 @@ body {
 }
 
 #button-container {
-  display: block;
+  width: 470px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 20px;
+  gap: 10px;
 }
 
 #back {
+  width: 48%;
   background-color: #fff;
   cursor: pointer;
   border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 20px;
 }
-#back:hover {
+
+#back:enabled:hover {
   background-color: #9152b4;
 }
 
 #next {
+  padding: 10px;
+  border-radius: 10px;
+  width: 48%;
   background-color: #fff;
   cursor: pointer;
   border: 1px solid black;
+  font-size: 20px;
 }
-#next:hover {
+
+#next:enabled:hover {
   background-color: #9152b4;
 }
+
 
 #end {
   background-color: #fff;
   cursor: pointer;
   border: 1px solid black;
 }
+
 #end:hover {
   /* background-color: #9152b4; */
-  
 }
+
+#start{
+  padding: 10px;
+  width: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  font-weight: 900;
+  font-size: 20px;
+}
+
+#start::after{
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+  width: 50%;
+  height: 100%;
+  background-color: #b9bade86;
+  transition: all 2s;
+}
+
+#start::before{
+  position: absolute;
+  top: 0;
+  right: 0;
+  content: '';
+  width: 50%;
+  height: 100%;
+  background-color: #b9bade86;
+  transform: translate(0);
+  transition: all 2s;
+}
+#start:enabled:hover::before{
+  transform: translate(100%);
+}
+#start:enabled:hover::after{
+  transform: translate(-100%);
+}
+
 
 #question-time-section {
 }
@@ -89,4 +151,31 @@ body {
 .choose{
   font-size: larger;
   font-weight: bold;
+}
+
+
+
+body{
+  width: 95vw;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+/* user data */
+#user-data{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+}
+
+#user-data > input {
+  padding: 10px;
+  border-radius: 5px;
 }

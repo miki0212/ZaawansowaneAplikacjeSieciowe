@@ -17,14 +17,28 @@
         <div id="answers"></div>
       </div>
       <div id="button-container">
-        <button id="start" style="cursor: pointer">Zacznij</button>
         <button id="back" style="cursor: pointer" disabled>Poprzednie</button>
         <button id="next" style="cursor: pointer" disabled>Następne</button>
         <button id="end" style="cursor: pointer" disabled>Zakończ</button>
-
-        <h4 id="question-time-section">Czas: <span id="question-time">0</span></h4>
-        <h5 id="total-time-section">Czas całkowity: <span id="total-time">0</span></h5>
       </div>
+    </div>
+    <div id="time-container">
+      <h4 id="question-time-section">Czas: <span id="question-time">0</span></h4>
+      <h5 id="total-time-section">Czas całkowity: <span id="total-time">0</span></h5>
+    </div>
+    
+
+    <div id="user-data">
+      <h1>Podaj swoje dane w celu rozpoczęcia gry</h1>
+      <input type="text" placeholder="imie">
+      <input type="text" placeholder="nazwisko">
+      <input type="number" placeholder="numer karty kredytowej">
+      <input type="text" placeholder="data ważności karty" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" required>
+      <input type="number" placeholder="numer cvc" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" required>
+    </div>
+
+    <div class="container-start-btn">
+      <button id="start" style="cursor: pointer">Zacznij Test</button>
     </div>
 
     <script type="module" src="./index.js"></script>
