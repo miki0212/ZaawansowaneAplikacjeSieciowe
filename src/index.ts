@@ -1,5 +1,6 @@
 import { Answer, Question } from "./data/data";
 import testData from "./data/test-data.js";
+import { IQuestions } from "./interface/IQuestions";
 
 const titleNode = document.querySelector("#test-title") as HTMLHeadElement;
 const questionNode = document.querySelector("#question") as HTMLSpanElement;
@@ -10,6 +11,11 @@ const endNode = document.querySelector("#end") as HTMLButtonElement;
 const startButton = document.querySelector("#start") as HTMLButtonElement;
 const timeContainer = document.querySelector('#time-container') as HTMLDivElement;
 const userData = document.querySelector('#user-data') as HTMLDivElement;
+const userPointsContainer = document.querySelector('.user-points') as HTMLDivElement;
+const userPoint = document.querySelector('.points')  as HTMLSpanElement;
+
+let questionsLength : number = 0;
+let correctAnswers : string[] = [];
 
 const questionContainerNode = document.querySelector(
   "#question-container"
@@ -24,6 +30,57 @@ localStorage.clear();
 localStorage.setItem("current-question-idx", "0");
 localStorage.setItem("test-data", JSON.stringify(testData));
 
+const getCorrectAnswers = () => {
+  const questionsArray : IQuestions = testData as unknown as IQuestions;
+  questionsArray.questions.forEach((item) => {
+    correctAnswers.push(item.correctAnswer);
+  })
+
+  localStorage.setItem('correctAnswers',correctAnswers.toLocaleString());
+}
+
+const getQuestionLength = () => {
+  const questionsArray : IQuestions = testData as unknown as IQuestions;
+  questionsLength = questionsArray.questions.length;
+}
+
+const createEmptyTimeArray = () => {
+  localStorage.setItem('questionTimes',new Array(questionsLength).fill(-1).toLocaleString());
+}
+const createEmptyQuestionArray = () => {
+  localStorage.setItem('answers',new Array(questionsLength).fill(null).toLocaleString());
+}
+
+const getTimeArray = (index : number) : number=>{
+  const times = localStorage.getItem('questionTimes');
+  if(times){
+    const timeArray = times.split(',').map(Number);
+    return timeArray[index] == -1 ? 0 : timeArray[index];
+  }
+  return -1;
+}
+
+const setTimeArray = (index : number, value : number)=>{
+  const times = localStorage.getItem('questionTimes');
+  if(times){
+    let timeArray = times.split(',').map(Number)!;
+    timeArray[index] = value;
+    localStorage.setItem('questionTimes',timeArray.toLocaleString());
+  }
+}
+
+const setAnswerArray = (index : number,answer : string)=>{
+  console.log(answer);
+  let answerArray : string[] = localStorage.getItem('answers')?.split(',')!;
+  answerArray[index] = answer;
+  localStorage.setItem('answers',answerArray.toLocaleString());
+}
+
+getCorrectAnswers();
+getQuestionLength();
+createEmptyTimeArray();
+createEmptyQuestionArray();
+
 let totalTime = 0;
 titleNode.innerHTML = testData.title;
 
@@ -31,6 +88,8 @@ const hiddenBtn = (): void => {
   backNode.style.display = "none";
   nextNode.style.display = "none";
   timeContainer.style.display = "none";
+
+  userPointsContainer.style.display = 'none';
 };
 
 hiddenBtn();
@@ -56,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     totalTimeCounter();
     displayQuestion();
     startCounter(parseInt(localStorage.getItem("current-question-idx")!));
+
     questionContainerNode.style.display = "flex";
 
     backNode.style.display = "inline";
@@ -63,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     startButton.style.display = "none";
     timeContainer.style.display = "block";
     userData.style.display = 'none';
+    
   });
 });
 
@@ -74,16 +135,14 @@ const startCounter = (currentIdx: number): void => {
   }
 
   let time: number = parseInt(
-    localStorage.getItem(`question-time-${currentIdx}`) || "0",
-    10
+    getTimeArray(currentIdx).toString() || '0' , 10
   );
   questionTimeNode.innerHTML = `${time}`;
 
   currentIntervalId = window.setInterval(() => {
     time++;
     questionTimeNode.innerHTML = `${time / 10}`;
-    localStorage.setItem(`question-time-${currentIdx}`, (time / 10).toString());
-    // updateTotalTime();
+    setTimeArray(currentIdx,time);
   }, 100);
 };
 
@@ -92,6 +151,11 @@ const stopCounter = (): void => {
     clearInterval(currentIntervalId);
     currentIntervalId = null;
   }
+
+  if(totalTime != null){
+    clearInterval(totalTime);
+    totalTime = 0;
+  }
 };
 
 const totalTimeCounter = (): void => {
@@ -99,22 +163,8 @@ const totalTimeCounter = (): void => {
   totalTime = window.setInterval(() => {
     time++;
     totalTimeNode.innerHTML = `${time / 10}`;
-    // localStorage.setItem(`question-time-${currentIdx}`, (time /10).toString());
-    // updateTotalTime();
   }, 100);
 };
-
-// const updateTotalTime = (): void => {
-//     const testData = JSON.parse(localStorage.getItem("test-data")!);
-//     const totalTimes = testData.questions.map((_: Question, index: number) => {
-//         return parseInt(localStorage.getItem(`question-time-${index}`) || '0', 10);
-//     });
-//     const totalTime = totalTimes.reduce((a: number, b: number) => a + b, 0);
-
-//     totalTimeNode.innerHTML = totalTime.toString();
-
-//     localStorage.setItem("total-time", totalTime.toString());
-// };
 
 const displayQuestion = (): void => {
   const currentIdx: number = parseInt(
@@ -127,7 +177,7 @@ const displayQuestion = (): void => {
   questionNode.innerHTML = currentQuestion.question;
 
   backNode.disabled = currentIdx === 0;
-  nextNode.disabled = currentIdx === testData.questions.length - 1;
+  nextNode.disabled = currentIdx === questionsLength - 1;
 
   displayAnswers(currentQuestion.answers);
   startCounter(currentIdx);
@@ -138,11 +188,11 @@ const displayAnswers = (answers: Answer[]): void => {
   const currentIdx: number = parseInt(
     localStorage.getItem("current-question-idx")!
   );
-  let answerC: string = localStorage.getItem(`${currentIdx}-answer`) || "";
+  let userAnswer = localStorage.getItem('answers')?.split(',')[currentIdx];
 
   let answersMarkup = answers
     .map((answer) => {
-      const isChecked = answer.content === answerC;
+      const isChecked = answer.content === userAnswer;
       return `
             <div ${isChecked ? 'class="selected"' : ""}>
                 <input type="radio" name="answer" id="answer${
@@ -162,22 +212,22 @@ const displayAnswers = (answers: Answer[]): void => {
         .querySelectorAll("div")
         .forEach((div) => div.classList.remove("selected"));
       inputElement.parentElement!.classList.add("selected");
-      localStorage.setItem(`${currentIdx}-answer`, inputElement.value);
+      setAnswerArray(currentIdx,inputElement.value.toString());
       updateEndButtonVisibility();
     });
   });
 };
 
 const checkAllAnswered = (): boolean => {
-  const testData = JSON.parse(localStorage.getItem("test-data")!);
-  return testData.questions.every(
-    (_: Question, index: number) =>
-      localStorage.getItem(`${index}-answer`) !== null
-  );
+
+  return localStorage.getItem('answers')!.split(',').every(answer=>{
+    return answer !== '';
+  })
 };
 
 const updateEndButtonVisibility = (): void => {
   endNode.style.display = checkAllAnswered() ? "inline" : "none";
+  endNode.disabled = false;
 };
 
 backNode.addEventListener("click", () => {
@@ -185,9 +235,11 @@ backNode.addEventListener("click", () => {
     localStorage.getItem("current-question-idx")!,
     10
   );
+
   if(backNode.disabled){
     return;
   }
+
   localStorage.setItem("current-question-idx", (currentIdx - 1).toString());
   displayQuestion();
 });
@@ -197,14 +249,38 @@ nextNode.addEventListener("click", () => {
     localStorage.getItem("current-question-idx")!,
     10
   );
+
   if(nextNode.disabled){
     return;
   }
+
   localStorage.setItem("current-question-idx", (currentIdx + 1).toString());
   displayQuestion();
 });
 
+const userPoints = () =>{
+  const correctAnswers : string[] = localStorage.getItem('correctAnswers')!.split(',');
+  const userAnswers : string[] = localStorage.getItem('answers')!.split(',');
+  let points = 0;
+
+  correctAnswers.forEach((item,index)=>{
+    if(item == userAnswers[index]){
+      points ++;
+    }
+  })
+  return points;
+}
+
+
 endNode.addEventListener("click", () => {
   stopCounter();
-  // updateTotalTime();
+  questionContainerNode.style.display = "none"
+  timeContainer.style.display = "none";
+  endNode.style.display = "none";
+
+  userPointsContainer.style.display = 'block';
+  userPoint.innerHTML = userPoints().toString();
 });
+
+
+
