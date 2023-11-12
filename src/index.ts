@@ -1,7 +1,10 @@
-import { localStorageItemsType } from './LocalStorageItemsType';
 import { Answer, Question } from "./data/data";
 import testData from "./data/test-data.js";
 import { IQuestions } from "./interface/IQuestions";
+import { localStoriageInitialize } from "./localStorageInitialize.js";
+import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
+
+
 
 const titleNode = document.querySelector("#test-title") as HTMLHeadElement;
 const questionNode = document.querySelector("#question") as HTMLSpanElement;
@@ -28,8 +31,13 @@ const questionTimeNode = document.querySelector(
 const totalTimeNode = document.querySelector("#total-time") as HTMLSpanElement;
 
 localStorage.clear();
-localStorage.setItem("current-question-idx", "0");
-localStorage.setItem("test-data", JSON.stringify(testData));
+
+localStoriageInitialize();
+
+// setLocalStorageItem('current-question-idx','0');
+//FIXME : Do usuniecia - // localStorage.setItem("current-question-idx", "0");
+//FIXME : Do usuniecia - // localStorage.setItem("test-data", JSON.stringify(testData));
+// setLocalStorageItem('test-data',JSON.stringify(testData));
 
 const getCorrectAnswers = () => {
   const questionsArray: IQuestions = testData as unknown as IQuestions;
@@ -41,20 +49,23 @@ const getCorrectAnswers = () => {
 }
 
 const getQuestionLength = () => {
-  const questionsArray: IQuestions = testData as unknown as IQuestions;
-  questionsLength = questionsArray.questions.length;
+  questionsLength = parseInt(getLocalStorageItem('question-length'));
+  //FIXME : Do - usuniecia // const questionsArray: IQuestions = testData as unknown as IQuestions;
+  //FIXME : Do - usuniecia // questionsLength = questionsArray.questions.length;
 }
 
-const createEmptyTimeArray = (localStorageItemName : localStorageItemsType) => {
-  localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(-1).toLocaleString());
-}
+// const createEmptyTimeArray = (localStorageItemName : string) => {
+//   localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(-1).toLocaleString());
+// }
 
-const createEmptyQuestionArray = (localStorageItemName : localStorageItemsType) => {
-  localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(null).toLocaleString());
-}
+// const createEmptyQuestionArray = (localStorageItemName : string) => {
+//   localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(null).toLocaleString());
+// }
 
 const getTimeArray = (index: number): number => {
-  const times = localStorage.getItem('question-times');
+  const times = getLocalStorageItem('question-times-array');
+  //FIXME : Do - usuniecia // const times = localStorage.getItem('question-times-array');
+  
   if (times) {
     const timeArray = times.split(',').map(Number);
     return timeArray[index] == -1 ? 0 : timeArray[index];
@@ -63,11 +74,13 @@ const getTimeArray = (index: number): number => {
 }
 
 const setTimeArray = (index: number, value: number) => {
-  const times = localStorage.getItem('question-times');
+  const times = getLocalStorageItem('question-times-array');
+  //FIXME : Do - usuniecia // const times = localStorage.getItem('question-times-array');
+  
   if (times) {
     let timeArray = times.split(',').map(Number)!;
     timeArray[index] = value;
-    localStorage.setItem('question-times', timeArray.toLocaleString());
+    setLocalStorageItem('question-times-array',timeArray.toString());
   }
 }
 
@@ -75,12 +88,12 @@ const setAnswerArray = (index: number, answer: string) => {
   console.log(answer);
   let answerArray: string[] = localStorage.getItem('user-answers')?.split(',')!;
   answerArray[index] = answer;
-  localStorage.setItem('user-answers', answerArray.toLocaleString());
+  setLocalStorageItem('user-answers',answerArray.toString())
+  //FIXME : Do usuniecia - // localStorage.setItem('user-answers', answerArray.toLocaleString());
 }
 
-const createRandomArray = (localStorageItemName : localStorageItemsType) => {
+const createRandomArray = () => {
   let defaultArray : number[] = [...Array(7).keys()].map(i=>i+1);
-  let randomQuestions : number[] = [];
   console.log(defaultArray);
 
   for(let i = defaultArray.length - 1;i > 0;i--){
@@ -89,16 +102,17 @@ const createRandomArray = (localStorageItemName : localStorageItemsType) => {
   }
 
   //Tworzy tablice losowych indeksow dla pytan - w sensie że to umożliwia pobieranie pytań w losowej kolejności - rozumiesz ?
-  localStorage.setItem(localStorageItemName,defaultArray.toLocaleString());
+  setLocalStorageItem('random-questions-index-array',defaultArray.toString())
 }
 
-//Pobiera aktualny indeks pytania z tablicy - z tej tablicy w ktorej elementy sa w losowej kolejnosci - defaulARray;
-const getActualQuestionIndex = (currentIndex : number, localStorageItemName : localStorageItemsType)=>{
-  const randomQuestionsArray = localStorage.getItem(localStorageItemName);
+//Pobiera aktualny indeks pytania z tablicy - z tej tablicy w ktorej elementy sa w losowej kolejnosci - defaultArray;
+const getCurrentRandomQuestionIndex = (currentIndex : number)=>{
+  // FIXME : Do usuniecia - const randomQuestionsArray = localStorage.getItem(localStorageItemName);
+  const randomQuestionsArray = getLocalStorageItem('random-questions-index-array')
   
   if(randomQuestionsArray){
     let actualQuestionIndex = randomQuestionsArray.split(',')[currentIndex];
-    console.log(actualQuestionIndex)
+    // console.log(actualQuestionIndex)
   }
 }
 
@@ -110,15 +124,15 @@ getCorrectAnswers();
 getQuestionLength();
 
 //Tworzy pusta tablice z czasami dla poszczegolnych pytań
-createEmptyTimeArray("question-times");
+// createEmptyTimeArray("question-times");
 
 //Tworzy pustą tablicę odpowiedzi użytkownika
-createEmptyQuestionArray("user-answers");
+// createEmptyQuestionArray("user-answers");
 
 //Tworzy tablice xd
-createRandomArray('random-questions-index-array');
+createRandomArray();
 
-getActualQuestionIndex(1,'random-questions-index-array');
+getCurrentRandomQuestionIndex(1);
 
 let totalTime = 0;
 titleNode.innerHTML = testData.title;
@@ -152,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
   endNode.style.display = "none";
 
   startButton.addEventListener("click", () => {
-    const localStorageItemName : localStorageItemsType = 'current-question-idx';
+    const localStorageItemName : string = 'current-question-idx';
     totalTimeCounter();
     displayQuestion();
     startCounter(parseInt(localStorage.getItem(localStorageItemName)!));
@@ -321,6 +335,4 @@ endNode.addEventListener("click", () => {
   userPointsContainer.style.display = 'block';
   userPoint.innerHTML = userPoints().toString();
 });
-
-
 

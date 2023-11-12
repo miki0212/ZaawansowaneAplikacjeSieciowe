@@ -1,4 +1,6 @@
 import testData from "./data/test-data.js";
+import { localStoriageInitialize } from "./localStorageInitialize.js";
+import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
 const titleNode = document.querySelector("#test-title");
 const questionNode = document.querySelector("#question");
 const answersNode = document.querySelector("#answers");
@@ -16,8 +18,11 @@ const questionContainerNode = document.querySelector("#question-container");
 const questionTimeNode = document.querySelector("#question-time");
 const totalTimeNode = document.querySelector("#total-time");
 localStorage.clear();
-localStorage.setItem("current-question-idx", "0");
-localStorage.setItem("test-data", JSON.stringify(testData));
+localStoriageInitialize();
+// setLocalStorageItem('current-question-idx','0');
+//FIXME : Do usuniecia - // localStorage.setItem("current-question-idx", "0");
+//FIXME : Do usuniecia - // localStorage.setItem("test-data", JSON.stringify(testData));
+// setLocalStorageItem('test-data',JSON.stringify(testData));
 const getCorrectAnswers = () => {
     const questionsArray = testData;
     questionsArray.questions.forEach((item) => {
@@ -26,17 +31,19 @@ const getCorrectAnswers = () => {
     localStorage.setItem('correctAnswers', correctAnswers.toLocaleString());
 };
 const getQuestionLength = () => {
-    const questionsArray = testData;
-    questionsLength = questionsArray.questions.length;
+    questionsLength = parseInt(getLocalStorageItem('question-length'));
+    //FIXME : Do - usuniecia // const questionsArray: IQuestions = testData as unknown as IQuestions;
+    //FIXME : Do - usuniecia // questionsLength = questionsArray.questions.length;
 };
-const createEmptyTimeArray = (localStorageItemName) => {
-    localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(-1).toLocaleString());
-};
-const createEmptyQuestionArray = (localStorageItemName) => {
-    localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(null).toLocaleString());
-};
+// const createEmptyTimeArray = (localStorageItemName : string) => {
+//   localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(-1).toLocaleString());
+// }
+// const createEmptyQuestionArray = (localStorageItemName : string) => {
+//   localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(null).toLocaleString());
+// }
 const getTimeArray = (index) => {
-    const times = localStorage.getItem('question-times');
+    const times = getLocalStorageItem('question-times-array');
+    //FIXME : Do - usuniecia // const times = localStorage.getItem('question-times-array');
     if (times) {
         const timeArray = times.split(',').map(Number);
         return timeArray[index] == -1 ? 0 : timeArray[index];
@@ -44,11 +51,12 @@ const getTimeArray = (index) => {
     return -1;
 };
 const setTimeArray = (index, value) => {
-    const times = localStorage.getItem('question-times');
+    const times = getLocalStorageItem('question-times-array');
+    //FIXME : Do - usuniecia // const times = localStorage.getItem('question-times-array');
     if (times) {
         let timeArray = times.split(',').map(Number);
         timeArray[index] = value;
-        localStorage.setItem('question-times', timeArray.toLocaleString());
+        setLocalStorageItem('question-times-array', timeArray.toString());
     }
 };
 const setAnswerArray = (index, answer) => {
@@ -56,25 +64,26 @@ const setAnswerArray = (index, answer) => {
     console.log(answer);
     let answerArray = (_a = localStorage.getItem('user-answers')) === null || _a === void 0 ? void 0 : _a.split(',');
     answerArray[index] = answer;
-    localStorage.setItem('user-answers', answerArray.toLocaleString());
+    setLocalStorageItem('user-answers', answerArray.toString());
+    //FIXME : Do usuniecia - // localStorage.setItem('user-answers', answerArray.toLocaleString());
 };
-const createRandomArray = (localStorageItemName) => {
+const createRandomArray = () => {
     let defaultArray = [...Array(7).keys()].map(i => i + 1);
-    let randomQuestions = [];
     console.log(defaultArray);
     for (let i = defaultArray.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [defaultArray[i], defaultArray[j]] = [defaultArray[j], defaultArray[i]];
     }
     //Tworzy tablice losowych indeksow dla pytan - w sensie że to umożliwia pobieranie pytań w losowej kolejności - rozumiesz ?
-    localStorage.setItem(localStorageItemName, defaultArray.toLocaleString());
+    setLocalStorageItem('random-questions-index-array', defaultArray.toString());
 };
-//Pobiera aktualny indeks pytania z tablicy - z tej tablicy w ktorej elementy sa w losowej kolejnosci - defaulARray;
-const getActualQuestionIndex = (currentIndex, localStorageItemName) => {
-    const randomQuestionsArray = localStorage.getItem(localStorageItemName);
+//Pobiera aktualny indeks pytania z tablicy - z tej tablicy w ktorej elementy sa w losowej kolejnosci - defaultArray;
+const getCurrentRandomQuestionIndex = (currentIndex) => {
+    // FIXME : Do usuniecia - const randomQuestionsArray = localStorage.getItem(localStorageItemName);
+    const randomQuestionsArray = getLocalStorageItem('random-questions-index-array');
     if (randomQuestionsArray) {
         let actualQuestionIndex = randomQuestionsArray.split(',')[currentIndex];
-        console.log(actualQuestionIndex);
+        // console.log(actualQuestionIndex)
     }
 };
 //Tworzy tablice z poprawnymi odpowiedziam i zapisuje ja w localstorage
@@ -82,12 +91,12 @@ getCorrectAnswers();
 //Pobiera liczbe pytan
 getQuestionLength();
 //Tworzy pusta tablice z czasami dla poszczegolnych pytań
-createEmptyTimeArray("question-times");
+// createEmptyTimeArray("question-times");
 //Tworzy pustą tablicę odpowiedzi użytkownika
-createEmptyQuestionArray("user-answers");
+// createEmptyQuestionArray("user-answers");
 //Tworzy tablice xd
-createRandomArray('random-questions-index-array');
-getActualQuestionIndex(1, 'random-questions-index-array');
+createRandomArray();
+getCurrentRandomQuestionIndex(1);
 let totalTime = 0;
 titleNode.innerHTML = testData.title;
 const hiddenBtn = () => {
