@@ -8,7 +8,6 @@ body {
   margin: 20px;
 }
 
-
 #question-container {
   display: flex;
   flex-direction: column;
@@ -131,9 +130,11 @@ body {
   transform: translate(0);
   transition: all 2s;
 }
+
 #start:enabled:hover::before{
   transform: translate(100%);
 }
+
 #start:enabled:hover::after{
   transform: translate(-100%);
 }
@@ -151,8 +152,6 @@ body {
   font-size: larger;
   font-weight: bold;
 }
-
-
 
 body{
   width: 95vw;

@@ -7,20 +7,19 @@ type localStorageItemsType =
     | 'user-answers' 
     | 'current-question-idx' 
     | 'test-data' 
-    | 'question-length';
+    | 'question-length'
+    | 'correct-answers';
 
 export function getLocalStorageItem(itemName : localStorageItemsType){
     const itemData = localStorage.getItem(itemName)
     return itemData ? itemData : "0";
-}
+};
 
 export function setLocalStorageItem(itemName : localStorageItemsType,itemData : string){
     localStorage.setItem(itemName,itemData);
-}
+};
 
-
-
-//random-questions-index-array - tablica losowych elementów : indeksow pytan w losowej kolejsnoci- 
+//random-questions-index-array - tablica losowych elementów : indeksow pytan w losowej kolejsnoci
 //questionTimes - tablica czasow dla poszczegolnych pytan
 //user-answers - tablica odpowiedzi uzytkownika
 //current-question-idx - aktualny index - nie losowy
