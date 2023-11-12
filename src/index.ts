@@ -1,8 +1,6 @@
 import testData from "./data/test-data.js";
 import { Answer, Question } from "./data/data";
 
-import { IQuestions } from "./interface/IQuestions";
-
 import { counterUserPoints, getQuestionLength, setAnswerArray, setTimeArray, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
 import { localStoriageInitialize } from "./localStorageInitialize.js";
 import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
@@ -22,28 +20,18 @@ const questionContainerNode = document.querySelector("#question-container") as H
 const questionTimeNode = document.querySelector("#question-time") as HTMLSpanElement;
 const totalTimeNode = document.querySelector("#total-time") as HTMLSpanElement;
 
-//Pobiera aktualny indeks pytania z tablicy - z tej tablicy w ktorej elementy sa w losowej kolejnosci - defaultArray;
-
 titleNode.innerHTML = testData.title;
 
-const getCurrentRandomQuestionIndex = (currentIndex: number) => {
-  const randomQuestionsArray = getLocalStorageItem('random-questions-index-array')
-
-  if (randomQuestionsArray) {
-    let actualQuestionIndex = randomQuestionsArray.split(',')[currentIndex];
-  }
-}
-
-getCurrentRandomQuestionIndex(1);
-
 let totalTime = 0;
-
 
 let currentIntervalId: number | null = null;
 
 const displayQuestion = (): void => {
   const currentIdx: number = parseInt(getLocalStorageItem('current-question-idx'));
-  const currentQuestion: Question = JSON.parse(getLocalStorageItem('test-data')).questions[currentIdx];
+
+  const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+
+  const currentQuestion: Question = JSON.parse(getLocalStorageItem('test-data')).questions[currendRandomIndex];
   const questionsLength : number = getQuestionLength();
 
   questionNode.innerHTML = currentQuestion.question;
@@ -82,7 +70,9 @@ const displayAnswers = (answers: Answer[]): void => {
         .querySelectorAll("div")
         .forEach((div) => div.classList.remove("selected"));
       inputElement.parentElement!.classList.add("selected");
-      setAnswerArray(currentIdx, inputElement.value.toString());
+
+      const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+      setAnswerArray(currendRandomIndex, inputElement.value.toString());
       updateEndButtonVisibility();
     });
   });
@@ -93,7 +83,6 @@ const checkAllAnswered = (): boolean => {
     return answer !== '';
   })
 };
-
 
 const bindHandlers = () => {
   document.addEventListener("DOMContentLoaded", () => contetLoadedHandler());
@@ -108,7 +97,7 @@ const bindHandlers = () => {
 bindHandlers();
 
 //Handlers
-const contetLoadedHandler = () => {
+const contetLoadedHandler = () : void => {
   localStoriageInitialize();
 
   questionContainerNode.style.display = "none";

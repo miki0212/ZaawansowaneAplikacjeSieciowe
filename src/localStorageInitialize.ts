@@ -51,7 +51,7 @@ function createCorrectAnswersArray(testData: any): void {
 }
 
 function createRandomArray (){
-    let defaultArray: number[] = [...Array(7).keys()].map(i => i + 1);
+    let defaultArray: number[] = [...Array(7).keys()].map(i => i);
   
     for (let i = defaultArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));

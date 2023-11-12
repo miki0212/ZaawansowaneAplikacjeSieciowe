@@ -44,12 +44,13 @@ export function startCounter(currentIdx, currentIntervalId = null, questionTimeN
         clearInterval(currentIntervalId);
     }
     console.log("Current : " + currentIntervalId);
-    let time = parseInt(getTimeArray(currentIdx).toString() || '0', 10);
+    const currendRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+    let time = parseInt(getTimeArray(currendRandomIndex).toString() || '0', 10);
     questionTimeNode.innerHTML = `${time}`;
     currentIntervalId = window.setInterval(() => {
         time++;
         questionTimeNode.innerHTML = `${time / 10}`;
-        setTimeArray(currentIdx, time);
+        setTimeArray(currendRandomIndex, time);
     }, 100);
     return currentIntervalId;
 }

@@ -51,16 +51,17 @@ export function startCounter(currentIdx: number, currentIntervalId: number | nul
         clearInterval(currentIntervalId);
     }
     console.log("Current : " + currentIntervalId)
+    const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
 
     let time: number = parseInt(
-        getTimeArray(currentIdx).toString() || '0', 10
+        getTimeArray(currendRandomIndex).toString() || '0', 10
     );
     questionTimeNode.innerHTML = `${time}`;
 
     currentIntervalId = window.setInterval(() => {
         time++;
         questionTimeNode.innerHTML = `${time / 10}`;
-        setTimeArray(currentIdx, time);
+        setTimeArray(currendRandomIndex, time);
     }, 100);
 
     return currentIntervalId;

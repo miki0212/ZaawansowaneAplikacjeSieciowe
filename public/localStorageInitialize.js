@@ -35,7 +35,7 @@ function createCorrectAnswersArray(testData) {
     setLocalStorageItem('correct-answers', correctAnswers.toString());
 }
 function createRandomArray() {
-    let defaultArray = [...Array(7).keys()].map(i => i + 1);
+    let defaultArray = [...Array(7).keys()].map(i => i);
     for (let i = defaultArray.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [defaultArray[i], defaultArray[j]] = [defaultArray[j], defaultArray[i]];

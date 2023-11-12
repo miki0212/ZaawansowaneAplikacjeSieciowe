@@ -16,20 +16,13 @@ const userPoint = document.querySelector('.points');
 const questionContainerNode = document.querySelector("#question-container");
 const questionTimeNode = document.querySelector("#question-time");
 const totalTimeNode = document.querySelector("#total-time");
-//Pobiera aktualny indeks pytania z tablicy - z tej tablicy w ktorej elementy sa w losowej kolejnosci - defaultArray;
 titleNode.innerHTML = testData.title;
-const getCurrentRandomQuestionIndex = (currentIndex) => {
-    const randomQuestionsArray = getLocalStorageItem('random-questions-index-array');
-    if (randomQuestionsArray) {
-        let actualQuestionIndex = randomQuestionsArray.split(',')[currentIndex];
-    }
-};
-getCurrentRandomQuestionIndex(1);
 let totalTime = 0;
 let currentIntervalId = null;
 const displayQuestion = () => {
     const currentIdx = parseInt(getLocalStorageItem('current-question-idx'));
-    const currentQuestion = JSON.parse(getLocalStorageItem('test-data')).questions[currentIdx];
+    const currendRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+    const currentQuestion = JSON.parse(getLocalStorageItem('test-data')).questions[currendRandomIndex];
     const questionsLength = getQuestionLength();
     questionNode.innerHTML = currentQuestion.question;
     backNode.disabled = currentIdx === 0;
@@ -59,7 +52,8 @@ const displayAnswers = (answers) => {
                 .querySelectorAll("div")
                 .forEach((div) => div.classList.remove("selected"));
             inputElement.parentElement.classList.add("selected");
-            setAnswerArray(currentIdx, inputElement.value.toString());
+            const currendRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+            setAnswerArray(currendRandomIndex, inputElement.value.toString());
             updateEndButtonVisibility();
         });
     });
