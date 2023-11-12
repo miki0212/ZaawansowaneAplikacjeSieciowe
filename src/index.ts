@@ -1,3 +1,4 @@
+import { localStorageItemsType } from './LocalStorageItemsType';
 import { Answer, Question } from "./data/data";
 import testData from "./data/test-data.js";
 import { IQuestions } from "./interface/IQuestions";
@@ -12,10 +13,10 @@ const startButton = document.querySelector("#start") as HTMLButtonElement;
 const timeContainer = document.querySelector('#time-container') as HTMLDivElement;
 const userData = document.querySelector('#user-data') as HTMLDivElement;
 const userPointsContainer = document.querySelector('.user-points') as HTMLDivElement;
-const userPoint = document.querySelector('.points')  as HTMLSpanElement;
+const userPoint = document.querySelector('.points') as HTMLSpanElement;
 
-let questionsLength : number = 0;
-let correctAnswers : string[] = [];
+let questionsLength: number = 0;
+let correctAnswers: string[] = [];
 
 const questionContainerNode = document.querySelector(
   "#question-container"
@@ -31,55 +32,93 @@ localStorage.setItem("current-question-idx", "0");
 localStorage.setItem("test-data", JSON.stringify(testData));
 
 const getCorrectAnswers = () => {
-  const questionsArray : IQuestions = testData as unknown as IQuestions;
+  const questionsArray: IQuestions = testData as unknown as IQuestions;
   questionsArray.questions.forEach((item) => {
     correctAnswers.push(item.correctAnswer);
   })
 
-  localStorage.setItem('correctAnswers',correctAnswers.toLocaleString());
+  localStorage.setItem('correctAnswers', correctAnswers.toLocaleString());
 }
 
 const getQuestionLength = () => {
-  const questionsArray : IQuestions = testData as unknown as IQuestions;
+  const questionsArray: IQuestions = testData as unknown as IQuestions;
   questionsLength = questionsArray.questions.length;
 }
 
-const createEmptyTimeArray = () => {
-  localStorage.setItem('questionTimes',new Array(questionsLength).fill(-1).toLocaleString());
-}
-const createEmptyQuestionArray = () => {
-  localStorage.setItem('answers',new Array(questionsLength).fill(null).toLocaleString());
+const createEmptyTimeArray = (localStorageItemName : localStorageItemsType) => {
+  localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(-1).toLocaleString());
 }
 
-const getTimeArray = (index : number) : number=>{
-  const times = localStorage.getItem('questionTimes');
-  if(times){
+const createEmptyQuestionArray = (localStorageItemName : localStorageItemsType) => {
+  localStorage.setItem(localStorageItemName, new Array(questionsLength).fill(null).toLocaleString());
+}
+
+const getTimeArray = (index: number): number => {
+  const times = localStorage.getItem('question-times');
+  if (times) {
     const timeArray = times.split(',').map(Number);
     return timeArray[index] == -1 ? 0 : timeArray[index];
   }
   return -1;
 }
 
-const setTimeArray = (index : number, value : number)=>{
-  const times = localStorage.getItem('questionTimes');
-  if(times){
+const setTimeArray = (index: number, value: number) => {
+  const times = localStorage.getItem('question-times');
+  if (times) {
     let timeArray = times.split(',').map(Number)!;
     timeArray[index] = value;
-    localStorage.setItem('questionTimes',timeArray.toLocaleString());
+    localStorage.setItem('question-times', timeArray.toLocaleString());
   }
 }
 
-const setAnswerArray = (index : number,answer : string)=>{
+const setAnswerArray = (index: number, answer: string) => {
   console.log(answer);
-  let answerArray : string[] = localStorage.getItem('answers')?.split(',')!;
+  let answerArray: string[] = localStorage.getItem('user-answers')?.split(',')!;
   answerArray[index] = answer;
-  localStorage.setItem('answers',answerArray.toLocaleString());
+  localStorage.setItem('user-answers', answerArray.toLocaleString());
 }
 
+const createRandomArray = (localStorageItemName : localStorageItemsType) => {
+  let defaultArray : number[] = [...Array(7).keys()].map(i=>i+1);
+  let randomQuestions : number[] = [];
+  console.log(defaultArray);
+
+  for(let i = defaultArray.length - 1;i > 0;i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [defaultArray[i], defaultArray[j]] = [defaultArray[j], defaultArray[i]];
+  }
+
+  //Tworzy tablice losowych indeksow dla pytan - w sensie że to umożliwia pobieranie pytań w losowej kolejności - rozumiesz ?
+  localStorage.setItem(localStorageItemName,defaultArray.toLocaleString());
+}
+
+//Pobiera aktualny indeks pytania z tablicy - z tej tablicy w ktorej elementy sa w losowej kolejnosci - defaulARray;
+const getActualQuestionIndex = (currentIndex : number, localStorageItemName : localStorageItemsType)=>{
+  const randomQuestionsArray = localStorage.getItem(localStorageItemName);
+  
+  if(randomQuestionsArray){
+    let actualQuestionIndex = randomQuestionsArray.split(',')[currentIndex];
+    console.log(actualQuestionIndex)
+  }
+}
+
+
+//Tworzy tablice z poprawnymi odpowiedziam i zapisuje ja w localstorage
 getCorrectAnswers();
+
+//Pobiera liczbe pytan
 getQuestionLength();
-createEmptyTimeArray();
-createEmptyQuestionArray();
+
+//Tworzy pusta tablice z czasami dla poszczegolnych pytań
+createEmptyTimeArray("question-times");
+
+//Tworzy pustą tablicę odpowiedzi użytkownika
+createEmptyQuestionArray("user-answers");
+
+//Tworzy tablice xd
+createRandomArray('random-questions-index-array');
+
+getActualQuestionIndex(1,'random-questions-index-array');
 
 let totalTime = 0;
 titleNode.innerHTML = testData.title;
@@ -90,6 +129,7 @@ const hiddenBtn = (): void => {
   timeContainer.style.display = "none";
 
   userPointsContainer.style.display = 'none';
+
 };
 
 hiddenBtn();
@@ -112,9 +152,10 @@ document.addEventListener("DOMContentLoaded", () => {
   endNode.style.display = "none";
 
   startButton.addEventListener("click", () => {
+    const localStorageItemName : localStorageItemsType = 'current-question-idx';
     totalTimeCounter();
     displayQuestion();
-    startCounter(parseInt(localStorage.getItem("current-question-idx")!));
+    startCounter(parseInt(localStorage.getItem(localStorageItemName)!));
 
     questionContainerNode.style.display = "flex";
 
@@ -123,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     startButton.style.display = "none";
     timeContainer.style.display = "block";
     userData.style.display = 'none';
-    
+
   });
 });
 
@@ -135,14 +176,14 @@ const startCounter = (currentIdx: number): void => {
   }
 
   let time: number = parseInt(
-    getTimeArray(currentIdx).toString() || '0' , 10
+    getTimeArray(currentIdx).toString() || '0', 10
   );
   questionTimeNode.innerHTML = `${time}`;
 
   currentIntervalId = window.setInterval(() => {
     time++;
     questionTimeNode.innerHTML = `${time / 10}`;
-    setTimeArray(currentIdx,time);
+    setTimeArray(currentIdx, time);
   }, 100);
 };
 
@@ -152,7 +193,7 @@ const stopCounter = (): void => {
     currentIntervalId = null;
   }
 
-  if(totalTime != null){
+  if (totalTime != null) {
     clearInterval(totalTime);
     totalTime = 0;
   }
@@ -188,16 +229,15 @@ const displayAnswers = (answers: Answer[]): void => {
   const currentIdx: number = parseInt(
     localStorage.getItem("current-question-idx")!
   );
-  let userAnswer = localStorage.getItem('answers')?.split(',')[currentIdx];
+  let userAnswer = localStorage.getItem('user-answers')?.split(',')[currentIdx];
 
   let answersMarkup = answers
     .map((answer) => {
       const isChecked = answer.content === userAnswer;
       return `
             <div ${isChecked ? 'class="selected"' : ""}>
-                <input type="radio" name="answer" id="answer${
-                  answer.id
-                }" value="${answer.content}" ${isChecked ? "checked" : ""} />
+                <input type="radio" name="answer" id="answer${answer.id
+        }" value="${answer.content}" ${isChecked ? "checked" : ""} />
                 <label for="answer${answer.id}">${answer.content}</label>
             </div>
         `;
@@ -212,7 +252,7 @@ const displayAnswers = (answers: Answer[]): void => {
         .querySelectorAll("div")
         .forEach((div) => div.classList.remove("selected"));
       inputElement.parentElement!.classList.add("selected");
-      setAnswerArray(currentIdx,inputElement.value.toString());
+      setAnswerArray(currentIdx, inputElement.value.toString());
       updateEndButtonVisibility();
     });
   });
@@ -220,7 +260,7 @@ const displayAnswers = (answers: Answer[]): void => {
 
 const checkAllAnswered = (): boolean => {
 
-  return localStorage.getItem('answers')!.split(',').every(answer=>{
+  return localStorage.getItem('user-answers')!.split(',').every(answer => {
     return answer !== '';
   })
 };
@@ -236,7 +276,7 @@ backNode.addEventListener("click", () => {
     10
   );
 
-  if(backNode.disabled){
+  if (backNode.disabled) {
     return;
   }
 
@@ -250,7 +290,7 @@ nextNode.addEventListener("click", () => {
     10
   );
 
-  if(nextNode.disabled){
+  if (nextNode.disabled) {
     return;
   }
 
@@ -258,14 +298,14 @@ nextNode.addEventListener("click", () => {
   displayQuestion();
 });
 
-const userPoints = () =>{
-  const correctAnswers : string[] = localStorage.getItem('correctAnswers')!.split(',');
-  const userAnswers : string[] = localStorage.getItem('answers')!.split(',');
+const userPoints = () => {
+  const correctAnswers: string[] = localStorage.getItem('correctAnswers')!.split(',');
+  const userAnswers: string[] = localStorage.getItem('user-answers')!.split(',');
   let points = 0;
 
-  correctAnswers.forEach((item,index)=>{
-    if(item == userAnswers[index]){
-      points ++;
+  correctAnswers.forEach((item, index) => {
+    if (item == userAnswers[index]) {
+      points++;
     }
   })
   return points;
