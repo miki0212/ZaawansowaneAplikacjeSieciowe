@@ -89,6 +89,7 @@ const contetLoadedHandler = () => {
     userPointsContainer.style.display = 'none';
 };
 const arrowHandler = (evt) => {
+    var _a, _b;
     if (questionContainerNode.style.display != "none") {
         evt.preventDefault();
         if (evt.code.toLocaleLowerCase() === "ArrowRight".toLocaleLowerCase()) {
@@ -98,6 +99,33 @@ const arrowHandler = (evt) => {
         else if (evt.code.toLocaleLowerCase() === "ArrowLeft".toLocaleLowerCase()) {
             evt.stopImmediatePropagation();
             backNode.dispatchEvent(new Event("click"));
+        }
+        if (evt.code.toLocaleLowerCase() === "Arrowup".toLocaleLowerCase()) {
+            // const radioBTNArray : HTMLInputElement[] = document.querySelectorAll('input[type="radio"]') as HTMLInputElement;
+            const radioBTNNodeList = document.querySelectorAll('input[type="radio"]');
+            const radioBTNArray = Array.from(radioBTNNodeList);
+            let idx = 0;
+            for (let i = 0; i < 4; i++) {
+                (_a = radioBTNArray[i].parentElement) === null || _a === void 0 ? void 0 : _a.classList.remove('selected');
+                if (radioBTNArray[i].checked) {
+                    idx = i;
+                    break;
+                }
+                if (i === 3) {
+                    idx = 0;
+                }
+            }
+            if (idx === 0) {
+                idx = 3;
+            }
+            else {
+                idx--;
+            }
+            radioBTNArray[idx].checked = true;
+            (_b = radioBTNArray[idx].parentElement) === null || _b === void 0 ? void 0 : _b.classList.add('selected');
+            const currentIdx = parseInt(getLocalStorageItem('current-question-idx'));
+            const currendRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+            setAnswerArray(currendRandomIndex, radioBTNArray[idx].value);
         }
     }
 };

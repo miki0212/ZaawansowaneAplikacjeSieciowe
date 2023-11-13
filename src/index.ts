@@ -131,6 +131,36 @@ const arrowHandler = (evt: KeyboardEvent): void => {
       evt.stopImmediatePropagation();
       backNode.dispatchEvent(new Event("click"));
     }
+
+    if(evt.code.toLocaleLowerCase() === "Arrowup".toLocaleLowerCase()){
+      // const radioBTNArray : HTMLInputElement[] = document.querySelectorAll('input[type="radio"]') as HTMLInputElement;
+      const radioBTNNodeList = document.querySelectorAll('input[type="radio"]');
+      const radioBTNArray: HTMLInputElement[] = Array.from(radioBTNNodeList) as HTMLInputElement[];
+
+      let idx = 0;
+      for(let i = 0;i<4;i++){ 
+        radioBTNArray[i].parentElement?.classList.remove('selected');
+        if(radioBTNArray[i].checked){ 
+          idx = i;
+          break;
+        }
+        if(i === 3){
+          idx = 0;
+        }
+      }
+
+      if(idx === 0){
+        idx = 3
+      }else{
+        idx--;
+      }
+      
+      radioBTNArray[idx].checked = true;
+      radioBTNArray[idx].parentElement?.classList.add('selected');
+      const currentIdx : number = parseInt(getLocalStorageItem('current-question-idx'));
+      const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+      setAnswerArray(currendRandomIndex,radioBTNArray[idx].value)
+    }
   }
 };
 
