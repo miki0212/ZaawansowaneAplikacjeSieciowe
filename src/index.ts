@@ -1,7 +1,7 @@
 import testData from "./data/test-data.js";
 import { Answer, Question } from "./data/data";
 
-import { counterUserPoints, getQuestionLength, setAnswerArray, setTimeArray, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
+import { counterUserPoints, getQuestionLength, setAnswerArray, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
 import { localStoriageInitialize } from "./localStorageInitialize.js";
 import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
 
@@ -85,9 +85,13 @@ const checkAllAnswered = (): boolean => {
 };
 
 const bindHandlers = () => {
+  //Ustawianie elementów na display none
   document.addEventListener("DOMContentLoaded", () => contetLoadedHandler());
+
+  //Obsługa strzałek lewo-prawo
   document.addEventListener("keyup", (evt: KeyboardEvent) => arrowHandler(evt));
 
+  //Przyciski
   startNode.addEventListener("click", (evt: Event) => startNodeHandler(evt));
   backNode.addEventListener("click", (evt: Event) => backNodeHandler(evt));
   nextNode.addEventListener("click", (evt: Event) => nextNodeHandler(evt));

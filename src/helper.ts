@@ -1,4 +1,3 @@
-import { IQuestions } from "./interface/IQuestions.js";
 import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
 
 export function counterUserPoints(): string {
