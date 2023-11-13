@@ -15,15 +15,29 @@
       <div id="question-elements">
         <h2 id="question-title"><span id="question"></span></h2>
         <div id="answers"></div>
+        <div id="question-counter">Pytanie 0 / 7  </div>
       </div>
       <div id="button-container">
         <button id="back" style="cursor: pointer" disabled>Poprzednie</button>
         <button id="next" style="cursor: pointer" disabled>Następne</button>
       </div>
     </div>
+
     <div id="time-container">
-      <h4 id="question-time-section">Czas: <span id="question-time">0</span></h4>
-      <h5 id="total-time-section">Czas całkowity: <span id="total-time">0</span></h5>
+      <div id="one-question-time">
+        <h4 id="question-time-section">
+          <span id="description-one-question-time">Czas :</span> 
+          <span id="question-time">0</span>
+        </h4>
+      </div>
+
+      <div id="one-question-time">
+        <h4 id="total-time-section">
+          <span id="description-one-question-time">Czas całkowity:</span> 
+          <span id="total-time">0</span>
+        </h4>
+      </div>
+      <!-- <h5 id="total-time-section">Czas całkowity: <span id="total-time">0</span></h5> -->
     </div>
     
     <div id="user-data">
@@ -43,9 +57,13 @@
       <button id="end" style="cursor: pointer" disabled>Zakończ</button>
     </div>
 
-    <div class="user-points">
-      <p>User : XYZ;</p>
-      Gratulacje masz <span class="points"></span> pkt,
+    <div id="user-result">
+      <div id="user-name">User : XYZ;</div>
+      <div id="correct-answers"></div>
+      <div id="user-points-result">
+        Gratulacje masz <span class="points"></span> pkt
+      </div>
+     
     </div>
 
     <script type="module" src="./index.js"></script>

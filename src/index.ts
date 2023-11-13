@@ -1,7 +1,7 @@
 import testData from "./data/test-data.js";
 import { Answer, Question } from "./data/data";
 
-import { counterUserPoints, getQuestionLength, setAnswerArray, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
+import { counterUserPoints, getQuestionLength, setAnswerArray, showCorrectAnswers, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
 import { localStoriageInitialize } from "./localStorageInitialize.js";
 import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
 
@@ -14,11 +14,14 @@ const endNode = document.querySelector("#end") as HTMLButtonElement;
 const startNode = document.querySelector("#start") as HTMLButtonElement;
 const timeContainer = document.querySelector('#time-container') as HTMLDivElement;
 const userData = document.querySelector('#user-data') as HTMLDivElement;
-const userPointsContainer = document.querySelector('.user-points') as HTMLDivElement;
+const userPointsContainer = document.querySelector('#user-result') as HTMLDivElement;
 const userPoint = document.querySelector('.points') as HTMLSpanElement;
 const questionContainerNode = document.querySelector("#question-container") as HTMLDivElement;
 const questionTimeNode = document.querySelector("#question-time") as HTMLSpanElement;
 const totalTimeNode = document.querySelector("#total-time") as HTMLSpanElement;
+const questionCounterNode = document.querySelector('#question-counter') as HTMLDivElement;
+
+const correctAnswerNode = document.querySelector('#correct-answers') as HTMLDivElement;
 
 titleNode.innerHTML = testData.title;
 
@@ -45,18 +48,20 @@ const displayQuestion = (): void => {
 
 const displayAnswers = (answers: Answer[]): void => {
   const currentIdx: number = parseInt(
-    localStorage.getItem("current-question-idx")!
+    getLocalStorageItem("current-question-idx")!
   );
-  let userAnswer = localStorage.getItem('user-answers')?.split(',')[currentIdx];
+  const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+
+  let userAnswer = getLocalStorageItem('user-answers')?.split(',')[currendRandomIndex];
 
   let answersMarkup = answers
     .map((answer) => {
       const isChecked = answer.content === userAnswer;
       return `
-            <div ${isChecked ? 'class="selected"' : ""}>
+            <div ${isChecked ? 'class="selected radio-btn"' : 'class="radio-btn"'}>
                 <input type="radio" name="answer" id="answer${answer.id
         }" value="${answer.content}" ${isChecked ? "checked" : ""} />
-                <label for="answer${answer.id}">${answer.content}</label>
+                <label class="answer-label" for="answer${answer.id}">${answer.content}</label>
             </div>
         `;
     })
@@ -79,7 +84,7 @@ const displayAnswers = (answers: Answer[]): void => {
 };
 
 const checkAllAnswered = (): boolean => {
-  return localStorage.getItem('user-answers')!.split(',').every(answer => {
+  return getLocalStorageItem('user-answers')!.split(',').every(answer => {
     return answer !== '';
   })
 };
@@ -111,7 +116,7 @@ const contetLoadedHandler = () : void => {
   nextNode.style.display = "none";
   timeContainer.style.display = "none";
 
-  userPointsContainer.style.display = 'none';
+  userPointsContainer.style.display = 'none'; 
 }
 
 const arrowHandler = (evt: KeyboardEvent): void => {
@@ -127,10 +132,19 @@ const arrowHandler = (evt: KeyboardEvent): void => {
       backNode.dispatchEvent(new Event("click"));
     }
   }
-}
+};
 
 const startNodeHandler = (evt: Event): void => {
+  totalTime = 0;
+  currentIntervalId = 0;
+  
+  userPointsContainer.style.display = 'none'; 
+
+  localStorage.clear();
+
   localStoriageInitialize();
+
+  questionCounterNode.innerHTML = `Pytanie 1 / ${getLocalStorageItem('question-length')}`
   totalTimeCounter(totalTime,totalTimeNode);
   displayQuestion();
   
@@ -140,7 +154,7 @@ const startNodeHandler = (evt: Event): void => {
   startNode.style.display = "none";
   timeContainer.style.display = "block";
   userData.style.display = 'none';
-}
+};
 
 const backNodeHandler = (evt: Event): void => {
   const currentIdx: number = parseInt(
@@ -153,8 +167,9 @@ const backNodeHandler = (evt: Event): void => {
   }
 
   localStorage.setItem("current-question-idx", (currentIdx - 1).toString());
+  questionCounterNode.innerHTML = `Pytanie ${currentIdx} / ${getLocalStorageItem('question-length')}`
   displayQuestion();
-}
+};
 
 const nextNodeHandler = (evt: Event): void => {
   const currentIdx: number = parseInt(
@@ -167,8 +182,9 @@ const nextNodeHandler = (evt: Event): void => {
   }
 
   localStorage.setItem("current-question-idx", (currentIdx + 1).toString());
+  questionCounterNode.innerHTML = `Pytanie ${currentIdx + 2} / ${getLocalStorageItem('question-length')}` 
   displayQuestion();
-}
+};
 
 const endNodeHandler = (evt: Event): void => {
   stopCounter(currentIntervalId);
@@ -183,11 +199,14 @@ const endNodeHandler = (evt: Event): void => {
   //   startNode.style.display = 'block'
   // }
 
+  startNode.style.display = 'block'
+
   endNode.style.display = "none";
-  userPointsContainer.style.display = 'block';
+  userPointsContainer.style.display = 'flex';
+  showCorrectAnswers(correctAnswerNode);
 
   userPoint.innerHTML = counterUserPoints();
-}
+};
 
 const updateEndButtonVisibility = (): void => {
   endNode.style.display = checkAllAnswered() ? "inline" : "none";

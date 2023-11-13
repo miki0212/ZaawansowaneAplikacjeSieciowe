@@ -41,7 +41,12 @@ export function totalTimeCounter(totalTime: number | null = null, totalTimeNode:
     let time = 0;
     totalTime = window.setInterval(() => {
         time++;
-        totalTimeNode.innerHTML = `${time / 10}`;
+
+        if (time % 10 == 0) {
+            totalTimeNode.innerHTML = `${time / 10}.0`;
+        } else {
+            totalTimeNode.innerHTML = `${time / 10}`;
+        }
     }, 100);
 };
 
@@ -50,7 +55,7 @@ export function startCounter(currentIdx: number, currentIntervalId: number | nul
         clearInterval(currentIntervalId);
     }
     console.log("Current : " + currentIntervalId)
-    const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+    const currendRandomIndex: number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
 
     let time: number = parseInt(
         getTimeArray(currendRandomIndex).toString() || '0', 10
@@ -59,7 +64,12 @@ export function startCounter(currentIdx: number, currentIntervalId: number | nul
 
     currentIntervalId = window.setInterval(() => {
         time++;
-        questionTimeNode.innerHTML = `${time / 10}`;
+
+        if (time % 10 == 0) {
+            questionTimeNode.innerHTML = `${time / 10}.0`;
+        } else {
+            questionTimeNode.innerHTML = `${time / 10}`;
+        }
         setTimeArray(currendRandomIndex, time);
     }, 100);
 
@@ -79,9 +89,34 @@ export function getQuestionLength(): number {
     return parseInt(getLocalStorageItem('question-length'));
 };
 
-export function setAnswerArray(index: number, answer: string){
+export function setAnswerArray(index: number, answer: string) {
     let answerArray: string[] = localStorage.getItem('user-answers')?.split(',')!;
     answerArray[index] = answer;
     setLocalStorageItem('user-answers', answerArray.toString())
-  }
+}
+
+export function showCorrectAnswers(correctAnswersNode : HTMLDivElement) {
+    //Pobieranie indeksow pytan - tych losowych
+    const randomIndex : number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
+    const correctAnswers : string[] = getLocalStorageItem('correct-answers').split(',');
+    const userAnswers : string[] = getLocalStorageItem('user-answers').split(',');
+    const questionTime : number[] = getLocalStorageItem('question-times-array').split(',').map(Number);
+
+    let answers = randomIndex.map((answer,index)=>{
+        return `
+            <div id='correct-answer-row'>
+                <div id='question-index'>${index + 1}</div>
+                <div id='correct-answer'>${correctAnswers[answer]}</div>
+                <div id='user-answer' class = ${userAnswers[answer] !== correctAnswers[answer] ? "error" : ''}>${userAnswers[answer]}</div>
+                <div id='question-time-result'>${questionTime[answer] % 10 === 0 ? questionTime[answer] / 10+'.0' : questionTime[answer] / 10}</div>
+            </div>
+        `
+    }).join('')
+
+    correctAnswersNode.innerHTML = answers;
+    // for(let i = 0;i<parseInt(getLocalStorageItem('question-length'));i++){
+
+    // }
+}
+
 

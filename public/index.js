@@ -1,5 +1,5 @@
 import testData from "./data/test-data.js";
-import { counterUserPoints, getQuestionLength, setAnswerArray, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
+import { counterUserPoints, getQuestionLength, setAnswerArray, showCorrectAnswers, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
 import { localStoriageInitialize } from "./localStorageInitialize.js";
 import { getLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
 const titleNode = document.querySelector("#test-title");
@@ -11,11 +11,13 @@ const endNode = document.querySelector("#end");
 const startNode = document.querySelector("#start");
 const timeContainer = document.querySelector('#time-container');
 const userData = document.querySelector('#user-data');
-const userPointsContainer = document.querySelector('.user-points');
+const userPointsContainer = document.querySelector('#user-result');
 const userPoint = document.querySelector('.points');
 const questionContainerNode = document.querySelector("#question-container");
 const questionTimeNode = document.querySelector("#question-time");
 const totalTimeNode = document.querySelector("#total-time");
+const questionCounterNode = document.querySelector('#question-counter');
+const correctAnswerNode = document.querySelector('#correct-answers');
 titleNode.innerHTML = testData.title;
 let totalTime = 0;
 let currentIntervalId = null;
@@ -32,15 +34,16 @@ const displayQuestion = () => {
 };
 const displayAnswers = (answers) => {
     var _a;
-    const currentIdx = parseInt(localStorage.getItem("current-question-idx"));
-    let userAnswer = (_a = localStorage.getItem('user-answers')) === null || _a === void 0 ? void 0 : _a.split(',')[currentIdx];
+    const currentIdx = parseInt(getLocalStorageItem("current-question-idx"));
+    const currendRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+    let userAnswer = (_a = getLocalStorageItem('user-answers')) === null || _a === void 0 ? void 0 : _a.split(',')[currendRandomIndex];
     let answersMarkup = answers
         .map((answer) => {
         const isChecked = answer.content === userAnswer;
         return `
-            <div ${isChecked ? 'class="selected"' : ""}>
+            <div ${isChecked ? 'class="selected radio-btn"' : 'class="radio-btn"'}>
                 <input type="radio" name="answer" id="answer${answer.id}" value="${answer.content}" ${isChecked ? "checked" : ""} />
-                <label for="answer${answer.id}">${answer.content}</label>
+                <label class="answer-label" for="answer${answer.id}">${answer.content}</label>
             </div>
         `;
     })
@@ -59,13 +62,16 @@ const displayAnswers = (answers) => {
     });
 };
 const checkAllAnswered = () => {
-    return localStorage.getItem('user-answers').split(',').every(answer => {
+    return getLocalStorageItem('user-answers').split(',').every(answer => {
         return answer !== '';
     });
 };
 const bindHandlers = () => {
+    //Ustawianie elementów na display none
     document.addEventListener("DOMContentLoaded", () => contetLoadedHandler());
+    //Obsługa strzałek lewo-prawo
     document.addEventListener("keyup", (evt) => arrowHandler(evt));
+    //Przyciski
     startNode.addEventListener("click", (evt) => startNodeHandler(evt));
     backNode.addEventListener("click", (evt) => backNodeHandler(evt));
     nextNode.addEventListener("click", (evt) => nextNodeHandler(evt));
@@ -96,7 +102,12 @@ const arrowHandler = (evt) => {
     }
 };
 const startNodeHandler = (evt) => {
+    totalTime = 0;
+    currentIntervalId = 0;
+    userPointsContainer.style.display = 'none';
+    localStorage.clear();
     localStoriageInitialize();
+    questionCounterNode.innerHTML = `Pytanie 1 / ${getLocalStorageItem('question-length')}`;
     totalTimeCounter(totalTime, totalTimeNode);
     displayQuestion();
     questionContainerNode.style.display = "flex";
@@ -112,6 +123,7 @@ const backNodeHandler = (evt) => {
         return;
     }
     localStorage.setItem("current-question-idx", (currentIdx - 1).toString());
+    questionCounterNode.innerHTML = `Pytanie ${currentIdx} / ${getLocalStorageItem('question-length')}`;
     displayQuestion();
 };
 const nextNodeHandler = (evt) => {
@@ -120,6 +132,7 @@ const nextNodeHandler = (evt) => {
         return;
     }
     localStorage.setItem("current-question-idx", (currentIdx + 1).toString());
+    questionCounterNode.innerHTML = `Pytanie ${currentIdx + 2} / ${getLocalStorageItem('question-length')}`;
     displayQuestion();
 };
 const endNodeHandler = (evt) => {
@@ -132,8 +145,10 @@ const endNodeHandler = (evt) => {
     //   console.log('TEST')
     //   startNode.style.display = 'block'
     // }
+    startNode.style.display = 'block';
     endNode.style.display = "none";
-    userPointsContainer.style.display = 'block';
+    userPointsContainer.style.display = 'flex';
+    showCorrectAnswers(correctAnswerNode);
     userPoint.innerHTML = counterUserPoints();
 };
 const updateEndButtonVisibility = () => {

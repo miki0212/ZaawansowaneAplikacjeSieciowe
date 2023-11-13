@@ -35,7 +35,12 @@ export function totalTimeCounter(totalTime = null, totalTimeNode) {
     let time = 0;
     totalTime = window.setInterval(() => {
         time++;
-        totalTimeNode.innerHTML = `${time / 10}`;
+        if (time % 10 == 0) {
+            totalTimeNode.innerHTML = `${time / 10}.0`;
+        }
+        else {
+            totalTimeNode.innerHTML = `${time / 10}`;
+        }
     }, 100);
 }
 ;
@@ -49,7 +54,12 @@ export function startCounter(currentIdx, currentIntervalId = null, questionTimeN
     questionTimeNode.innerHTML = `${time}`;
     currentIntervalId = window.setInterval(() => {
         time++;
-        questionTimeNode.innerHTML = `${time / 10}`;
+        if (time % 10 == 0) {
+            questionTimeNode.innerHTML = `${time / 10}.0`;
+        }
+        else {
+            questionTimeNode.innerHTML = `${time / 10}`;
+        }
         setTimeArray(currendRandomIndex, time);
     }, 100);
     return currentIntervalId;
@@ -72,4 +82,24 @@ export function setAnswerArray(index, answer) {
     let answerArray = (_a = localStorage.getItem('user-answers')) === null || _a === void 0 ? void 0 : _a.split(',');
     answerArray[index] = answer;
     setLocalStorageItem('user-answers', answerArray.toString());
+}
+export function showCorrectAnswers(correctAnswersNode) {
+    //Pobieranie indeksow pytan - tych losowych
+    const randomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
+    const correctAnswers = getLocalStorageItem('correct-answers').split(',');
+    const userAnswers = getLocalStorageItem('user-answers').split(',');
+    const questionTime = getLocalStorageItem('question-times-array').split(',').map(Number);
+    let answers = randomIndex.map((answer, index) => {
+        return `
+            <div id='correct-answer-row'>
+                <div id='question-index'>${index + 1}</div>
+                <div id='correct-answer'>${correctAnswers[answer]}</div>
+                <div id='user-answer' class = ${userAnswers[answer] !== correctAnswers[answer] ? "error" : ''}>${userAnswers[answer]}</div>
+                <div id='question-time-result'>${questionTime[answer] % 10 === 0 ? questionTime[answer] / 10 + '.0' : questionTime[answer] / 10}</div>
+            </div>
+        `;
+    }).join('');
+    correctAnswersNode.innerHTML = answers;
+    // for(let i = 0;i<parseInt(getLocalStorageItem('question-length'));i++){
+    // }
 }
