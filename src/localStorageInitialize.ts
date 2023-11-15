@@ -4,9 +4,12 @@ import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/Lo
 import { IQuestions } from "./interface/IQuestions.js";
 
 
-export function localStoriageInitialize() {
+export function localStoriageInitialize(username: string) {
     //Czyszczenie localStorage
     localStorage.clear();
+
+    //Ustawienie nazwy uzytkownika
+    setLocalStorageItem('username', username.toString());
 
     //Pobranie pytani i odpowiedzi
     setLocalStorageItem('test-data', JSON.stringify(testData));
@@ -50,16 +53,16 @@ function createCorrectAnswersArray(testData: any): void {
     setLocalStorageItem('correct-answers', correctAnswers.toString());
 }
 
-function createRandomArray (){
+function createRandomArray() {
     let defaultArray: number[] = [...Array(7).keys()].map(i => i);
-  
+
     for (let i = defaultArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [defaultArray[i], defaultArray[j]] = [defaultArray[j], defaultArray[i]];
+        const j = Math.floor(Math.random() * (i + 1));
+        [defaultArray[i], defaultArray[j]] = [defaultArray[j], defaultArray[i]];
     }
-  
+
     //Tworzy tablice losowych indeksow dla pytan - w sensie że to umożliwia pobieranie pytań w losowej kolejności - rozumiesz ?
     setLocalStorageItem('random-questions-index-array', defaultArray.toString())
-  }
+}
 
 

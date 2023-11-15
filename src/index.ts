@@ -21,6 +21,10 @@ const questionTimeNode = document.querySelector("#question-time") as HTMLSpanEle
 const totalTimeNode = document.querySelector("#total-time") as HTMLSpanElement;
 const questionCounterNode = document.querySelector('#question-counter') as HTMLDivElement;
 
+const usernameNode = document.querySelector('#username') as HTMLInputElement;
+
+const usernameDiv = document.querySelector('#user-name') as HTMLDivElement;
+
 const correctAnswerNode = document.querySelector('#correct-answers') as HTMLDivElement;
 
 titleNode.innerHTML = testData.title;
@@ -32,10 +36,10 @@ let currentIntervalId: number | null = null;
 const displayQuestion = (): void => {
   const currentIdx: number = parseInt(getLocalStorageItem('current-question-idx'));
 
-  const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+  const currendRandomIndex: number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
 
   const currentQuestion: Question = JSON.parse(getLocalStorageItem('test-data')).questions[currendRandomIndex];
-  const questionsLength : number = getQuestionLength();
+  const questionsLength: number = getQuestionLength();
 
   questionNode.innerHTML = currentQuestion.question;
 
@@ -43,14 +47,14 @@ const displayQuestion = (): void => {
   nextNode.disabled = currentIdx === questionsLength - 1;
 
   displayAnswers(currentQuestion.answers);
-  currentIntervalId = startCounter(currentIdx,currentIntervalId,questionTimeNode);
+  currentIntervalId = startCounter(currentIdx, currentIntervalId, questionTimeNode);
 };
 
 const displayAnswers = (answers: Answer[]): void => {
   const currentIdx: number = parseInt(
     getLocalStorageItem("current-question-idx")!
   );
-  const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+  const currendRandomIndex: number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
 
   let userAnswer = getLocalStorageItem('user-answers')?.split(',')[currendRandomIndex];
 
@@ -76,7 +80,7 @@ const displayAnswers = (answers: Answer[]): void => {
         .forEach((div) => div.classList.remove("selected"));
       inputElement.parentElement!.classList.add("selected");
 
-      const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+      const currendRandomIndex: number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
       setAnswerArray(currendRandomIndex, inputElement.value.toString());
       updateEndButtonVisibility();
     });
@@ -106,8 +110,9 @@ const bindHandlers = () => {
 bindHandlers();
 
 //Handlers
-const contetLoadedHandler = () : void => {
-  localStoriageInitialize();
+const contetLoadedHandler = (): void => {
+  // localStoriageInitialize();
+  localStorage.clear();
 
   questionContainerNode.style.display = "none";
   endNode.style.display = "none";
@@ -116,7 +121,7 @@ const contetLoadedHandler = () : void => {
   nextNode.style.display = "none";
   timeContainer.style.display = "none";
 
-  userPointsContainer.style.display = 'none'; 
+  userPointsContainer.style.display = 'none';
 }
 
 const arrowHandler = (evt: KeyboardEvent): void => {
@@ -132,58 +137,67 @@ const arrowHandler = (evt: KeyboardEvent): void => {
       backNode.dispatchEvent(new Event("click"));
     }
 
-    if(evt.code.toLocaleLowerCase() === "Arrowup".toLocaleLowerCase()){
+    if (evt.code.toLocaleLowerCase() === "Arrowup".toLocaleLowerCase()) {
       // const radioBTNArray : HTMLInputElement[] = document.querySelectorAll('input[type="radio"]') as HTMLInputElement;
       const radioBTNNodeList = document.querySelectorAll('input[type="radio"]');
       const radioBTNArray: HTMLInputElement[] = Array.from(radioBTNNodeList) as HTMLInputElement[];
 
       let idx = 0;
-      for(let i = 0;i<4;i++){ 
+      for (let i = 0; i < 4; i++) {
         radioBTNArray[i].parentElement?.classList.remove('selected');
-        if(radioBTNArray[i].checked){ 
+        if (radioBTNArray[i].checked) {
           idx = i;
           break;
         }
-        if(i === 3){
+        if (i === 3) {
           idx = 0;
         }
       }
 
-      if(idx === 0){
+      if (idx === 0) {
         idx = 3
-      }else{
+      } else {
         idx--;
       }
-      
+
       radioBTNArray[idx].checked = true;
       radioBTNArray[idx].parentElement?.classList.add('selected');
-      const currentIdx : number = parseInt(getLocalStorageItem('current-question-idx'));
-      const currendRandomIndex : number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
-      setAnswerArray(currendRandomIndex,radioBTNArray[idx].value)
+      const currentIdx: number = parseInt(getLocalStorageItem('current-question-idx'));
+      const currendRandomIndex: number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
+      setAnswerArray(currendRandomIndex, radioBTNArray[idx].value)
     }
   }
 };
 
 const startNodeHandler = (evt: Event): void => {
-  totalTime = 0;
-  currentIntervalId = 0;
-  
-  userPointsContainer.style.display = 'none'; 
-
   localStorage.clear();
 
-  localStoriageInitialize();
+  //FIXME:
+  if (usernameNode.value != '') {
+    console.log(usernameNode.value)
+    setLocalStorageItem('username', usernameNode.value);
+  }
 
-  questionCounterNode.innerHTML = `Pytanie 1 / ${getLocalStorageItem('question-length')}`
-  totalTimeCounter(totalTime,totalTimeNode);
-  displayQuestion();
-  
-  questionContainerNode.style.display = "flex";
-  backNode.style.display = "inline";
-  nextNode.style.display = "inline";
-  startNode.style.display = "none";
-  timeContainer.style.display = "block";
-  userData.style.display = 'none';
+  //FIXME:
+  if (getLocalStorageItem('username') != '') {
+    totalTime = 0;
+    currentIntervalId = 0;
+
+    userPointsContainer.style.display = 'none';
+
+    localStoriageInitialize(usernameNode.value || " ");
+
+    questionCounterNode.innerHTML = `Pytanie 1 / ${getLocalStorageItem('question-length')}`
+    totalTimeCounter(totalTime, totalTimeNode);
+    displayQuestion();
+
+    questionContainerNode.style.display = "flex";
+    backNode.style.display = "inline";
+    nextNode.style.display = "inline";
+    startNode.style.display = "none";
+    timeContainer.style.display = "block";
+    userData.style.display = 'none';
+  }
 };
 
 const backNodeHandler = (evt: Event): void => {
@@ -212,13 +226,15 @@ const nextNodeHandler = (evt: Event): void => {
   }
 
   localStorage.setItem("current-question-idx", (currentIdx + 1).toString());
-  questionCounterNode.innerHTML = `Pytanie ${currentIdx + 2} / ${getLocalStorageItem('question-length')}` 
+  questionCounterNode.innerHTML = `Pytanie ${currentIdx + 2} / ${getLocalStorageItem('question-length')}`
   displayQuestion();
 };
 
 const endNodeHandler = (evt: Event): void => {
   stopCounter(currentIntervalId);
   stopCounter(totalTime);
+
+  usernameDiv.innerHTML = getLocalStorageItem('username');
 
   questionContainerNode.style.display = "none"
   timeContainer.style.display = "none";

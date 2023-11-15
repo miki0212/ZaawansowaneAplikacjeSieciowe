@@ -1,7 +1,7 @@
 import testData from "./data/test-data.js";
 import { counterUserPoints, getQuestionLength, setAnswerArray, showCorrectAnswers, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
 import { localStoriageInitialize } from "./localStorageInitialize.js";
-import { getLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
+import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
 const titleNode = document.querySelector("#test-title");
 const questionNode = document.querySelector("#question");
 const answersNode = document.querySelector("#answers");
@@ -17,6 +17,8 @@ const questionContainerNode = document.querySelector("#question-container");
 const questionTimeNode = document.querySelector("#question-time");
 const totalTimeNode = document.querySelector("#total-time");
 const questionCounterNode = document.querySelector('#question-counter');
+const usernameNode = document.querySelector('#username');
+const usernameDiv = document.querySelector('#user-name');
 const correctAnswerNode = document.querySelector('#correct-answers');
 titleNode.innerHTML = testData.title;
 let totalTime = 0;
@@ -80,7 +82,8 @@ const bindHandlers = () => {
 bindHandlers();
 //Handlers
 const contetLoadedHandler = () => {
-    localStoriageInitialize();
+    // localStoriageInitialize();
+    localStorage.clear();
     questionContainerNode.style.display = "none";
     endNode.style.display = "none";
     backNode.style.display = "none";
@@ -130,20 +133,28 @@ const arrowHandler = (evt) => {
     }
 };
 const startNodeHandler = (evt) => {
-    totalTime = 0;
-    currentIntervalId = 0;
-    userPointsContainer.style.display = 'none';
     localStorage.clear();
-    localStoriageInitialize();
-    questionCounterNode.innerHTML = `Pytanie 1 / ${getLocalStorageItem('question-length')}`;
-    totalTimeCounter(totalTime, totalTimeNode);
-    displayQuestion();
-    questionContainerNode.style.display = "flex";
-    backNode.style.display = "inline";
-    nextNode.style.display = "inline";
-    startNode.style.display = "none";
-    timeContainer.style.display = "block";
-    userData.style.display = 'none';
+    //FIXME:
+    if (usernameNode.value != '') {
+        console.log(usernameNode.value);
+        setLocalStorageItem('username', usernameNode.value);
+    }
+    //FIXME:
+    if (getLocalStorageItem('username') != '') {
+        totalTime = 0;
+        currentIntervalId = 0;
+        userPointsContainer.style.display = 'none';
+        localStoriageInitialize(usernameNode.value || " ");
+        questionCounterNode.innerHTML = `Pytanie 1 / ${getLocalStorageItem('question-length')}`;
+        totalTimeCounter(totalTime, totalTimeNode);
+        displayQuestion();
+        questionContainerNode.style.display = "flex";
+        backNode.style.display = "inline";
+        nextNode.style.display = "inline";
+        startNode.style.display = "none";
+        timeContainer.style.display = "block";
+        userData.style.display = 'none';
+    }
 };
 const backNodeHandler = (evt) => {
     const currentIdx = parseInt(localStorage.getItem("current-question-idx"), 10);
@@ -166,6 +177,7 @@ const nextNodeHandler = (evt) => {
 const endNodeHandler = (evt) => {
     stopCounter(currentIntervalId);
     stopCounter(totalTime);
+    usernameDiv.innerHTML = getLocalStorageItem('username');
     questionContainerNode.style.display = "none";
     timeContainer.style.display = "none";
     //TODO :

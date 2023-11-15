@@ -1,8 +1,10 @@
 import testData from "./data/test-data.js";
 import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
-export function localStoriageInitialize() {
+export function localStoriageInitialize(username) {
     //Czyszczenie localStorage
     localStorage.clear();
+    //Ustawienie nazwy uzytkownika
+    setLocalStorageItem('username', username.toString());
     //Pobranie pytani i odpowiedzi
     setLocalStorageItem('test-data', JSON.stringify(testData));
     //Wartośc początkowa indeksu

@@ -1,7 +1,7 @@
 // export type localStorageItemsType = "random-questions-index-array" | 'question-times' | 'user-answers' | 'current-question-idx';
 export function getLocalStorageItem(itemName) {
     const itemData = localStorage.getItem(itemName);
-    return itemData ? itemData : "0";
+    return itemData ? itemData : "";
 }
 ;
 export function setLocalStorageItem(itemName, itemData) {
@@ -12,5 +12,5 @@ export function setLocalStorageItem(itemName, itemData) {
 //questionTimes - tablica czasow dla poszczegolnych pytan
 //user-answers - tablica odpowiedzi uzytkownika
 //current-question-idx - aktualny index - nie losowy
-//test-data - pytania i odpowiedzi wczytane z pliku ts / w przyszłości z pliku json :) 
+//test-data - pytania i odpowiedzi wczytane z pliku ts / w przyszłości z pliku json :)
 //question-length - liczba pytan w tescie
