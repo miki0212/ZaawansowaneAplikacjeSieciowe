@@ -121,7 +121,7 @@ input[type='radio']{
 }
 
 #back:enabled:hover {
-  background-color: #9152b4;
+  background-color: #b9bade86;
 }
 
 #next {
@@ -135,18 +135,49 @@ input[type='radio']{
 }
 
 #next:enabled:hover {
-  background-color: #9152b4;
+  background-color: #b9bade86;
 }
 
-
-#end {
-  background-color: #fff;
-  cursor: pointer;
-  border: 1px solid black;
+#end{
+  padding: 10px;
+  width: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  font-weight: 900;
+  font-size: 20px;
+  bottom: 220px;
 }
 
-#end:hover {
-  /* background-color: #9152b4; */
+#end::after{
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+  width: 50%;
+  height: 100%;
+  background-color: #b9bade86;
+  transition: all 2s;
+}
+
+#end::before{
+  position: absolute;
+  top: 0;
+  right: 0;
+  content: '';
+  width: 50%;
+  height: 100%;
+  background-color: #b9bade86;
+  transform: translate(0);
+  transition: all 2s;
+}
+
+#end:enabled:hover::before{
+  transform: translate(100%);
+}
+
+#end:enabled:hover::after{
+  transform: translate(-100%);
 }
 
 #start{
@@ -200,6 +231,8 @@ input[type='radio']{
   justify-content: center;
   flex-direction: row;
   align-items: center;
+  /* margin-top: 0;
+  margin-bottom: 0; */
 }
 
 #question-time{
@@ -236,6 +269,8 @@ input[type='radio']{
   justify-content: center;
   flex-direction: row;
   align-items: center;
+  /* margin-top: 40px;
+  margin-bottom: 10px; */
 }
 
 .choose{
