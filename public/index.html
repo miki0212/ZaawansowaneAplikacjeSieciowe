@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test sample</title>
+    <title>Test wiedzy o piłce nożnej</title>
     <link rel="stylesheet" href="./style/style.css" />
-</head>
-<body>
+  </head>
+  <body>
     <div id="wrapper">
       <h1 id="test-title"></h1>
     </div>
@@ -15,18 +15,53 @@
       <div id="question-elements">
         <h2 id="question-title"><span id="question"></span></h2>
         <div id="answers"></div>
+        <div id="question-counter">Pytanie 0 / 7</div>
       </div>
       <div id="button-container">
-        <button id="start" style="cursor: pointer">Zacznij</button>
         <button id="back" style="cursor: pointer" disabled>Poprzednie</button>
         <button id="next" style="cursor: pointer" disabled>Następne</button>
-        <button id="end" style="cursor: pointer" disabled>Zakończ</button>
+      </div>
+    </div>
 
-        <h4 id="question-time-section">Czas: <span id="question-time">0</span></h4>
-        <h5 id="total-time-section">Czas całkowity: <span id="total-time">0</span></h5>
+    <div id="time-container">
+      <div id="one-question-time">
+        <h4 id="question-time-section">
+          <span id="description-one-question-time">Czas :</span>
+          <span id="question-time">0</span>
+        </h4>
+      </div>
+
+      <div id="one-question-time">
+        <h4 id="total-time-section">
+          <span id="description-one-question-time">Czas całkowity:</span>
+          <span id="total-time">0</span>
+        </h4>
+      </div>
+      <!-- <h5 id="total-time-section">Czas całkowity: <span id="total-time">0</span></h5> -->
+    </div>
+
+    <div id="user-data">
+      <h1>Podaj swoje dane w celu rozpoczęcia gry</h1>
+      <input id="username" type="text" placeholder="Username" />
+      <!-- <input type="text" placeholder="Nazwisko"> -->
+    </div>
+
+    <div class="container-start-btn">
+      <button id="start" style="cursor: pointer">Zacznij Test</button>
+    </div>
+
+    <div class="container-end-btn">
+      <button id="end" style="cursor: pointer" disabled>Zakończ</button>
+    </div>
+
+    <div id="user-result">
+      <div id="user-name">User : XYZ</div>
+      <div id="correct-answers"></div>
+      <div id="user-points-result">
+        Twój wynik: <span class="points"></span> pkt
       </div>
     </div>
 
     <script type="module" src="./index.js"></script>
-</body>
+  </body>
 </html>

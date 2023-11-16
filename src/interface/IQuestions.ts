@@ -1,5 +1,8 @@
 import { IAnswers } from "./IAnswers";
+import { IQuestionData } from "./IQuestionData";
 
 export interface IQuestions{
-    questions : IAnswers[];
+    title : string,
+    // questions : IAnswers[];
+    questions : IQuestionData[];
 }
