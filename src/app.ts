@@ -1,5 +1,5 @@
 import testData from "./data/test-data.js";
-import { Answer, Question } from "./data/data";
+import { Answer, Question } from "./data/data.js";
 
 import { counterUserPoints, getQuestionLength, setAnswerArray, showCorrectAnswers, startCounter, stopCounter, totalTimeCounter } from "./helper.js";
 import { localStoriageInitialize } from "./localStorageInitialize.js";
@@ -258,3 +258,12 @@ const updateEndButtonVisibility = (): void => {
   endNode.style.display = checkAllAnswered() ? "inline" : "none";
   endNode.disabled = false;
 };
+
+
+
+
+//------------------------------------------------------------
+//New Version
+//------------------------------------------------------------
+
+const mainCointainer = document.querySelector('#main-container') as HTMLDivElement;

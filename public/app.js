@@ -195,3 +195,7 @@ const updateEndButtonVisibility = () => {
     endNode.style.display = checkAllAnswered() ? "inline" : "none";
     endNode.disabled = false;
 };
+//------------------------------------------------------------
+//New Version
+//------------------------------------------------------------
+const mainCointainer = document.querySelector('#main-container');
