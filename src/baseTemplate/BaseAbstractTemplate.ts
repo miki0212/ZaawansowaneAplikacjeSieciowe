@@ -1,11 +1,7 @@
 
 
 export abstract class BaseAbstractTemplate {
-    createPage(): void {
-        throw new Error('Methond not implemented');
-    };
+    abstract createPage(): void;
 
-    bindHandlers(): void {
-        throw new Error('Methond not implemented');
-    };
+    abstract bindHandlers(): void;
 }
