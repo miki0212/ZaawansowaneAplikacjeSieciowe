@@ -13,28 +13,39 @@ export class GameContentModule extends BaseAbstractTemplate {
             this._mainContainer.append(this._baseContainer);
         };
         this.nextBtnHandler = (evt) => {
+            const currentRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
             const currentIndex = parseInt(getLocalStorageItem('current-question-idx'));
             if (currentIndex != this._maxPage - 1) {
                 this.updatePage(currentIndex + 2);
+                console.log('Random Index' + currentRandomIndex[currentIndex + 2]);
                 setLocalStorageItem('current-question-idx', (currentIndex + 1).toString());
-                // new GameContentModule(this._mainContainer, this._actualPage + 1, 7).render();
+                this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex + 1]].question}`;
                 new QuestionContentModule(this._questionContainer).render();
             }
         };
         this.prevBtnHandler = (evt) => {
+            const currentRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
             const currentIndex = parseInt(getLocalStorageItem('current-question-idx'));
             if (currentIndex - 1 >= 0) {
                 this.updatePage(currentIndex);
                 setLocalStorageItem('current-question-idx', (currentIndex - 1).toString());
-                // new GameContentModule(this._mainContainer, this._actualPage - 1, 7).render();
+                this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex - 1]].question}`;
                 new QuestionContentModule(this._questionContainer).render();
             }
         };
         LocalStorageInitializ.localStoriageInitialize('xyz');
+        const questionData = getLocalStorageItem('question-data');
+        if (questionData) {
+            const allData = JSON.parse(questionData);
+            this._questionContent = allData.questions;
+            console.log(this._questionContent);
+        }
+        // console.log(this._questionContent)
         this._actualPage = actualPage;
         this._maxPage = parseInt(getLocalStorageItem('question-length'));
         this._mainContainer = mainContainer;
         this._baseContainer = createElement('div', 'base-container');
+        this._questionContentContainer = createElement('div', 'question-content');
         this._questionContainer = createElement('div', 'question-container');
         this._buttonsContainer = createElement('div', 'buttons-container');
         this._pageContainer = createElement('div', 'page-container');
@@ -48,12 +59,14 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._prevBtn.addEventListener('click', (evt) => this.prevBtnHandler(evt));
     }
     createPage() {
+        const currentRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
         this.bindHandlers();
         const currentIndex = parseInt(getLocalStorageItem('current-question-idx'));
+        this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex]].question}`;
         this._pageContainer.innerHTML = `${currentIndex + 1} / ${this._maxPage}`;
         new QuestionContentModule(this._questionContainer).render();
         this._buttonsContainer.append(this._prevBtn, this._pageContainer, this._nextBtn);
-        this._baseContainer.append(this._questionContainer, this._buttonsContainer);
+        this._baseContainer.append(this._questionContentContainer, this._questionContainer, this._buttonsContainer);
         console.log(this._baseContainer);
         //Buttons
         this._nextBtn.id;

@@ -11,6 +11,7 @@ type localStorageItemsType =
     | 'correct-answers'
     | 'username'
     | 'question-data'
+    | 'answers-user-provided'
 
 export function getLocalStorageItem(itemName: localStorageItemsType) {
     const itemData = localStorage.getItem(itemName)

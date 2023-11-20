@@ -17,12 +17,15 @@ export class GameContentModule extends BaseAbstractTemplate {
     private _questionContainer: HTMLDivElement;
     private _buttonsContainer: HTMLDivElement;
     private _pageContainer: HTMLDivElement;
+    private _questionContentContainer: HTMLDivElement;
 
     private _nextBtn: HTMLInputElement;
     private _prevBtn: HTMLInputElement;
 
     private _actualPage: number;
     private _maxPage: number;
+
+    private _questionContent!: IQuestionDataArray[];
 
     // private _questionArray: IQuestionDataArray[];
 
@@ -32,12 +35,25 @@ export class GameContentModule extends BaseAbstractTemplate {
 
         LocalStorageInitializ.localStoriageInitialize('xyz');
 
+
+
+
+        const questionData = getLocalStorageItem('question-data');
+        if (questionData) {
+            const allData: IQuestions = (JSON.parse(questionData) as IQuestions);
+            this._questionContent = allData.questions;
+            console.log(this._questionContent)
+        }
+
+        // console.log(this._questionContent)
+
         this._actualPage = actualPage;
         this._maxPage = parseInt(getLocalStorageItem('question-length'));
 
         this._mainContainer = mainContainer;
 
         this._baseContainer = createElement('div', 'base-container') as HTMLDivElement;
+        this._questionContentContainer = createElement('div', 'question-content') as HTMLDivElement;
         this._questionContainer = createElement('div', 'question-container') as HTMLDivElement;
         this._buttonsContainer = createElement('div', 'buttons-container') as HTMLDivElement;
         this._pageContainer = createElement('div', 'page-container') as HTMLDivElement;
@@ -60,15 +76,20 @@ export class GameContentModule extends BaseAbstractTemplate {
     }
 
     createPage(): void {
+
+        const currentRandomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
+
         this.bindHandlers();
 
         const currentIndex: number = parseInt(getLocalStorageItem('current-question-idx'));
+
+        this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex]].question}`
+
         this._pageContainer.innerHTML = `${currentIndex + 1} / ${this._maxPage}`
         new QuestionContentModule(this._questionContainer).render();
 
         this._buttonsContainer.append(this._prevBtn, this._pageContainer, this._nextBtn);
-        this._baseContainer.append(this._questionContainer, this._buttonsContainer);
-
+        this._baseContainer.append(this._questionContentContainer, this._questionContainer, this._buttonsContainer);
 
         console.log(this._baseContainer)
 
@@ -77,21 +98,28 @@ export class GameContentModule extends BaseAbstractTemplate {
     }
 
     private nextBtnHandler = (evt: Event): void => {
+        const currentRandomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
         const currentIndex: number = parseInt(getLocalStorageItem('current-question-idx'));
+
         if (currentIndex != this._maxPage - 1) {
             this.updatePage(currentIndex + 2);
+            console.log('Random Index' + currentRandomIndex[currentIndex + 2])
             setLocalStorageItem('current-question-idx', (currentIndex + 1).toString());
-            // new GameContentModule(this._mainContainer, this._actualPage + 1, 7).render();
+            this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex + 1]].question}`
+
             new QuestionContentModule(this._questionContainer).render();
         }
     }
 
     private prevBtnHandler = (evt: Event): void => {
+        const currentRandomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
         const currentIndex: number = parseInt(getLocalStorageItem('current-question-idx'));
+
         if (currentIndex - 1 >= 0) {
             this.updatePage(currentIndex);
             setLocalStorageItem('current-question-idx', (currentIndex - 1).toString());
-            // new GameContentModule(this._mainContainer, this._actualPage - 1, 7).render();
+            this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex - 1]].question}`
+
             new QuestionContentModule(this._questionContainer).render();
         }
     }

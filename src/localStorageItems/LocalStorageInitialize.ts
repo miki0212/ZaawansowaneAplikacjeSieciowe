@@ -8,6 +8,9 @@ export function localStoriageInitialize(username: string) {
     //Czyszczenie localStorage
     localStorage.clear();
 
+    //Zlicza na ile pytań użytkownik już odpowiedział
+    setLocalStorageItem('answers-user-provided', '0')
+
     //Ustawienie nazwy uzytkownika
     setLocalStorageItem('username', username.toString());
 

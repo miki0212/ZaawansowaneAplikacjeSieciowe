@@ -84,6 +84,12 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
             radioBtnAnswer.addEventListener('click', (evt: Event) => {
                 this._allQuestions.questions[this._currentRandomIndex].userAnswer = (evt.target as HTMLInputElement).value;
+
+                if (this._question.userAnswer == '') {
+                    const questionAnswered: number = parseInt(getLocalStorageItem('answers-user-provided')) + 1
+                    setLocalStorageItem('answers-user-provided', questionAnswered.toString());
+                }
+
                 setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
             })
 
