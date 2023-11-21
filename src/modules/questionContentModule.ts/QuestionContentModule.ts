@@ -8,10 +8,12 @@ import { getLocalStorageItem, setLocalStorageItem } from "../../localStorageItem
 
 export class QuestionContentModule extends BaseAbstractTemplate {
     private _questionContainer: HTMLDivElement;
+    private _endBtn: HTMLButtonElement;
 
     private _answerContainer: HTMLDivElement[];
     private _answers: IAnswers[];
     // w    private _answerLabel : HTMLLabelElement;
+    private _userAnswerHelper: string;
 
     private _currentRandomIndex: number;
     private _currentIndex: number;
@@ -21,8 +23,11 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
     // private _answersButton : HTMLInputElement[];
 
-    constructor(questionContainer: HTMLDivElement) {
+    constructor(questionContainer: HTMLDivElement, endGame: HTMLButtonElement) {
         super();
+
+        this._userAnswerHelper = '';
+        this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
 
         this._questionContainer = questionContainer;
 
@@ -85,9 +90,17 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             radioBtnAnswer.addEventListener('click', (evt: Event) => {
                 this._allQuestions.questions[this._currentRandomIndex].userAnswer = (evt.target as HTMLInputElement).value;
 
-                if (this._question.userAnswer == '') {
+                if (this._question.userAnswer == '' && this._userAnswerHelper == '') {
+                    this._userAnswerHelper = (evt.target as HTMLInputElement).value;
                     const questionAnswered: number = parseInt(getLocalStorageItem('answers-user-provided')) + 1
                     setLocalStorageItem('answers-user-provided', questionAnswered.toString());
+
+                    //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
+
+                    const questionLength: number = parseInt(getLocalStorageItem('question-length'));
+                    if (questionLength === questionAnswered) {
+                        this._endBtn.classList.add('end');
+                    }
                 }
 
                 setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))

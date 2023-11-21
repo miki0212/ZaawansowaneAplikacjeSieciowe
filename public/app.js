@@ -208,5 +208,7 @@ import { StartPageModules } from "./modules/startPageModule/StartPageModule.js";
 //New Version
 //------------------------------------------------------------
 const mainCointainer = document.querySelector('#main-container');
+const endBtn = document.querySelector('#end-btn');
 const startGameModule = new StartPageModules(mainCointainer);
+endBtn.style.display = 'none';
 startGameModule.render();

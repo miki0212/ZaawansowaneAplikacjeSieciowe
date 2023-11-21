@@ -3,12 +3,14 @@ import { createElement } from "../../createElements/CreateElements.js";
 import { getLocalStorageItem, setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 export class QuestionContentModule extends BaseAbstractTemplate {
     // private _answersButton : HTMLInputElement[];
-    constructor(questionContainer) {
+    constructor(questionContainer, endGame) {
         super();
         this.render = () => {
             this._questionContainer.innerHTML = '';
             this.createPage();
         };
+        this._userAnswerHelper = '';
+        this._endBtn = document.querySelector('#end-btn');
         this._questionContainer = questionContainer;
         this._currentIndex = parseInt(getLocalStorageItem('current-question-idx'));
         this._currentRandomIndex = parseInt(getLocalStorageItem('random-questions-index-array').split(',')[this._currentIndex]);
@@ -51,9 +53,15 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             item.append(radioBtnAnswerLabel);
             radioBtnAnswer.addEventListener('click', (evt) => {
                 this._allQuestions.questions[this._currentRandomIndex].userAnswer = evt.target.value;
-                if (this._question.userAnswer == '') {
+                if (this._question.userAnswer == '' && this._userAnswerHelper == '') {
+                    this._userAnswerHelper = evt.target.value;
                     const questionAnswered = parseInt(getLocalStorageItem('answers-user-provided')) + 1;
                     setLocalStorageItem('answers-user-provided', questionAnswered.toString());
+                    //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
+                    const questionLength = parseInt(getLocalStorageItem('question-length'));
+                    if (questionLength === questionAnswered) {
+                        this._endBtn.classList.add('end');
+                    }
                 }
                 setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
             });

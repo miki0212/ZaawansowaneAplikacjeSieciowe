@@ -180,18 +180,18 @@ input[type="radio"] {
   background-color: #b9bade86;
 }
 
-#end {
+#end-btn {
   padding: 10px;
-  width: 300px;
+  width: 450px;
   border-radius: 10px;
   overflow: hidden;
-  position: relative;
+  position: fixed;
   font-weight: 900;
   font-size: 20px;
   bottom: 220px;
 }
 
-#end::after {
+#end-btn::after {
   position: absolute;
   top: 0;
   left: 0;
@@ -199,10 +199,11 @@ input[type="radio"] {
   width: 50%;
   height: 100%;
   background-color: #b9bade86;
+  /* transform: translate(0); */
   transition: all 2s;
 }
 
-#end::before {
+#end-btn::before {
   position: absolute;
   top: 0;
   right: 0;
@@ -210,15 +211,19 @@ input[type="radio"] {
   width: 50%;
   height: 100%;
   background-color: #b9bade86;
-  transform: translate(0);
+  /* transform: translate(0); */
   transition: all 2s;
 }
 
-#end:enabled:hover::before {
+.end {
+  cursor: pointer;
+}
+
+.end:enabled::before {
   transform: translate(100%);
 }
 
-#end:enabled:hover::after {
+.end:enabled::after {
   transform: translate(-100%);
 }
 
