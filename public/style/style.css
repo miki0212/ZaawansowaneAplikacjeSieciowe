@@ -199,7 +199,6 @@ input[type="radio"] {
   width: 50%;
   height: 100%;
   background-color: #b9bade86;
-  /* transform: translate(0); */
   transition: all 2s;
 }
 
@@ -211,7 +210,6 @@ input[type="radio"] {
   width: 50%;
   height: 100%;
   background-color: #b9bade86;
-  /* transform: translate(0); */
   transition: all 2s;
 }
 
@@ -293,7 +291,17 @@ input[type="radio"] {
 }
 
 #total-time {
-  width: 100px;
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  /* border: 2px solid black; */
+  gap: 5px;
+}
+
+#total-time-content {
+  /* display: flex; */
+  text-align: right;
+  width: 55%;
 }
 
 #description-one-question-time {

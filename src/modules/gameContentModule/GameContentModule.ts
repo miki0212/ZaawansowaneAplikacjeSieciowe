@@ -1,4 +1,5 @@
 import { BaseAbstractTemplate } from "../../baseTemplate/BaseAbstractTemplate.js";
+import eventBus from "../../bus/EventBus.js";
 import { createElement } from "../../createElements/CreateElements.js";
 
 import testData from "../../data/questions-data.js";
@@ -18,24 +19,39 @@ export class GameContentModule extends BaseAbstractTemplate {
     private _buttonsContainer: HTMLDivElement;
     private _pageContainer: HTMLDivElement;
     private _questionContentContainer: HTMLDivElement;
-    private _endBtn: HTMLButtonElement;
+    private _timeContainer: HTMLDivElement;
+    private _totalTimeContainer: HTMLDivElement;
+    private _totalTimeSpan: HTMLSpanElement;
+    private _totalTimeSpanContent: HTMLSpanElement;
 
     private _nextBtn: HTMLInputElement;
     private _prevBtn: HTMLInputElement;
+    private _endBtn: HTMLButtonElement;
 
     private _actualPage: number;
     private _maxPage: number;
 
     private _questionContent!: IQuestionDataArray[];
 
+    private _totalTimeCounterId: number;
+
+    //Handler Function Bind - Potrzebne, bo inaczej nie działa odłączanie Handlera, kij wie czemu
+    // private boundEnterHandler: (evt: KeyboardEvent) => void;
+
     // private _questionArray: IQuestionDataArray[];
 
-    //TODO : Dodac przekazywanie aktualnego pytania w konstruktorze
     constructor(mainContainer: HTMLDivElement, actualPage: number, maxPage: number) {
         super();
 
+        this._totalTimeCounterId = 0;
+
+        this._totalTimeSpan = document.createElement('span') as HTMLSpanElement;
+        this._totalTimeSpanContent = document.createElement('span') as HTMLSpanElement;
+
         LocalStorageInitializ.localStoriageInitialize('xyz');
 
+        this._timeContainer = document.createElement('div') as HTMLDivElement;
+        this._totalTimeContainer = document.createElement('div') as HTMLDivElement;
 
         const questionData = getLocalStorageItem('question-data');
         if (questionData) {
@@ -76,9 +92,23 @@ export class GameContentModule extends BaseAbstractTemplate {
     bindHandlers(): void {
         this._nextBtn.addEventListener('click', (evt: Event) => this.nextBtnHandler(evt))
         this._prevBtn.addEventListener('click', (evt: Event) => this.prevBtnHandler(evt))
+
+        document.addEventListener('keydown', (evt: KeyboardEvent) => this.arrowsRightLeftKeyDownHandler(evt))
+        document.addEventListener('keyup', (evt: KeyboardEvent) => this.arrowsRightLeftKeyUpHandler(evt))
+
+        this._endBtn.addEventListener('click', (evt: Event) => this.endGameHandler(evt))
     }
 
     createPage(): void {
+        this._timeContainer.innerHTML = '0';
+        this._totalTimeContainer.innerHTML = '';
+
+        this._totalTimeContainer.id = 'total-time';
+        this._totalTimeSpanContent.id = 'total-time-content'
+
+        //Total Time Div Create
+        this._totalTimeSpanContent.innerHTML = 'Całkowity czas : ';
+        this._totalTimeContainer.append(this._totalTimeSpanContent, this._totalTimeSpan)
 
         this._endBtn.style.display = 'block';
 
@@ -91,17 +121,42 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex]].question}`
 
         this._pageContainer.innerHTML = `${currentIndex + 1} / ${this._maxPage}`
+
+        //Renderuje pytania
         new QuestionContentModule(this._questionContainer, this._endBtn).render();
 
         this._buttonsContainer.append(this._prevBtn, this._pageContainer, this._nextBtn);
-        this._baseContainer.append(this._questionContentContainer, this._questionContainer, this._buttonsContainer);
+        this._baseContainer.append(this._questionContentContainer, this._questionContainer, this._totalTimeContainer, this._buttonsContainer);
 
         console.log(this._baseContainer)
 
+
+        //Licznik czasu ogólnego
+        this.totalTimeCounter();
         //Buttons
         this._nextBtn.id;
     }
 
+    //Liczy łączny czas testu
+    private totalTimeCounter = () => {
+        let time = 0;
+        this._totalTimeCounterId = window.setInterval(() => {
+            time++;
+            if (time % 10 === 0) {
+                this._totalTimeSpan.innerHTML = `${time / 10}.0`;
+            } else {
+                this._totalTimeSpan.innerHTML = `${time / 10}`;
+            }
+
+            //Zapisuje czas do localStorage
+            setLocalStorageItem('user-total-time', `${time}`);
+        }, 100)
+    }
+
+
+    //Handlers - Takie coś do eventów
+
+    //Wczytuje poprzednie pytanie
     private nextBtnHandler = (evt: Event): void => {
         const currentRandomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
         const currentIndex: number = parseInt(getLocalStorageItem('current-question-idx'));
@@ -116,6 +171,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         }
     }
 
+    //Wczytuje następne pytanie
     private prevBtnHandler = (evt: Event): void => {
         const currentRandomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
         const currentIndex: number = parseInt(getLocalStorageItem('current-question-idx'));
@@ -129,6 +185,42 @@ export class GameContentModule extends BaseAbstractTemplate {
         }
     }
 
+    //Pozwala na używanie strzałek podczas przełączania pytań i dodaje efekt hover
+    private arrowsRightLeftKeyDownHandler = (evt: KeyboardEvent): void => {
+        if (evt.code.toLocaleLowerCase() === 'ArrowLeft'.toLocaleLowerCase()) {
+            this._prevBtn.style.background = '#b9bade86';
+            this.prevBtnHandler(new Event('click'));
+        } else if (evt.code.toLocaleLowerCase() === 'ArrowRight'.toLocaleLowerCase()) {
+            this._nextBtn.style.background = '#b9bade86';
+            this.nextBtnHandler(new Event('click'));
+        }
+    }
+
+    //Zabiera efekt hover przy przełączaniu pytań
+    private arrowsRightLeftKeyUpHandler = (evt: KeyboardEvent): void => {
+        if (evt.code.toLocaleLowerCase() === 'ArrowLeft'.toLocaleLowerCase()) {
+            this._prevBtn.style.background = '';
+        } else if (evt.code.toLocaleLowerCase() === 'ArrowRight'.toLocaleLowerCase()) {
+            this._nextBtn.style.background = '';
+        }
+    }
+
+    private endGameHandler(evt: Event) {
+        const questionLength: number = parseInt(getLocalStorageItem('question-length'));
+        const userAnswerLength: number = parseInt(getLocalStorageItem('answers-user-provided'));
+
+        //Sprawdza czy użytkownik udzielił odpowiedzi na wszystkie pytania
+        if (questionLength === userAnswerLength) {
+            //Zatrzymuje licznik czasu
+            window.clearInterval(this._totalTimeCounterId);
+
+
+            //Wywołuje event endGame - który wczytuje okno statystyk
+            eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
+        }
+    }
+
+    //Aktualizuje aktualny numer pytania
     private updatePage(actualPage: number) {
         console.log(actualPage)
         this._pageContainer.innerHTML = `${actualPage} / ${this._maxPage}`;

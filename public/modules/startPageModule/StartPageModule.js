@@ -1,4 +1,5 @@
 import { BaseAbstractTemplate } from "../../baseTemplate/BaseAbstractTemplate.js";
+import eventBus from "../../bus/EventBus.js";
 import { StartGameEvent } from "../../events/StartGameEvent.js";
 import { GameContentModule } from "../gameContentModule/GameContentModule.js";
 export class StartPageModules extends BaseAbstractTemplate {
@@ -38,6 +39,7 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._startBtn.addEventListener('start-game', () => this.loadGameContentHandler());
         document.addEventListener('keydown', this.boundEnterHandler);
         this._usernameNode.addEventListener('input', (evt) => this.usernameNodeHandler(evt));
+        eventBus.on('endGame', this.showStatistic);
     }
     createPage() {
         this._mainContainer.append(this._usernameLabel, this._usernameNode, this._startBtn);
@@ -65,5 +67,8 @@ export class StartPageModules extends BaseAbstractTemplate {
         else {
             this._usernameNode.style.border = '2px solid red';
         }
+    }
+    showStatistic(evt) {
+        evt.detail.mainContainer.innerHTML = ''; //Kończy gre i wyswietla statystyki
     }
 }
