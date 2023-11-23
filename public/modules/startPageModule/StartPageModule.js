@@ -6,6 +6,7 @@ export class StartPageModules extends BaseAbstractTemplate {
     constructor(mainContainer) {
         super();
         this.render = () => {
+            this.createPage();
             this._mainContainer.append(this._baseContainer);
         };
         //Handlers
@@ -14,25 +15,22 @@ export class StartPageModules extends BaseAbstractTemplate {
                 this._startBtn.dispatchEvent(new StartGameEvent('start-game'));
             }
             else {
+                //Dodaje czerwoną ramke do labela z username
+                //jak użytkownik kliknie se entera ale nie poda username
                 this._usernameNode.style.border = '2px solid red';
             }
         };
+        //Przypisanie enterHandlera do tej zmiennej, żeby sie dalo to potem remowowac
+        //Bo jak sie nie remowuje to potem przy pytanach dalej ten Enter dziala
         this.boundEnterHandler = this.enterHandler.bind(this);
         this._mainContainer = mainContainer;
+        //Inicjalizowanie zmiennych
         this._baseContainer = document.createElement('div');
         this._usernameLabel = document.createElement('label');
-        this._usernameLabel.id = 'user-name';
-        this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika';
         this._usernameNode = document.createElement('input');
-        this._usernameNode.id = 'user-name-input';
-        this._usernameNode.placeholder = 'Username';
         this._startBtn = document.createElement('button');
-        this._startBtn.id = 'start';
-        // this._startBtn.type = 'button';
-        this._startBtn.innerHTML = 'Rozpocznij Test';
-        // this._startBtn.disabled = true;
+        //Tworzenie Handlerow
         this.bindHandlers();
-        this.createPage();
     }
     bindHandlers() {
         this._startBtn.addEventListener('click', (evt) => this.startBtnNodeHandler(evt));
@@ -42,14 +40,22 @@ export class StartPageModules extends BaseAbstractTemplate {
         eventBus.on('endGame', this.showStatistic);
     }
     createPage() {
+        this._usernameLabel.id = 'user-name';
+        this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika';
+        this._usernameNode.id = 'user-name-input';
+        this._usernameNode.placeholder = 'Username';
+        this._startBtn.id = 'start';
+        this._startBtn.innerHTML = 'Rozpocznij Test';
         this._mainContainer.append(this._usernameLabel, this._usernameNode, this._startBtn);
     }
+    //Czysci main content i ładuje gameContent
     loadGameContentHandler() {
         this._mainContainer.innerHTML = '';
-        console.log('Game Started');
         new GameContentModule(this._mainContainer, 1, 7).render();
     }
     usernameNodeHandler(evt) {
+        //Dodaje/Usuwa efekt odblokowania przycisku
+        //Dodaje/Usuwa czerwoną/zieloną ramkę przy input username
         if (this._usernameNode.value.length > 0) {
             this._startBtn.classList.add('start-enable');
             this._usernameNode.style.border = '2px solid green';
@@ -59,6 +65,7 @@ export class StartPageModules extends BaseAbstractTemplate {
             this._usernameNode.style.border = '2px solid red';
         }
     }
+    //Dodaje obsługe entera
     enterHandler(evt) {
         if (evt.code.toLowerCase() === 'Enter'.toLocaleLowerCase() && this._usernameNode.value != '') {
             this._startBtn.dispatchEvent(new Event('click'));
@@ -69,6 +76,8 @@ export class StartPageModules extends BaseAbstractTemplate {
         }
     }
     showStatistic(evt) {
-        evt.detail.mainContainer.innerHTML = ''; //Kończy gre i wyswietla statystyki
+        //Kończy gre 
+        //i wyswietla statystyki(Jeszcze ich nie wyświetla bo zapierdol w robocie i nie dodałem XD)
+        evt.detail.mainContainer.innerHTML = '';
     }
 }

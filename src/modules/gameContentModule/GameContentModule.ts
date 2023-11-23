@@ -1,14 +1,13 @@
 import { BaseAbstractTemplate } from "../../baseTemplate/BaseAbstractTemplate.js";
-import eventBus from "../../bus/EventBus.js";
 import { createElement } from "../../createElements/CreateElements.js";
-
-import testData from "../../data/questions-data.js";
 import { IQuestionDataArray } from "../../interface/IQuestionDataArray.js";
 import { IQuestions } from "../../interface/IQuestions.js";
-import * as LocalStorageInitializ from "../../localStorageItems/LocalStorageInitialize.js";
 import { getLocalStorageItem, setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 import { QuestionContentModule } from "../questionContentModule.ts/QuestionContentModule.js";
+import * as LocalStorageInitializ from "../../localStorageItems/LocalStorageInitialize.js";
 
+//Magistrala
+import eventBus from "../../bus/EventBus.js";
 
 
 export class GameContentModule extends BaseAbstractTemplate {
@@ -48,6 +47,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._totalTimeSpan = document.createElement('span') as HTMLSpanElement;
         this._totalTimeSpanContent = document.createElement('span') as HTMLSpanElement;
 
+        //FIXME : 'xyz' - trzeba usunąc argument tej funkcji bo raczej niepotrzebne
         LocalStorageInitializ.localStoriageInitialize('xyz');
 
         this._timeContainer = document.createElement('div') as HTMLDivElement;
@@ -57,14 +57,9 @@ export class GameContentModule extends BaseAbstractTemplate {
         if (questionData) {
             const allData: IQuestions = (JSON.parse(questionData) as IQuestions);
             this._questionContent = allData.questions;
-            console.log(this._questionContent)
         }
 
         this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
-        // this._endBtn.id = 'end';
-        // this._endBtn.innerHTML = 'Zakończ Test';
-
-        // console.log(this._questionContent)
 
         this._actualPage = actualPage;
         this._maxPage = parseInt(getLocalStorageItem('question-length'));
@@ -80,26 +75,26 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._nextBtn = createElement('input', 'next', 'button', 'Next Question') as HTMLInputElement;
         this._prevBtn = createElement('input', 'back', 'button', 'Prev Question') as HTMLInputElement;
 
-        this.createPage();
+
     }
 
     render = () => {
+        this.createPage();
         this._mainContainer.innerHTML = '';
         this._mainContainer.append(this._baseContainer);
     }
 
-    //Abstract Functions
+    //Handlers - Takie coś do eventów
     bindHandlers(): void {
         this._nextBtn.addEventListener('click', (evt: Event) => this.nextBtnHandler(evt))
         this._prevBtn.addEventListener('click', (evt: Event) => this.prevBtnHandler(evt))
-
         document.addEventListener('keydown', (evt: KeyboardEvent) => this.arrowsRightLeftKeyDownHandler(evt))
         document.addEventListener('keyup', (evt: KeyboardEvent) => this.arrowsRightLeftKeyUpHandler(evt))
-
         this._endBtn.addEventListener('click', (evt: Event) => this.endGameHandler(evt))
     }
 
     createPage(): void {
+        this.bindHandlers();
         this._timeContainer.innerHTML = '0';
         this._totalTimeContainer.innerHTML = '';
 
@@ -112,35 +107,39 @@ export class GameContentModule extends BaseAbstractTemplate {
 
         this._endBtn.style.display = 'block';
 
+        //Pobiera tablice indeksow z tablicy randomowych indeksow w localStorage - Dziwnie to brzmi ale działa XD
         const currentRandomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
 
-        this.bindHandlers();
-
+        //Pobiera aktualny indeks
         const currentIndex: number = parseInt(getLocalStorageItem('current-question-idx'));
 
         this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex]].question}`
-
         this._pageContainer.innerHTML = `${currentIndex + 1} / ${this._maxPage}`
 
-        //Renderuje pytania
+        //Renderuje pytania - Inputy typu radio
         new QuestionContentModule(this._questionContainer, this._endBtn).render();
 
+        //Tworzy Kontener z przyciskami i numerem strony
         this._buttonsContainer.append(this._prevBtn, this._pageContainer, this._nextBtn);
+
+        //Dodaje do base ccontainer to co wyrzej sie potworzyło , duzo tego nie chce mi się wymieniać
         this._baseContainer.append(this._questionContentContainer, this._questionContainer, this._totalTimeContainer, this._buttonsContainer);
-
-        console.log(this._baseContainer)
-
 
         //Licznik czasu ogólnego
         this.totalTimeCounter();
+
+        //FIXME: Trzeba dodać licznik czasu dla poszczególnego ale no zapierdol w robocie i jeszcze go ni ma :) XD
+        //this.questionTimeCounter();
+
         //Buttons
-        this._nextBtn.id;
+        // this._nextBtn.id;
     }
 
     //Liczy łączny czas testu
     private totalTimeCounter = () => {
         let time = 0;
         this._totalTimeCounterId = window.setInterval(() => {
+            //Dodaje do time 1 co ilość ms podaną poniżej
             time++;
             if (time % 10 === 0) {
                 this._totalTimeSpan.innerHTML = `${time / 10}.0`;
@@ -153,10 +152,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         }, 100)
     }
 
-
-    //Handlers - Takie coś do eventów
-
-    //Wczytuje poprzednie pytanie
+    //Wczytuje pytanie po prawo
     private nextBtnHandler = (evt: Event): void => {
         const currentRandomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
         const currentIndex: number = parseInt(getLocalStorageItem('current-question-idx'));
@@ -171,7 +167,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         }
     }
 
-    //Wczytuje następne pytanie
+    //Wczytuje pytanie po to drugie prawo XD
     private prevBtnHandler = (evt: Event): void => {
         const currentRandomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
         const currentIndex: number = parseInt(getLocalStorageItem('current-question-idx'));
@@ -205,6 +201,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         }
     }
 
+    //Kończy gre
     private endGameHandler(evt: Event) {
         const questionLength: number = parseInt(getLocalStorageItem('question-length'));
         const userAnswerLength: number = parseInt(getLocalStorageItem('answers-user-provided'));
@@ -214,8 +211,7 @@ export class GameContentModule extends BaseAbstractTemplate {
             //Zatrzymuje licznik czasu
             window.clearInterval(this._totalTimeCounterId);
 
-
-            //Wywołuje event endGame - który wczytuje okno statystyk
+            //Wywołuje event endGame - który wczytuje okno statystyk(Bedzie dodane no ale no zapierdol w robocie)
             eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
         }
     }

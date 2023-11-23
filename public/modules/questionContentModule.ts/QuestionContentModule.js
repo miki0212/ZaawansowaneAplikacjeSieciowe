@@ -2,13 +2,13 @@ import { BaseAbstractTemplate } from "../../baseTemplate/BaseAbstractTemplate.js
 import { createElement } from "../../createElements/CreateElements.js";
 import { getLocalStorageItem, setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 export class QuestionContentModule extends BaseAbstractTemplate {
-    // private _answersButton : HTMLInputElement[];
     constructor(questionContainer, endGame) {
         super();
         this.render = () => {
             this._questionContainer.innerHTML = '';
             this.createPage();
         };
+        //To jest chyba do zapamiętania czy użytkownik wybrał już jakieś pytanie
         this._userAnswerHelper = '';
         this._endBtn = document.querySelector('#end-btn');
         this._questionContainer = questionContainer;
@@ -28,6 +28,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         }
         this._answerContainer = [];
     }
+    //Tworzy eventy - których tu ni ma :)
     bindHandlers() {
     }
     createPage() {
