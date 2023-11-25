@@ -95,28 +95,24 @@ export function setAnswerArray(index: number, answer: string) {
     setLocalStorageItem('user-answers', answerArray.toString())
 }
 
-export function showCorrectAnswers(correctAnswersNode : HTMLDivElement) {
+export function showCorrectAnswers(correctAnswersNode: HTMLDivElement) {
     //Pobieranie indeksow pytan - tych losowych
-    const randomIndex : number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
-    const correctAnswers : string[] = getLocalStorageItem('correct-answers').split(',');
-    const userAnswers : string[] = getLocalStorageItem('user-answers').split(',');
-    const questionTime : number[] = getLocalStorageItem('question-times-array').split(',').map(Number);
+    const randomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
+    const correctAnswers: string[] = getLocalStorageItem('correct-answers').split(',');
+    const userAnswers: string[] = getLocalStorageItem('user-answers').split(',');
+    const questionTime: number[] = getLocalStorageItem('question-times-array').split(',').map(Number);
 
-    let answers = randomIndex.map((answer,index)=>{
+    let answers = randomIndex.map((answer, index) => {
         return `
             <div id='correct-answer-row'>
                 <div id='question-index'>${index + 1}</div>
                 <div id='correct-answer'>${correctAnswers[answer]}</div>
                 <div id='user-answer' class = ${userAnswers[answer] !== correctAnswers[answer] ? "error" : ''}>${userAnswers[answer]}</div>
-                <div id='question-time-result'>${questionTime[answer] % 10 === 0 ? questionTime[answer] / 10+'.0' : questionTime[answer] / 10}</div>
+                <div id='question-time-result'>${questionTime[answer] % 10 === 0 ? questionTime[answer] / 10 + '.0' : questionTime[answer] / 10}</div>
             </div>
         `
     }).join('')
 
     correctAnswersNode.innerHTML = answers;
-    // for(let i = 0;i<parseInt(getLocalStorageItem('question-length'));i++){
-
-    // }
 }
-
 

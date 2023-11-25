@@ -1,5 +1,4 @@
-
-
+//Klasa abstrakcyjna
 export abstract class BaseAbstractTemplate {
     abstract createPage(): void;
 

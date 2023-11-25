@@ -12,19 +12,18 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
     private _answerContainer: HTMLDivElement[];
     private _answers: IAnswers[];
-    // w    private _answerLabel : HTMLLabelElement;
-    private _userAnswerHelper: string;
 
+    private _userAnswerHelper: string;
     private _currentRandomIndex: number;
     private _currentIndex: number;
 
     private _question!: IQuestionDataArray;
     private _allQuestions!: IQuestions;
 
-    // private _answersButton : HTMLInputElement[];
-
     constructor(questionContainer: HTMLDivElement, endGame: HTMLButtonElement) {
         super();
+
+        //To jest chyba do zapamiętania czy użytkownik wybrał już jakieś pytanie
 
         this._userAnswerHelper = '';
         this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
@@ -55,6 +54,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         this.createPage();
     }
 
+    //Tworzy eventy - których tu ni ma :)
     bindHandlers(): void {
 
     }
@@ -96,7 +96,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                     setLocalStorageItem('answers-user-provided', questionAnswered.toString());
 
                     //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
-
                     const questionLength: number = parseInt(getLocalStorageItem('question-length'));
                     if (questionLength === questionAnswered) {
                         this._endBtn.classList.add('end');
