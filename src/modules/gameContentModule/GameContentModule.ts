@@ -12,7 +12,6 @@ import eventBus from "../../bus/EventBus.js";
 
 export class GameContentModule extends BaseAbstractTemplate {
     private _mainContainer: HTMLDivElement;
-
     private _baseContainer: HTMLDivElement;
     private _questionContainer: HTMLDivElement;
     private _buttonsContainer: HTMLDivElement;
@@ -78,26 +77,19 @@ export class GameContentModule extends BaseAbstractTemplate {
 
     }
 
+    //Tworzy strone
     render = () => {
         this.createPage();
         this._mainContainer.innerHTML = '';
         this._mainContainer.append(this._baseContainer);
     }
 
-    //Handlers - Takie coś do eventów
-    bindHandlers(): void {
-        this._nextBtn.addEventListener('click', (evt: Event) => this.nextBtnHandler(evt))
-        this._prevBtn.addEventListener('click', (evt: Event) => this.prevBtnHandler(evt))
-        document.addEventListener('keydown', (evt: KeyboardEvent) => this.arrowsRightLeftKeyDownHandler(evt))
-        document.addEventListener('keyup', (evt: KeyboardEvent) => this.arrowsRightLeftKeyUpHandler(evt))
-        this._endBtn.addEventListener('click', (evt: Event) => this.endGameHandler(evt))
-    }
-
+    //Też tworzy strone
     createPage(): void {
         this.bindHandlers();
+
         this._timeContainer.innerHTML = '0';
         this._totalTimeContainer.innerHTML = '';
-
         this._totalTimeContainer.id = 'total-time';
         this._totalTimeSpanContent.id = 'total-time-content'
 
@@ -135,12 +127,23 @@ export class GameContentModule extends BaseAbstractTemplate {
         // this._nextBtn.id;
     }
 
+    //Handlers - Takie coś do eventów
+    bindHandlers(): void {
+        this._nextBtn.addEventListener('click', (evt: Event) => this.nextBtnHandler(evt))
+        this._prevBtn.addEventListener('click', (evt: Event) => this.prevBtnHandler(evt))
+        document.addEventListener('keydown', (evt: KeyboardEvent) => this.arrowsRightLeftKeyDownHandler(evt))
+        document.addEventListener('keyup', (evt: KeyboardEvent) => this.arrowsRightLeftKeyUpHandler(evt))
+        this._endBtn.addEventListener('click', (evt: Event) => this.endGameHandler(evt))
+    }
+
     //Liczy łączny czas testu
     private totalTimeCounter = () => {
         let time = 0;
         this._totalTimeCounterId = window.setInterval(() => {
             //Dodaje do time 1 co ilość ms podaną poniżej
             time++;
+
+            //Wyswietla czas na stronie
             if (time % 10 === 0) {
                 this._totalTimeSpan.innerHTML = `${time / 10}.0`;
             } else {

@@ -42,11 +42,13 @@ export class StartPageModules extends BaseAbstractTemplate {
         eventBus.on('endGame', this.showStatistic);
     }
 
+    //Tworzy strone
     render = (): void => {
         this.createPage();
         this._mainContainer.append(this._baseContainer);
     }
 
+    //Też tworzy strone
     createPage(): void {
         this._usernameLabel.id = 'user-name';
         this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika'

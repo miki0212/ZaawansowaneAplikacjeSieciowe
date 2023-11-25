@@ -5,6 +5,7 @@ import { GameContentModule } from "../gameContentModule/GameContentModule.js";
 export class StartPageModules extends BaseAbstractTemplate {
     constructor(mainContainer) {
         super();
+        //Tworzy strone
         this.render = () => {
             this.createPage();
             this._mainContainer.append(this._baseContainer);
@@ -39,6 +40,7 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._usernameNode.addEventListener('input', (evt) => this.usernameNodeHandler(evt));
         eventBus.on('endGame', this.showStatistic);
     }
+    //Też tworzy strone
     createPage() {
         this._usernameLabel.id = 'user-name';
         this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika';

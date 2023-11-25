@@ -1,3 +1,7 @@
+//Można dodać aby było użyte w każdym możliwym miejscu w aplikacji
+//I dodać jeszcze kilka wariantów funkcji
+//Albo można to po prostu wypierdolic, też dobry pomysł
+
 export function createElement(elementName: keyof HTMLElementTagNameMap): HTMLElement;
 export function createElement(elementName: keyof HTMLElementTagNameMap, id: string): HTMLElement;
 export function createElement(elementName: keyof HTMLElementTagNameMap, id: string, type: string): HTMLElement;

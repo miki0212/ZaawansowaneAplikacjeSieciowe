@@ -96,7 +96,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                     setLocalStorageItem('answers-user-provided', questionAnswered.toString());
 
                     //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
-
                     const questionLength: number = parseInt(getLocalStorageItem('question-length'));
                     if (questionLength === questionAnswered) {
                         this._endBtn.classList.add('end');

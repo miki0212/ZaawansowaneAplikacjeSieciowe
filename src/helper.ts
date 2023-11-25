@@ -114,9 +114,5 @@ export function showCorrectAnswers(correctAnswersNode: HTMLDivElement) {
     }).join('')
 
     correctAnswersNode.innerHTML = answers;
-    // for(let i = 0;i<parseInt(getLocalStorageItem('question-length'));i++){
-
-    // }
 }
-
 

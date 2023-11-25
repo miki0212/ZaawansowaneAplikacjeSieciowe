@@ -100,6 +100,4 @@ export function showCorrectAnswers(correctAnswersNode) {
         `;
     }).join('');
     correctAnswersNode.innerHTML = answers;
-    // for(let i = 0;i<parseInt(getLocalStorageItem('question-length'));i++){
-    // }
 }

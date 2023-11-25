@@ -11,6 +11,7 @@ export class GameContentModule extends BaseAbstractTemplate {
     // private _questionArray: IQuestionDataArray[];
     constructor(mainContainer, actualPage, maxPage) {
         super();
+        //Tworzy strone
         this.render = () => {
             this.createPage();
             this._mainContainer.innerHTML = '';
@@ -22,6 +23,7 @@ export class GameContentModule extends BaseAbstractTemplate {
             this._totalTimeCounterId = window.setInterval(() => {
                 //Dodaje do time 1 co ilość ms podaną poniżej
                 time++;
+                //Wyswietla czas na stronie
                 if (time % 10 === 0) {
                     this._totalTimeSpan.innerHTML = `${time / 10}.0`;
                 }
@@ -99,14 +101,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._nextBtn = createElement('input', 'next', 'button', 'Next Question');
         this._prevBtn = createElement('input', 'back', 'button', 'Prev Question');
     }
-    //Handlers - Takie coś do eventów
-    bindHandlers() {
-        this._nextBtn.addEventListener('click', (evt) => this.nextBtnHandler(evt));
-        this._prevBtn.addEventListener('click', (evt) => this.prevBtnHandler(evt));
-        document.addEventListener('keydown', (evt) => this.arrowsRightLeftKeyDownHandler(evt));
-        document.addEventListener('keyup', (evt) => this.arrowsRightLeftKeyUpHandler(evt));
-        this._endBtn.addEventListener('click', (evt) => this.endGameHandler(evt));
-    }
+    //Też tworzy strone
     createPage() {
         this.bindHandlers();
         this._timeContainer.innerHTML = '0';
@@ -135,6 +130,14 @@ export class GameContentModule extends BaseAbstractTemplate {
         //this.questionTimeCounter();
         //Buttons
         // this._nextBtn.id;
+    }
+    //Handlers - Takie coś do eventów
+    bindHandlers() {
+        this._nextBtn.addEventListener('click', (evt) => this.nextBtnHandler(evt));
+        this._prevBtn.addEventListener('click', (evt) => this.prevBtnHandler(evt));
+        document.addEventListener('keydown', (evt) => this.arrowsRightLeftKeyDownHandler(evt));
+        document.addEventListener('keyup', (evt) => this.arrowsRightLeftKeyUpHandler(evt));
+        this._endBtn.addEventListener('click', (evt) => this.endGameHandler(evt));
     }
     //Kończy gre
     endGameHandler(evt) {
