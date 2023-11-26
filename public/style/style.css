@@ -291,20 +291,6 @@ input[type="radio"] {
   align-items: center; */
 }
 
-#total-time {
-  display: flex;
-  justify-content: start;
-  width: 100%;
-  /* border: 2px solid black; */
-  gap: 5px;
-}
-
-#total-time-content {
-  /* display: flex; */
-  text-align: right;
-  width: 55%;
-}
-
 #description-one-question-time {
   width: 50%;
   text-align: right;
@@ -501,6 +487,40 @@ body {
 }
 
 /* 
+  Total time question timer
+*/
+#total-time {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  /* border: 2px solid black; */
+  gap: 5px;
+}
+
+/* FIXME:  */
+#total-time-center-container {
+  background-color: #7375b6;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  border: 2px solid beige;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+#total-time-content {
+  text-align: center;
+  font-size: 18px;
+}
+
+#total-time-span {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* 
   One question time container
 */
 
@@ -516,7 +536,7 @@ body {
   background-color: #7375b6;
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 70%;
   border: 2px solid beige;
   justify-content: center;
   align-items: center;

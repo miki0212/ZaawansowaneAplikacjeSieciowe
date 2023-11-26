@@ -19,8 +19,8 @@ export class GameContentModule extends BaseAbstractTemplate {
     private _pageContainer: HTMLDivElement;
     private _questionContentContainer: HTMLDivElement;
 
-    private _timeContainer: HTMLDivElement;
     private _totalTimeContainer: HTMLDivElement;
+    private _totalTimeCenterContainer: HTMLDivElement;
     private _totalTimeSpan: HTMLSpanElement;
     private _totalTimeSpanContent: HTMLSpanElement;
 
@@ -70,7 +70,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         //FIXME : 'xyz' - trza usunąc argument tej funkcji bo raczej niepotrzebne
         LocalStorageInitializ.localStoriageInitialize('xyz');
 
-        this._timeContainer = document.createElement('div') as HTMLDivElement;
+        this._totalTimeCenterContainer = document.createElement('div') as HTMLDivElement;
         this._totalTimeContainer = document.createElement('div') as HTMLDivElement;
 
         const questionData = getLocalStorageItem('question-data');
@@ -109,17 +109,17 @@ export class GameContentModule extends BaseAbstractTemplate {
     createPage(): void {
         this.bindHandlers();
 
-        this._timeContainer.innerHTML = '0';
-        this._totalTimeContainer.innerHTML = '';
+        // this._totalTimeContainer.innerHTML = '';
+        // this._totalTimeCenterContainer.innerHTML = '';
+        this._totalTimeCenterContainer.id = 'total-time-center-container'
         this._totalTimeContainer.id = 'total-time';
         this._totalTimeSpanContent.id = 'total-time-content'
-
-
+        this._totalTimeSpan.id = 'total-time-span';
 
         //Total Time Div Create
-        this._totalTimeSpanContent.innerHTML = 'Całkowity czas : ';
-        this._totalTimeContainer.append(this._totalTimeSpanContent, this._totalTimeSpan)
-
+        this._totalTimeSpanContent.innerHTML = 'Całkowity czas';
+        this._totalTimeCenterContainer.append(this._totalTimeSpanContent, this._totalTimeSpan)
+        this._totalTimeContainer.append(this._totalTimeCenterContainer);
 
         //Czas dla pojedńczego pytania
         this._oneQuestionTimeContainer.id = 'one-question-time-container';
