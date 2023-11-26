@@ -183,12 +183,13 @@ input[type="radio"] {
 #end-btn {
   padding: 10px;
   width: 450px;
+  /* height: 20px; */
   border-radius: 10px;
   overflow: hidden;
   position: fixed;
   font-weight: 900;
   font-size: 20px;
-  bottom: 220px;
+  bottom: 160px;
 }
 
 #end-btn::after {
@@ -498,6 +499,7 @@ body {
   align-items: center;
   font-size: 18px;
 }
+
 /* 
   One question time container
 */
