@@ -1,3 +1,4 @@
+import { IQuestions } from "./interface/IQuestions.js";
 import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
 
 export function counterUserPoints(): string {
@@ -115,4 +116,20 @@ export function showCorrectAnswers(correctAnswersNode: HTMLDivElement) {
 
     correctAnswersNode.innerHTML = answers;
 }
+
+// ----------------------------------------------------------------------------------
+//New Version
+// ----------------------------------------------------------------------------------
+
+export function getAllQuestionData(): IQuestions {
+    const questionData = getLocalStorageItem('question-data');
+
+    if (questionData) {
+        const allData: IQuestions = (JSON.parse(questionData) as IQuestions);
+        // this._questionContent = allData.questions;
+        return allData;
+    }
+    return {} as IQuestions;
+}
+
 

@@ -8,6 +8,10 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             this._questionContainer.innerHTML = '';
             this.createPage();
         };
+        this._allQuestions = {};
+        this._question = {};
+        //Inicjalizacja id timera
+        this._oneQuestionTimerId = 0;
         //To jest chyba do zapamiętania czy użytkownik wybrał już jakieś pytanie
         this._userAnswerHelper = '';
         this._endBtn = document.querySelector('#end-btn');
@@ -18,8 +22,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         if (data) {
             this._allQuestions = JSON.parse(data);
             this._question = JSON.parse(data).questions[this._currentRandomIndex];
-            // console.log((JSON.parse(data) as IQuestions).questions);
-            // this._answers = ((JSON.parse(data) as IQuestions).questions as IQuestionDataArray[])[this._currentRandomIndex].answers as IAnswers[];
             this._answers = this._question.answers;
             console.log(this._allQuestions);
         }
