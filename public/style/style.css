@@ -189,7 +189,7 @@ input[type="radio"] {
   position: fixed;
   font-weight: 900;
   font-size: 20px;
-  bottom: 160px;
+  bottom: 50px;
 }
 
 #end-btn::after {
