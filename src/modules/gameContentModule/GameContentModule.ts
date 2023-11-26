@@ -9,6 +9,7 @@ import * as LocalStorageInitializ from "../../localStorageItems/LocalStorageInit
 //Magistrala
 import eventBus from "../../bus/EventBus.js";
 import { getAllQuestionData } from "../../helper.js";
+import { StatisticContentModule } from "../statisticContentModule/StatisticContentModule.js";
 
 
 export class GameContentModule extends BaseAbstractTemplate {
@@ -294,7 +295,9 @@ export class GameContentModule extends BaseAbstractTemplate {
             window.clearInterval(this._totalTimeCounterId);
 
             //Wywołuje event endGame - który wczytuje okno statystyk(Bedzie dodane no ale no zapierdol w robocie)
-            eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
+            // eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
+            this._mainContainer.innerHTML = '';
+            new StatisticContentModule(this._mainContainer).render();
         }
     }
 

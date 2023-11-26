@@ -3,9 +3,8 @@ import { createElement } from "../../createElements/CreateElements.js";
 import { getLocalStorageItem, setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 import { QuestionContentModule } from "../questionContentModule.ts/QuestionContentModule.js";
 import * as LocalStorageInitializ from "../../localStorageItems/LocalStorageInitialize.js";
-//Magistrala
-import eventBus from "../../bus/EventBus.js";
 import { getAllQuestionData } from "../../helper.js";
+import { StatisticContentModule } from "../statisticContentModule/StatisticContentModule.js";
 export class GameContentModule extends BaseAbstractTemplate {
     //Handler Function Bind - Potrzebne, bo inaczej nie działa odłączanie Handlera, kij wie czemu
     // private boundEnterHandler: (evt: KeyboardEvent) => void;
@@ -203,7 +202,9 @@ export class GameContentModule extends BaseAbstractTemplate {
             //Zatrzymuje licznik czasu
             window.clearInterval(this._totalTimeCounterId);
             //Wywołuje event endGame - który wczytuje okno statystyk(Bedzie dodane no ale no zapierdol w robocie)
-            eventBus.dispatch('endGame', { mainContainer: this._mainContainer });
+            // eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
+            this._mainContainer.innerHTML = '';
+            new StatisticContentModule(this._mainContainer).render();
         }
     }
     //Aktualizuje aktualny numer pytania
