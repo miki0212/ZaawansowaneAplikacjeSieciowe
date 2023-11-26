@@ -24,7 +24,7 @@ export function localStoriageInitialize(username) {
 }
 const createEmptyTimeArray = () => {
     const questionsLength = parseInt(getLocalStorageItem('question-length'));
-    setLocalStorageItem('question-times-array', new Array(questionsLength).fill(-1).toString());
+    setLocalStorageItem('question-times-array', new Array(questionsLength).fill(0).toString());
 };
 const createEmptyQuestionArray = () => {
     const questionsLength = parseInt(getLocalStorageItem('question-length'));

@@ -17,11 +17,20 @@ export class QuestionContentModule extends BaseAbstractTemplate {
     private _currentRandomIndex: number;
     private _currentIndex: number;
 
-    private _question!: IQuestionDataArray;
-    private _allQuestions!: IQuestions;
+    private _question: IQuestionDataArray;
+    private _allQuestions: IQuestions;
+
+    private _oneQuestionTimerId: number;
+    private _actualQuestionTime!: number;
 
     constructor(questionContainer: HTMLDivElement, endGame: HTMLButtonElement) {
         super();
+
+        this._allQuestions = {} as IQuestions;
+        this._question = {} as IQuestionDataArray;
+
+        //Inicjalizacja id timera
+        this._oneQuestionTimerId = 0;
 
         //To jest chyba do zapamiętania czy użytkownik wybrał już jakieś pytanie
 
@@ -37,8 +46,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         if (data) {
             this._allQuestions = (JSON.parse(data) as IQuestions);
             this._question = ((JSON.parse(data) as IQuestions).questions as IQuestionDataArray[])[this._currentRandomIndex];
-            // console.log((JSON.parse(data) as IQuestions).questions);
-            // this._answers = ((JSON.parse(data) as IQuestions).questions as IQuestionDataArray[])[this._currentRandomIndex].answers as IAnswers[];
             this._answers = this._question.answers;
             console.log(this._allQuestions)
         } else {
