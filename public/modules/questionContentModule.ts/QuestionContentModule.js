@@ -15,9 +15,11 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         //To jest chyba do zapamiętania czy użytkownik wybrał już jakieś pytanie
         this._userAnswerHelper = '';
         this._endBtn = document.querySelector('#end-btn');
+        this._endBtn.style.display = 'none';
         this._questionContainer = questionContainer;
         this._currentIndex = parseInt(getLocalStorageItem('current-question-idx'));
         this._currentRandomIndex = parseInt(getLocalStorageItem('random-questions-index-array').split(',')[this._currentIndex]);
+
         const data = getLocalStorageItem('question-data');
         if (data) {
             this._allQuestions = JSON.parse(data);
@@ -38,6 +40,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         for (let i = 0; i < 4; i++) {
             this._answerContainer.push(createElement('div', 'answer'));
         }
+
         this._answerContainer.forEach((item, index) => {
             const radioBtnAnswer = createElement('input', `answer-${index}`, 'radio', `${this._answers[index].content}`);
             radioBtnAnswer.name = `answer-radio-group`;
@@ -63,8 +66,9 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                     //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
                     const questionLength = parseInt(getLocalStorageItem('question-length'));
                     if (questionLength === questionAnswered) {
-                        this._endBtn.classList.add('end');
+                        this._endBtn.style.display = 'block';
                     }
+                    
                 }
                 setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
             });
