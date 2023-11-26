@@ -561,7 +561,8 @@ body {
   Statistic container
 */
 #base-statistic-container {
-  width: 500px;
+  background-color: #787ac2;
+  width: 550px;
   display: flex;
   flex-direction: column;
   border: 2px solid black;
@@ -569,10 +570,12 @@ body {
   justify-content: center;
   align-items: center;
   gap: 10px;
+  border-radius: 5px;
+  /* padding: 10px; */
 }
 
 #question-statistic-container {
-  width: 450px;
+  width: 500px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -588,12 +591,14 @@ body {
   /* padding: 0; */
   border: 2px solid black;
   border-radius: 10px;
+  gap: 5px;
 }
 
 #lp-answer {
   /* display: flex; */
   text-align: center;
   width: 10%;
+  padding: 10px;
 }
 
 #user-answer {
@@ -608,6 +613,8 @@ body {
   width: 40%;
   text-align: center;
   padding: 15px;
+  border-radius: 10px;
+  background-color: #f7e5e5a6;
 }
 
 .correct {
@@ -628,4 +635,20 @@ body {
 
 .incorrect:hover {
   background-color: rgb(255, 178, 178);
+}
+
+#question-time-container {
+  width: 10%;
+  text-align: center;
+  padding: 10px;
+}
+
+#points-question-container {
+  width: 100%;
+  background-color: #6b6daa;
+  padding: 15px 0;
+  border-radius: 0 0 5px 5px;
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
 }

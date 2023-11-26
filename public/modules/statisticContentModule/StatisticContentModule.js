@@ -8,6 +8,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
             const questionLength = parseInt(getLocalStorageItem('question-length'));
             const randomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
             const questions = this._allQuestionData.questions;
+            const questionTimes = getLocalStorageItem('question-times-array').split(',').map(Number);
             //Statistic
             for (let i = 0; i < questionLength; i++) {
                 const answerDiv = document.createElement('div');
@@ -15,13 +16,15 @@ export class StatisticContentModule extends BaseAbstractTemplate {
                 const lpAnswer = document.createElement('div');
                 const userAnswerDiv = document.createElement('div');
                 const correctAnswerDiv = document.createElement('div');
+                const questionTimeDiv = createElement('div', 'question-time-container');
                 lpAnswer.id = 'lp-answer';
-                lpAnswer.innerHTML = '' + randomIndex[i];
+                lpAnswer.innerHTML = '' + i;
                 correctAnswerDiv.id = 'correct-answer';
                 correctAnswerDiv.innerHTML = questions[randomIndex[i]].correctAnswer;
                 userAnswerDiv.id = 'user-answer';
                 userAnswerDiv.innerHTML = questions[randomIndex[i]].userAnswer;
-                answerDiv.append(lpAnswer, correctAnswerDiv, userAnswerDiv);
+                questionTimeDiv.innerHTML = '' + (questionTimes[randomIndex[i]] % 10 == 0 ? questionTimes[randomIndex[i]] / 10 + '.0 s' : questionTimes[randomIndex[i]] / 10 + ' s');
+                answerDiv.append(lpAnswer, correctAnswerDiv, userAnswerDiv, questionTimeDiv);
                 this._questionStatisticContainer.append(answerDiv);
                 if (questions[randomIndex[i]].correctAnswer === questions[randomIndex[i]].userAnswer) {
                     userAnswerDiv.classList.add('correct');
