@@ -1,6 +1,7 @@
 import { BaseAbstractTemplate } from "../../baseTemplate/BaseAbstractTemplate.js";
 import eventBus from "../../bus/EventBus.js";
 import { StartGameEvent } from "../../events/StartGameEvent.js";
+import { setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 import { GameContentModule } from "../gameContentModule/GameContentModule.js";
 
 export class StartPageModules extends BaseAbstractTemplate {
@@ -98,7 +99,7 @@ export class StartPageModules extends BaseAbstractTemplate {
     public saveUserNameToLocalStorage(): string {
         const userNameInputValue = this._usernameNode.value;
 
-        localStorage.setItem('username', userNameInputValue);
+        setLocalStorageItem('username', userNameInputValue)
 
         return userNameInputValue;
     }

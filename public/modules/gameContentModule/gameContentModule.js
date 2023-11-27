@@ -121,7 +121,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._oneQuestionTimeCenterContainer = document.createElement('div');
         this._oneQuestionTimeSpan = document.createElement('div');
         this._oneQuestionTimeSpanContent = document.createElement('span');
-        LocalStorageInitializ.localStoriageInitialize('');
+        LocalStorageInitializ.localStoriageInitialize();
         this._totalTimeCenterContainer = document.createElement('div');
         this._totalTimeContainer = document.createElement('div');
         const questionData = getLocalStorageItem('question-data');

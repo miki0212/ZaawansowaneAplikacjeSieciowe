@@ -42,7 +42,7 @@ label:hover {
   background-color: #cecece;
 }
 
-input[type="radio"]:checked+label {
+input[type="radio"]:checked + label {
   background-color: #fff;
   font-weight: 900;
   font-size: 20px;
@@ -59,7 +59,7 @@ input[type="radio"]:checked+label {
   background-color: #ffffff71;
 }
 
-.selected>.radio-btn:hover {
+.selected > .radio-btn:hover {
   background-color: none;
 }
 
@@ -372,7 +372,7 @@ body {
   font-weight: 800;
 }
 
-#user-data>input {
+#user-data > input {
   padding: 10px;
   border-radius: 5px;
 }
@@ -574,7 +574,7 @@ body {
 */
 #base-statistic-container {
   background-color: #787ac2;
-  width: 550px;
+  width: 650px;
   display: flex;
   flex-direction: column;
   border: 2px solid black;
@@ -596,10 +596,10 @@ body {
 }
 
 #question-statistic-container {
-  width: 500px;
+  width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 #answerDiv {
@@ -612,7 +612,7 @@ body {
   /* padding: 0; */
   border: 2px solid black;
   border-radius: 10px;
-  gap: 5px;
+  gap: 12.51234850121234495819283716237475917495967162871292321321389235347594358238942384238490238234732489324723847328912983123123123092343243px;
 }
 
 #lp-answer {
