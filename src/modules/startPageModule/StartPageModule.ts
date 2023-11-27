@@ -3,8 +3,9 @@ import eventBus from "../../bus/EventBus.js";
 import { StartGameEvent } from "../../events/StartGameEvent.js";
 import { GameContentModule } from "../gameContentModule/GameContentModule.js";
 
-
 export class StartPageModules extends BaseAbstractTemplate {
+
+    private _testInfo: HTMLDivElement;
     private _mainContainer: HTMLDivElement;
 
     private _baseContainer: HTMLDivElement;
@@ -25,6 +26,7 @@ export class StartPageModules extends BaseAbstractTemplate {
 
         //Inicjalizowanie zmiennych
         this._baseContainer = document.createElement('div');
+        this._testInfo = document.createElement('div');
         this._usernameLabel = document.createElement('label');
         this._usernameNode = document.createElement('input');
         this._startBtn = document.createElement('button');
@@ -50,6 +52,10 @@ export class StartPageModules extends BaseAbstractTemplate {
 
     //Też tworzy strone
     createPage(): void {
+        this._testInfo.id = 'test-info';
+        //FIXME: I need some resolution because this text is not showing on this container and I did not why
+        this._testInfo.innerHTML = JSON.stringify(this.parseFileToString());
+        
         this._usernameLabel.id = 'user-name';
         this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika'
 
@@ -59,11 +65,37 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._startBtn.id = 'start';
         this._startBtn.innerHTML = 'Rozpocznij Test';
 
-        this._mainContainer.append(this._usernameLabel, this._usernameNode, this._startBtn);
+        this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
+        }
+
+    //It is working and this function read text from file
+    public async parseFileToString(): Promise<string> {
+        //FIXME: It needs to fix path for file
+        const textFromFile = JSON.stringify(this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
+        console.log("xd")
+        return textFromFile;
+    }
+
+    //Reading text about test from file
+    public async readTestInfoFile(file: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            let testInfoFile = new XMLHttpRequest();
+            testInfoFile.open("GET", file, true);
+            testInfoFile.onreadystatechange = function () {
+                if (testInfoFile.readyState === 4) {
+                    if (testInfoFile.status === 200 || testInfoFile.status === 0) {
+                        const text: string = testInfoFile.responseText;
+                        console.log(text);
+                    }
+                }
+            };
+
+            testInfoFile.send(null);
+        })
     }
 
     //Adding username to localStorage
-    public saveUserNameToLocalStorage() : string{
+    public saveUserNameToLocalStorage(): string {
         const userNameInputValue = this._usernameNode.value;
 
         localStorage.setItem('username', userNameInputValue);

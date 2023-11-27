@@ -1,0 +1,11 @@
+Informacje o teście:
+1. Test zawiera 7 pytań. Każde z pytań zawiera 4 odpowiedzi. Tylko jedna odpowiedź jest poprawna.
+2. Aby rozpocząć test wpisz swoją nazwę użytkownika i naciśnij przycisk 'Rozpocznij Test'.
+3. Użytkownik może przejść do kolejnego pytania, bez udzielenia odpowiedzi na poprzednie pytanie.
+4. Można powrócić do poprzedniego pytania, jednakże nie można zmienić wcześniej zaznaczonej odpowiedzi.
+5. Odpowiedź można zmienić jedynie w aktualnym pytaniu.
+5. Pod każdym pytaniem i jego odpowiedziami zostanie wyświetlony naliczany czas dla każdego pytania oraz czas dla całego testu.
+6. Po udzieleniu odpowiedzi na wszystkie pytania, na ekranie pojawi się przycisk 'Zakończ'. Umożliwia on ukończenie testu i zapisanie wyników.
+7. Po zakończeniu testu zostanie wyświetlona tabela z poprawnymi odpowiedziami oraz z odpowiedziami użytkownika.
+8. Obok każdego pytania zostanie wyświetlona informacja, ile czasu zajęło użytkownikowi udzielenie odpowiedzi na poszczególne pytanie.
+9. Pod tabelą zostanie wyświetlona ilość punktów oraz czas, w jakim użytkownik rozwiązał test.
