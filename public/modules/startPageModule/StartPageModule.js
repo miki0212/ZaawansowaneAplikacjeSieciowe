@@ -54,24 +54,18 @@ export class StartPageModules extends BaseAbstractTemplate {
     }
     //Też tworzy strone
     createPage() {
-        this._testInfo.id = 'test-info';
-        //FIXME: I need some resolution because this text is not showing on this container and I did not why
-        this._testInfo.innerHTML = JSON.stringify(this.parseFileToString());
-        this._usernameLabel.id = 'user-name';
-        this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika';
-        this._usernameNode.id = 'user-name-input';
-        this._usernameNode.placeholder = 'Username';
-        this._startBtn.id = 'start';
-        this._startBtn.innerHTML = 'Rozpocznij Test';
-        this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
-    }
-    //It is working and this function read text from file
-    parseFileToString() {
         return __awaiter(this, void 0, void 0, function* () {
-            //FIXME: It needs to fix path for file
+            this._testInfo.id = 'test-info';
+            //FIXME: I need some resolution because this text is not showing on this container and I don't know why
             const textFromFile = JSON.stringify(this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
-            console.log("xd");
-            return textFromFile;
+            this._testInfo.textContent = textFromFile;
+            this._usernameLabel.id = 'user-name';
+            this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika';
+            this._usernameNode.id = 'user-name-input';
+            this._usernameNode.placeholder = 'Username';
+            this._startBtn.id = 'start';
+            this._startBtn.innerHTML = 'Rozpocznij Test';
+            this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
         });
     }
     //Reading text about test from file
@@ -84,7 +78,12 @@ export class StartPageModules extends BaseAbstractTemplate {
                     if (testInfoFile.readyState === 4) {
                         if (testInfoFile.status === 200 || testInfoFile.status === 0) {
                             const text = testInfoFile.responseText;
+                            resolve(text);
+                            //Here text from file is reading and it is working
                             console.log(text);
+                        }
+                        else {
+                            reject(new Error('Read from file is failed'));
                         }
                     }
                 };
