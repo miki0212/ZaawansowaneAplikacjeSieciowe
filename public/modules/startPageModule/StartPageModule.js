@@ -14,6 +14,7 @@ export class StartPageModules extends BaseAbstractTemplate {
         this.startBtnNodeHandler = (evt) => {
             if (this._startBtn.classList.contains('start-enable')) {
                 this._startBtn.dispatchEvent(new StartGameEvent('start-game'));
+                this.saveUserNameToLocalStorage();
             }
             else {
                 //Dodaje czerwoną ramke do labela z username
@@ -49,6 +50,12 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._startBtn.id = 'start';
         this._startBtn.innerHTML = 'Rozpocznij Test';
         this._mainContainer.append(this._usernameLabel, this._usernameNode, this._startBtn);
+    }
+    //Adding username to localStorage
+    saveUserNameToLocalStorage() {
+        const userNameInputValue = this._usernameNode.value;
+        localStorage.setItem('username', userNameInputValue);
+        return userNameInputValue;
     }
     //Czysci main content i ładuje gameContent
     loadGameContentHandler() {

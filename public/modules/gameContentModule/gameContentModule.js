@@ -121,8 +121,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._oneQuestionTimeCenterContainer = document.createElement('div');
         this._oneQuestionTimeSpan = document.createElement('div');
         this._oneQuestionTimeSpanContent = document.createElement('span');
-        //FIXME : 'xyz' - trza usunąc argument tej funkcji bo raczej niepotrzebne
-        LocalStorageInitializ.localStoriageInitialize('xyz');
+        LocalStorageInitializ.localStoriageInitialize('');
         this._totalTimeCenterContainer = document.createElement('div');
         this._totalTimeContainer = document.createElement('div');
         const questionData = getLocalStorageItem('question-data');
@@ -155,7 +154,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._totalTimeSpanContent.innerHTML = 'Całkowity czas';
         this._totalTimeCenterContainer.append(this._totalTimeSpanContent, this._totalTimeSpan);
         this._totalTimeContainer.append(this._totalTimeCenterContainer);
-        //Czas dla pojedńczego pytania
+        //Czas dla pojedynczego pytania
         this._oneQuestionTimeContainer.id = 'one-question-time-container';
         this._oneQuestionTimeCenterContainer.id = 'one-question-center-container';
         this._oneQuestionTimeSpanContent.id = 'one-question-time-content';

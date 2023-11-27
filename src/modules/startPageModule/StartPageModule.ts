@@ -62,11 +62,21 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._mainContainer.append(this._usernameLabel, this._usernameNode, this._startBtn);
     }
 
+    //Adding username to localStorage
+    public saveUserNameToLocalStorage() : string{
+        const userNameInputValue = this._usernameNode.value;
+
+        localStorage.setItem('username', userNameInputValue);
+
+        return userNameInputValue;
+    }
+
     //Handlers
     private startBtnNodeHandler = (evt: Event): void => {
 
         if (this._startBtn.classList.contains('start-enable')) {
             this._startBtn.dispatchEvent(new StartGameEvent('start-game'));
+            this.saveUserNameToLocalStorage();
         }
         else {
             //Dodaje czerwoną ramke do labela z username
