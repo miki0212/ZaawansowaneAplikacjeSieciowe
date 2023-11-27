@@ -15,6 +15,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         //To jest chyba do zapamiętania czy użytkownik wybrał już jakieś pytanie
         this._userAnswerHelper = '';
         this._endBtn = document.querySelector('#end-btn');
+        this._endBtn.style.display = 'none';
         this._questionContainer = questionContainer;
         this._currentIndex = parseInt(getLocalStorageItem('current-question-idx'));
         this._currentRandomIndex = parseInt(getLocalStorageItem('random-questions-index-array').split(',')[this._currentIndex]);
@@ -63,7 +64,8 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                     //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
                     const questionLength = parseInt(getLocalStorageItem('question-length'));
                     if (questionLength === questionAnswered) {
-                        this._endBtn.classList.add('end');
+                        // this._endBtn.classList.add('end');
+                        this._endBtn.style.display = 'block';
                     }
                 }
                 setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));

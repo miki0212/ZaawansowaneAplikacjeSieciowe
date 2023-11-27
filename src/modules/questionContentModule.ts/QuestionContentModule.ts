@@ -36,6 +36,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
         this._userAnswerHelper = '';
         this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
+        this._endBtn.style.display = 'none';
 
         this._questionContainer = questionContainer;
 
@@ -105,7 +106,8 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                     //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
                     const questionLength: number = parseInt(getLocalStorageItem('question-length'));
                     if (questionLength === questionAnswered) {
-                        this._endBtn.classList.add('end');
+                        // this._endBtn.classList.add('end');
+                        this._endBtn.style.display = 'block';
                     }
                 }
 

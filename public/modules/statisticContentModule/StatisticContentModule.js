@@ -48,6 +48,8 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         };
         this._mainContainer = mainContainer;
         this._allQuestionData = JSON.parse(getLocalStorageItem('question-data'));
+        this._endBtn = document.querySelector('#end-btn');
+        this._endBtn.style.display = 'none';
         this._baseContainer = createElement('div', 'base-statistic-container');
         this._usernameContainer = createElement('div', 'username-statistic-container');
         this._questionStatisticContainer = createElement('div', 'question-statistic-container');

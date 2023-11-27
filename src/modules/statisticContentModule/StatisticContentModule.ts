@@ -9,6 +9,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
 
     private _mainContainer: HTMLDivElement;
     private _allQuestionData: IQuestions;
+    private _endBtn: HTMLButtonElement;
 
     //Containers
     private _baseContainer: HTMLDivElement;
@@ -22,6 +23,8 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._mainContainer = mainContainer;
 
         this._allQuestionData = JSON.parse(getLocalStorageItem('question-data')) as IQuestions;
+        this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
+        this._endBtn.style.display = 'none';
 
         this._baseContainer = createElement('div', 'base-statistic-container') as HTMLDivElement;
         this._usernameContainer = createElement('div', 'username-statistic-container') as HTMLDivElement;
