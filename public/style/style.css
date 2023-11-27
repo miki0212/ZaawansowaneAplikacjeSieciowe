@@ -34,7 +34,7 @@ label:hover {
   background-color: #cecece;
 }
 
-input[type="radio"]:checked + label {
+input[type="radio"]:checked+label {
   background-color: #fff;
   font-weight: 900;
   font-size: 20px;
@@ -51,7 +51,7 @@ input[type="radio"]:checked + label {
   background-color: #ffffff71;
 }
 
-.selected > .radio-btn:hover {
+.selected>.radio-btn:hover {
   background-color: none;
 }
 
@@ -329,6 +329,7 @@ body {
   align-items: center;
   gap: 30px;
 }
+
 /* user data */
 #user-data {
   height: 400px;
@@ -363,7 +364,7 @@ body {
   font-weight: 800;
 }
 
-#user-data > input {
+#user-data>input {
   padding: 10px;
   border-radius: 5px;
 }
@@ -428,6 +429,7 @@ body {
   font-size: 22px;
   font-weight: 700;
 }
+
 .error {
   color: red;
 }
@@ -444,6 +446,7 @@ body {
   border: 2px solid #b9bade86;
   background-color: #b9bade86;
 }
+
 #user-name-input {
   border: 2px solid #b9bade86;
   width: 96%;
@@ -532,6 +535,7 @@ body {
   width: 100%;
   /* border: 2px solid black; */
 }
+
 #one-question-center-container {
   background-color: #7375b6;
   display: flex;
@@ -571,7 +575,16 @@ body {
   align-items: center;
   gap: 10px;
   border-radius: 5px;
-  /* padding: 10px; */
+}
+
+#username-statistic-container {
+  width: 100%;
+  /* background-color: #6b6daa; */
+  padding: 15px 0;
+  border-radius: 0 0 5px 5px;
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
 }
 
 #question-statistic-container {

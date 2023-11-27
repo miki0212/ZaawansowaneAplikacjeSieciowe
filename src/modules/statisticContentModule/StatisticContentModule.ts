@@ -41,12 +41,13 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._mainContainer.append(this._baseContainer);
 
         //Get username
-        this._usernameContainer.innerHTML = getLocalStorageItem('username');
+        this._usernameContainer.innerHTML = 'Użytkownik ' +getLocalStorageItem('username');
 
         //Statistic
         this.createStatistic();
+
         //User points
-        this._pointsQuestionContainer.innerHTML = 'Congratulations you have : ' + this.countUserPoints();
+        this._pointsQuestionContainer.innerHTML = 'Gratulacje, masz  ' + this.countUserPoints() + ' pkt!';
     }
 
     bindHandlers(): void {

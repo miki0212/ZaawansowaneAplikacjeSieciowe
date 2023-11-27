@@ -62,11 +62,11 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._baseContainer.append(this._usernameContainer, this._questionStatisticContainer, this._pointsQuestionContainer);
         this._mainContainer.append(this._baseContainer);
         //Get username
-        this._usernameContainer.innerHTML = getLocalStorageItem('username');
+        this._usernameContainer.innerHTML = 'Użytkownik ' + getLocalStorageItem('username');
         //Statistic
         this.createStatistic();
         //User points
-        this._pointsQuestionContainer.innerHTML = 'Congratulations you have : ' + this.countUserPoints();
+        this._pointsQuestionContainer.innerHTML = 'Gratulacje, masz  ' + this.countUserPoints() + ' pkt!';
     }
     bindHandlers() {
         throw new Error("Method not implemented.");
