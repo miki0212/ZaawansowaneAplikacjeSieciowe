@@ -21,7 +21,7 @@ body {
   gap: 10px;
 }
 
-#test-info{
+#test-info {
   background-color: white;
   flex-direction: column;
   border-radius: 10px;
@@ -236,7 +236,8 @@ input[type="radio"] {
 
 #start {
   padding: 10px;
-  width: 300px;
+  /* width: 300px; */
+  width: 100%;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -370,6 +371,7 @@ body {
   align-items: center;
   font-size: 22px;
   font-weight: 800;
+  width: 100%;
 }
 
 #user-data > input {
@@ -588,7 +590,7 @@ body {
 #username-statistic-container {
   width: 100%;
   /* background-color: #6b6daa; */
-  padding: 15px 0;  
+  padding: 15px 0;
   border-radius: 0 0 5px 5px;
   font-weight: 700;
   font-size: 18px;
@@ -672,4 +674,17 @@ body {
   font-weight: 700;
   font-size: 18px;
   text-align: center;
+}
+
+/* 
+  Test info
+*/
+
+#test-info {
+  width: 450px;
+}
+
+#test-info-p {
+  padding: 2px;
+  margin: 0;
 }

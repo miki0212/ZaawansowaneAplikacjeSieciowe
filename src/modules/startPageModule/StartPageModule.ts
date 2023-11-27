@@ -53,36 +53,42 @@ export class StartPageModules extends BaseAbstractTemplate {
 
     //Też tworzy strone
     async createPage() {
-            this._testInfo.id = 'test-info';
-            //FIXME: I need some resolution because this text is not showing on this container and I don't know why
-            const textFromFile = JSON.stringify(this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
-            this._testInfo.textContent = textFromFile;
+        this._testInfo.id = 'test-info';
+        //FIXME: I need some resolution because this text is not showing on this container and I don't know why
+        const textFromFile: string[] = (await this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
 
-            this._usernameLabel.id = 'user-name';
-            this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika'
+        for (let i = 0; i < textFromFile.length; i++) {
+            const p = document.createElement('p');
+            p.innerHTML = textFromFile[i];
+            p.id = 'test-info-p'
+            this._testInfo.append(p);
+        }
 
-            this._usernameNode.id = 'user-name-input';
-            this._usernameNode.placeholder = 'Username';
+        this._usernameLabel.id = 'user-name';
+        this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika'
 
-            this._startBtn.id = 'start';
-            this._startBtn.innerHTML = 'Rozpocznij Test';
+        this._usernameNode.id = 'user-name-input';
+        this._usernameNode.placeholder = 'Username';
 
-            this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
+        this._startBtn.id = 'start';
+        this._startBtn.innerHTML = 'Rozpocznij Test';
+
+        this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
     }
 
     //Reading text about test from file
-    public async readTestInfoFile(file: string): Promise<string> {
+    public async readTestInfoFile(file: string): Promise<string[]> {
         return new Promise((resolve, reject) => {
             let testInfoFile = new XMLHttpRequest();
             testInfoFile.open("GET", file, true);
             testInfoFile.onreadystatechange = function () {
                 if (testInfoFile.readyState === 4) {
                     if (testInfoFile.status === 200 || testInfoFile.status === 0) {
-                        const text: string = testInfoFile.responseText;
+                        const text: string[] = testInfoFile.responseText.split('//');
                         resolve(text);
                         //Here text from file is reading and it is working
                         console.log(text);
-                    }else{
+                    } else {
                         reject(new Error('Read from file is failed'))
                     }
                 }

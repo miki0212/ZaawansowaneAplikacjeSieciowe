@@ -57,8 +57,13 @@ export class StartPageModules extends BaseAbstractTemplate {
         return __awaiter(this, void 0, void 0, function* () {
             this._testInfo.id = 'test-info';
             //FIXME: I need some resolution because this text is not showing on this container and I don't know why
-            const textFromFile = JSON.stringify(this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
-            this._testInfo.textContent = textFromFile;
+            const textFromFile = (yield this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
+            for (let i = 0; i < textFromFile.length; i++) {
+                const p = document.createElement('p');
+                p.innerHTML = textFromFile[i];
+                p.id = 'test-info-p';
+                this._testInfo.append(p);
+            }
             this._usernameLabel.id = 'user-name';
             this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika';
             this._usernameNode.id = 'user-name-input';
@@ -77,7 +82,7 @@ export class StartPageModules extends BaseAbstractTemplate {
                 testInfoFile.onreadystatechange = function () {
                     if (testInfoFile.readyState === 4) {
                         if (testInfoFile.status === 200 || testInfoFile.status === 0) {
-                            const text = testInfoFile.responseText;
+                            const text = testInfoFile.responseText.split('//');
                             resolve(text);
                             //Here text from file is reading and it is working
                             console.log(text);
