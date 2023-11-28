@@ -9,7 +9,10 @@ type localStorageItemsType =
     | 'test-data'
     | 'question-length'
     | 'correct-answers'
-    | 'username';
+    | 'username'
+    | 'question-data'
+    | 'answers-user-provided'
+    | 'user-total-time'
 
 export function getLocalStorageItem(itemName: localStorageItemsType) {
     const itemData = localStorage.getItem(itemName)

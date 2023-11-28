@@ -1,24 +1,24 @@
-import testData from "./data/test-data.js";
+import questionData from "../data/questions-data.js";
 
-import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
-import { IQuestions } from "./interface/IQuestions.js";
+import { getLocalStorageItem, setLocalStorageItem } from "./LocalStorageItems.js";
+import { IQuestions } from "../interface/IQuestions.js";
 
 
-export function localStoriageInitialize(username: string) {
+export function localStoriageInitialize() {
     //Czyszczenie localStorage
     localStorage.clear();
 
-    //Ustawienie nazwy uzytkownika
-    setLocalStorageItem('username', username.toString());
+    //Zlicza na ile pytań użytkownik już odpowiedział
+    setLocalStorageItem('answers-user-provided', '0')
 
     //Pobranie pytani i odpowiedzi
-    setLocalStorageItem('test-data', JSON.stringify(testData));
+    setLocalStorageItem('question-data', JSON.stringify((questionData as IQuestions)));
 
     //Wartośc początkowa indeksu
     setLocalStorageItem('current-question-idx', '0');
 
     //Ustawia Liczbe pytan
-    setLocalStorageItem('question-length', testData.questions.length.toString());
+    setLocalStorageItem('question-length', questionData.questions.length.toString());
 
     //Tworzy pustą tablice czasów dla pytań
     createEmptyTimeArray();
@@ -27,7 +27,7 @@ export function localStoriageInitialize(username: string) {
     createEmptyQuestionArray();
 
     //Tworzy tablicę poprawnych odpowiedzi
-    createCorrectAnswersArray(testData);
+    createCorrectAnswersArray(questionData);
 
     //Tworzy tablice xd - losowe elementy
     createRandomArray();
@@ -35,7 +35,7 @@ export function localStoriageInitialize(username: string) {
 
 const createEmptyTimeArray = () => {
     const questionsLength: number = parseInt(getLocalStorageItem('question-length'));
-    setLocalStorageItem('question-times-array', new Array(questionsLength).fill(-1).toString())
+    setLocalStorageItem('question-times-array', new Array(questionsLength).fill(0).toString())
 }
 
 const createEmptyQuestionArray = () => {

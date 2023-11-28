@@ -100,6 +100,16 @@ export function showCorrectAnswers(correctAnswersNode) {
         `;
     }).join('');
     correctAnswersNode.innerHTML = answers;
-    // for(let i = 0;i<parseInt(getLocalStorageItem('question-length'));i++){
-    // }
+}
+// ----------------------------------------------------------------------------------
+//New Version
+// ----------------------------------------------------------------------------------
+export function getAllQuestionData() {
+    const questionData = getLocalStorageItem('question-data');
+    if (questionData) {
+        const allData = JSON.parse(questionData);
+        // this._questionContent = allData.questions;
+        return allData;
+    }
+    return {};
 }
