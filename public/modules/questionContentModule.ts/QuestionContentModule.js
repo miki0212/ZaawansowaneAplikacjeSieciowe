@@ -10,9 +10,9 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         };
         this._allQuestions = {};
         this._question = {};
-        //Inicjalizacja id timera
+        //Initialize timer id
         this._oneQuestionTimerId = 0;
-        //To jest chyba do zapamiętania czy użytkownik wybrał już jakieś pytanie
+        //This is probably remembered by the user who already has some question
         this._userAnswerHelper = '';
         this._endBtn = document.querySelector('#end-btn');
         this._endBtn.style.display = 'none';
@@ -31,6 +31,18 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         }
         this._answerContainer = [];
     }
+    loadDataFromLocalStorage(data) {
+        if (data) {
+            this._allQuestions = JSON.parse(data);
+            this._question = JSON.parse(data).questions[this._currentRandomIndex];
+            this._answers = this._question.answers;
+            console.log(this._allQuestions);
+        }
+        else {
+            this._answers = [];
+        }
+    }
+
     //FIXME: Add events
     bindHandlers() {
     }
@@ -41,8 +53,8 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         }
         this._answerContainer.forEach((item, index) => {
             const radioBtnAnswer = createElement('input', `answer-${index}`, 'radio', `${this._answers[index].content}`);
-            radioBtnAnswer.name = `answer-radio-group`;
             const radioBtnAnswerLabel = document.createElement('label');
+            radioBtnAnswer.name = `answer-radio-group`;
             radioBtnAnswerLabel.htmlFor = `answer-${index}`;
             radioBtnAnswerLabel.innerHTML = `${this._answers[index].content}`;
             radioBtnAnswerLabel.id = 'answer-options';
@@ -55,6 +67,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             }
             item.append(radioBtnAnswer);
             item.append(radioBtnAnswerLabel);
+
             radioBtnAnswer.addEventListener('click', (evt) => {
                 this._allQuestions.questions[this._currentRandomIndex].userAnswer = evt.target.value;
                 if (this._question.userAnswer == '' && this._userAnswerHelper == '') {
@@ -70,7 +83,25 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                 }
                 setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
             });
+
+            this.updateUserAnswer(radioBtnAnswer);
             this._questionContainer.append(item);
+        });
+    }
+    updateUserAnswer(radioBtnAnswer) {
+        radioBtnAnswer.addEventListener('click', (evt) => {
+            this._allQuestions.questions[this._currentRandomIndex].userAnswer = evt.target.value;
+            if (this._question.userAnswer == '' && this._userAnswerHelper == '') {
+                this._userAnswerHelper = evt.target.value;
+                const questionAnswered = parseInt(getLocalStorageItem('answers-user-provided')) + 1;
+                setLocalStorageItem('answers-user-provided', questionAnswered.toString());
+                //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
+                const questionLength = parseInt(getLocalStorageItem('question-length'));
+                if (questionLength === questionAnswered) {
+                    this._endBtn.style.display = 'block';
+                }
+            }
+            setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
         });
     }
 }
