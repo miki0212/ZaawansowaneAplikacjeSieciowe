@@ -1,10 +1,12 @@
 import { BaseAbstractTemplate } from "../../baseTemplate/BaseAbstractTemplate.js";
 import eventBus from "../../bus/EventBus.js";
 import { StartGameEvent } from "../../events/StartGameEvent.js";
+import { setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 import { GameContentModule } from "../gameContentModule/GameContentModule.js";
 
-
 export class StartPageModules extends BaseAbstractTemplate {
+
+    private _testInfo: HTMLDivElement;
     private _mainContainer: HTMLDivElement;
 
     private _baseContainer: HTMLDivElement;
@@ -25,6 +27,7 @@ export class StartPageModules extends BaseAbstractTemplate {
 
         //Inicjalizowanie zmiennych
         this._baseContainer = document.createElement('div');
+        this._testInfo = document.createElement('div');
         this._usernameLabel = document.createElement('label');
         this._usernameNode = document.createElement('input');
         this._startBtn = document.createElement('button');
@@ -49,7 +52,18 @@ export class StartPageModules extends BaseAbstractTemplate {
     }
 
     //Też tworzy strone
-    createPage(): void {
+    async createPage() {
+        this._testInfo.id = 'test-info';
+        //FIXME: I need some resolution because this text is not showing on this container and I don't know why
+        const textFromFile: string[] = (await this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
+
+        for (let i = 0; i < textFromFile.length; i++) {
+            const p = document.createElement('p');
+            p.innerHTML = textFromFile[i];
+            p.id = 'test-info-p'
+            this._testInfo.append(p);
+        }
+
         this._usernameLabel.id = 'user-name';
         this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika'
 
@@ -59,7 +73,38 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._startBtn.id = 'start';
         this._startBtn.innerHTML = 'Rozpocznij Test';
 
-        this._mainContainer.append(this._usernameLabel, this._usernameNode, this._startBtn);
+        this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
+    }
+
+    //Reading text about test from file
+    public async readTestInfoFile(file: string): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            let testInfoFile = new XMLHttpRequest();
+            testInfoFile.open("GET", file, true);
+            testInfoFile.onreadystatechange = function () {
+                if (testInfoFile.readyState === 4) {
+                    if (testInfoFile.status === 200 || testInfoFile.status === 0) {
+                        const text: string[] = testInfoFile.responseText.split('//');
+                        resolve(text);
+                        //Here text from file is reading and it is working
+                        console.log(text);
+                    } else {
+                        reject(new Error('Read from file is failed'))
+                    }
+                }
+            };
+
+            testInfoFile.send(null);
+        })
+    }
+
+    //Adding username to localStorage
+    public saveUserNameToLocalStorage(): string {
+        const userNameInputValue = this._usernameNode.value;
+
+        setLocalStorageItem('username', userNameInputValue)
+
+        return userNameInputValue;
     }
 
     //Handlers
@@ -67,6 +112,7 @@ export class StartPageModules extends BaseAbstractTemplate {
 
         if (this._startBtn.classList.contains('start-enable')) {
             this._startBtn.dispatchEvent(new StartGameEvent('start-game'));
+            this.saveUserNameToLocalStorage();
         }
         else {
             //Dodaje czerwoną ramke do labela z username

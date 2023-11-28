@@ -17,16 +17,26 @@ export class QuestionContentModule extends BaseAbstractTemplate {
     private _currentRandomIndex: number;
     private _currentIndex: number;
 
-    private _question!: IQuestionDataArray;
-    private _allQuestions!: IQuestions;
+    private _question: IQuestionDataArray;
+    private _allQuestions: IQuestions;
+
+    private _oneQuestionTimerId: number;
+    private _actualQuestionTime!: number;
 
     constructor(questionContainer: HTMLDivElement, endGame: HTMLButtonElement) {
         super();
 
-        //To jest chyba do zapamiętania czy użytkownik wybrał już jakieś pytanie
+        this._allQuestions = {} as IQuestions;
+        this._question = {} as IQuestionDataArray;
 
+        //Initialize timer id
+        this._oneQuestionTimerId = 0;
+
+        //This is probably remembered by the user who already has some question
         this._userAnswerHelper = '';
+
         this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
+        this._endBtn.style.display = 'none';
 
         this._questionContainer = questionContainer;
 
@@ -37,16 +47,25 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         if (data) {
             this._allQuestions = (JSON.parse(data) as IQuestions);
             this._question = ((JSON.parse(data) as IQuestions).questions as IQuestionDataArray[])[this._currentRandomIndex];
-            // console.log((JSON.parse(data) as IQuestions).questions);
-            // this._answers = ((JSON.parse(data) as IQuestions).questions as IQuestionDataArray[])[this._currentRandomIndex].answers as IAnswers[];
             this._answers = this._question.answers;
             console.log(this._allQuestions)
         } else {
             this._answers = [];
         }
-
         this._answerContainer = [];
+    }
 
+    loadDataFromLocalStorage(data: string) {
+        if (data) {
+            this._allQuestions = JSON.parse(data);
+            this._question = JSON.parse(data).questions[this._currentRandomIndex];
+            this._answers = this._question.answers;
+
+            console.log(this._allQuestions);
+        }
+        else {
+            this._answers = [];
+        }
     }
 
     render = () => {
@@ -54,7 +73,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         this.createPage();
     }
 
-    //Tworzy eventy - których tu ni ma :)
+    //FIXME: Add events
     bindHandlers(): void {
 
     }
@@ -67,9 +86,9 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
         this._answerContainer.forEach((item, index) => {
             const radioBtnAnswer = createElement('input', `answer-${index}`, 'radio', `${this._answers[index].content}`) as HTMLInputElement;
-            radioBtnAnswer.name = `answer-radio-group`;
-
             const radioBtnAnswerLabel = document.createElement('label') as HTMLLabelElement;
+
+            radioBtnAnswer.name = `answer-radio-group`;
             radioBtnAnswerLabel.htmlFor = `answer-${index}`;
             radioBtnAnswerLabel.innerHTML = `${this._answers[index].content}`;
             radioBtnAnswerLabel.id = 'answer-options';
@@ -83,31 +102,41 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                 radioBtnAnswer.checked = true;
             }
 
-
             item.append(radioBtnAnswer)
             item.append(radioBtnAnswerLabel)
 
-            radioBtnAnswer.addEventListener('click', (evt: Event) => {
-                this._allQuestions.questions[this._currentRandomIndex].userAnswer = (evt.target as HTMLInputElement).value;
-
-                if (this._question.userAnswer == '' && this._userAnswerHelper == '') {
-                    this._userAnswerHelper = (evt.target as HTMLInputElement).value;
-                    const questionAnswered: number = parseInt(getLocalStorageItem('answers-user-provided')) + 1
-                    setLocalStorageItem('answers-user-provided', questionAnswered.toString());
-
-                    //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
-                    const questionLength: number = parseInt(getLocalStorageItem('question-length'));
-                    if (questionLength === questionAnswered) {
-                        this._endBtn.classList.add('end');
-                    }
-                }
-
-                setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
-            })
-
+            this.updateUserAnswer(radioBtnAnswer);
 
             this._questionContainer.append(item);
         })
+        //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
+        // const questionLength: number = parseInt(getLocalStorageItem('question-length'));
+        // if (questionLength === questionAnswered) {
+        //     // this._endBtn.classList.add('end');
+        //     this._endBtn.style.display = 'block';
+        // }
+    }
+    updateUserAnswer(radioBtnAnswer: HTMLInputElement) {
+        radioBtnAnswer.addEventListener('click', (evt: Event) => {
+            this._allQuestions.questions[this._currentRandomIndex].userAnswer = (evt.target as HTMLInputElement).value;
 
+            if (this._question.userAnswer == '' && this._userAnswerHelper == '') {
+                this._userAnswerHelper = (evt.target as HTMLInputElement).value;
+                const questionAnswered: number = parseInt(getLocalStorageItem('answers-user-provided')) + 1
+                setLocalStorageItem('answers-user-provided', questionAnswered.toString());
+
+                //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
+                const questionLength: number = parseInt(getLocalStorageItem('question-length'));
+                if (questionLength === questionAnswered) {
+                    this._endBtn.style.display = 'block';
+                }
+            }
+
+            setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
+        })
+
+        // this._questionContainer.append(item);
+
+        setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
     }
 }

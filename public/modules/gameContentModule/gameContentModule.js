@@ -3,8 +3,8 @@ import { createElement } from "../../createElements/CreateElements.js";
 import { getLocalStorageItem, setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 import { QuestionContentModule } from "../questionContentModule.ts/QuestionContentModule.js";
 import * as LocalStorageInitializ from "../../localStorageItems/LocalStorageInitialize.js";
-//Magistrala
-import eventBus from "../../bus/EventBus.js";
+import { getAllQuestionData } from "../../helper.js";
+import { StatisticContentModule } from "../statisticContentModule/StatisticContentModule.js";
 export class GameContentModule extends BaseAbstractTemplate {
     //Handler Function Bind - Potrzebne, bo inaczej nie działa odłączanie Handlera, kij wie czemu
     // private boundEnterHandler: (evt: KeyboardEvent) => void;
@@ -17,6 +17,8 @@ export class GameContentModule extends BaseAbstractTemplate {
             this._mainContainer.innerHTML = '';
             this._mainContainer.append(this._baseContainer);
         };
+        // this._oneQuestionTimer = () =>{
+        // }
         //Liczy łączny czas testu
         this.totalTimeCounter = () => {
             let time = 0;
@@ -34,15 +36,44 @@ export class GameContentModule extends BaseAbstractTemplate {
                 setLocalStorageItem('user-total-time', `${time}`);
             }, 100);
         };
+        this.oneQuestionTimeCounter = () => {
+            //Pobiera aktualne dane pytań
+            const allQuestionData = getAllQuestionData();
+            const actualIndex = parseInt(getLocalStorageItem('current-question-idx'));
+            const randomIndexArray = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[actualIndex];
+            const userAnswer = allQuestionData.questions[randomIndexArray].userAnswer;
+            let actualQuestionTimeArray = getLocalStorageItem('question-times-array').split(',').map(Number);
+            let actualQuestionTime = actualQuestionTimeArray[randomIndexArray];
+            window.clearInterval(this._oneQuestionTimeCounterId);
+            if (userAnswer == '') {
+                this._oneQuestionTimeCounterId = window.setInterval(() => {
+                    actualQuestionTime++;
+                    if (actualQuestionTime % 10 === 0) {
+                        this._oneQuestionTimeSpan.innerHTML = `${actualQuestionTime / 10}.0`;
+                    }
+                    else {
+                        this._oneQuestionTimeSpan.innerHTML = `${actualQuestionTime / 10}`;
+                    }
+                    //Dodawanie do tablicy aktualnego czasu aktualnego pytania
+                    actualQuestionTimeArray[randomIndexArray] = actualQuestionTime;
+                    setLocalStorageItem('question-times-array', actualQuestionTimeArray.toString());
+                }, 100);
+            }
+            else {
+                this._oneQuestionTimeSpan.innerHTML = '' + (actualQuestionTime % 10 == 0 ? actualQuestionTime / 10 + '.0' : '' + actualQuestionTime / 10);
+            }
+        };
         //Wczytuje pytanie po prawo
         this.nextBtnHandler = (evt) => {
             const currentRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
             const currentIndex = parseInt(getLocalStorageItem('current-question-idx'));
             if (currentIndex != this._maxPage - 1) {
                 this.updatePage(currentIndex + 2);
-                console.log('Random Index' + currentRandomIndex[currentIndex + 2]);
+                // console.log('Random Index' + currentRandomIndex[currentIndex + 2])
                 setLocalStorageItem('current-question-idx', (currentIndex + 1).toString());
+                this._oneQuestionTimera();
                 this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex + 1]].question}`;
+                // this._allQuestions.questions[this._currentRandomIndex].userAnswer = (evt.target as HTMLInputElement).value;
                 new QuestionContentModule(this._questionContainer, this._endBtn).render();
             }
         };
@@ -53,11 +84,13 @@ export class GameContentModule extends BaseAbstractTemplate {
             if (currentIndex - 1 >= 0) {
                 this.updatePage(currentIndex);
                 setLocalStorageItem('current-question-idx', (currentIndex - 1).toString());
+                this._oneQuestionTimera();
                 this._questionContentContainer.innerHTML = `${this._questionContent[currentRandomIndex[currentIndex - 1]].question}`;
                 new QuestionContentModule(this._questionContainer, this._endBtn).render();
             }
         };
         //Pozwala na używanie strzałek podczas przełączania pytań i dodaje efekt hover
+        //W sensie na przełączanie pytań prawo / lewo (tłumaczenie : to drugie prawo)
         this.arrowsRightLeftKeyDownHandler = (evt) => {
             if (evt.code.toLocaleLowerCase() === 'ArrowLeft'.toLocaleLowerCase()) {
                 this._prevBtn.style.background = '#b9bade86';
@@ -77,12 +110,19 @@ export class GameContentModule extends BaseAbstractTemplate {
                 this._nextBtn.style.background = '';
             }
         };
+        this._oneQuestionTimera = this.oneQuestionTimeCounter.bind(this);
         this._totalTimeCounterId = 0;
+        this._oneQuestionTimeCounterId = 0;
+        //Timer liczący łączny czas testu(Jego elementy logik jest niżej)
         this._totalTimeSpan = document.createElement('span');
         this._totalTimeSpanContent = document.createElement('span');
-        //FIXME : 'xyz' - trzeba usunąc argument tej funkcji bo raczej niepotrzebne
-        LocalStorageInitializ.localStoriageInitialize('xyz');
-        this._timeContainer = document.createElement('div');
+        //Timer dla pojedyńczego pytania(Jego elementy logik jest niżej)
+        this._oneQuestionTimeContainer = document.createElement('div');
+        this._oneQuestionTimeCenterContainer = document.createElement('div');
+        this._oneQuestionTimeSpan = document.createElement('div');
+        this._oneQuestionTimeSpanContent = document.createElement('span');
+        LocalStorageInitializ.localStoriageInitialize();
+        this._totalTimeCenterContainer = document.createElement('div');
         this._totalTimeContainer = document.createElement('div');
         const questionData = getLocalStorageItem('question-data');
         if (questionData) {
@@ -104,13 +144,24 @@ export class GameContentModule extends BaseAbstractTemplate {
     //Też tworzy strone
     createPage() {
         this.bindHandlers();
-        this._timeContainer.innerHTML = '0';
-        this._totalTimeContainer.innerHTML = '';
+        // this._totalTimeContainer.innerHTML = '';
+        // this._totalTimeCenterContainer.innerHTML = '';
+        this._totalTimeCenterContainer.id = 'total-time-center-container';
         this._totalTimeContainer.id = 'total-time';
         this._totalTimeSpanContent.id = 'total-time-content';
+        this._totalTimeSpan.id = 'total-time-span';
         //Total Time Div Create
-        this._totalTimeSpanContent.innerHTML = 'Całkowity czas : ';
-        this._totalTimeContainer.append(this._totalTimeSpanContent, this._totalTimeSpan);
+        this._totalTimeSpanContent.innerHTML = 'Całkowity czas';
+        this._totalTimeCenterContainer.append(this._totalTimeSpanContent, this._totalTimeSpan);
+        this._totalTimeContainer.append(this._totalTimeCenterContainer);
+        //Czas dla pojedynczego pytania
+        this._oneQuestionTimeContainer.id = 'one-question-time-container';
+        this._oneQuestionTimeCenterContainer.id = 'one-question-center-container';
+        this._oneQuestionTimeSpanContent.id = 'one-question-time-content';
+        this._oneQuestionTimeSpan.id = 'one-question-time';
+        this._oneQuestionTimeSpanContent.innerHTML = "Czas pytania";
+        this._oneQuestionTimeCenterContainer.append(this._oneQuestionTimeSpanContent, this._oneQuestionTimeSpan);
+        this._oneQuestionTimeContainer.append(this._oneQuestionTimeCenterContainer);
         this._endBtn.style.display = 'block';
         //Pobiera tablice indeksow z tablicy randomowych indeksow w localStorage - Dziwnie to brzmi ale działa XD
         const currentRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
@@ -123,11 +174,13 @@ export class GameContentModule extends BaseAbstractTemplate {
         //Tworzy Kontener z przyciskami i numerem strony
         this._buttonsContainer.append(this._prevBtn, this._pageContainer, this._nextBtn);
         //Dodaje do base ccontainer to co wyrzej sie potworzyło , duzo tego nie chce mi się wymieniać
-        this._baseContainer.append(this._questionContentContainer, this._questionContainer, this._totalTimeContainer, this._buttonsContainer);
+        this._baseContainer.append(this._questionContentContainer, this._questionContainer, this._oneQuestionTimeContainer, this._totalTimeContainer, this._buttonsContainer);
         //Licznik czasu ogólnego
         this.totalTimeCounter();
         //FIXME: Trzeba dodać licznik czasu dla poszczególnego ale no zapierdol w robocie i jeszcze go ni ma :) XD
         //this.questionTimeCounter();
+        // this.oneQuestionTimeCounter();
+        this._oneQuestionTimera();
         //Buttons
         // this._nextBtn.id;
     }
@@ -148,7 +201,9 @@ export class GameContentModule extends BaseAbstractTemplate {
             //Zatrzymuje licznik czasu
             window.clearInterval(this._totalTimeCounterId);
             //Wywołuje event endGame - który wczytuje okno statystyk(Bedzie dodane no ale no zapierdol w robocie)
-            eventBus.dispatch('endGame', { mainContainer: this._mainContainer });
+            // eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
+            this._mainContainer.innerHTML = '';
+            new StatisticContentModule(this._mainContainer).render();
         }
     }
     //Aktualizuje aktualny numer pytania
