@@ -26,6 +26,7 @@ export class StartPageModules extends BaseAbstractTemplate {
         this.boundEnterHandler = this.enterHandler.bind(this);
 
         this._mainContainer = mainContainer;
+        this._mainContainer.innerHTML = '';
 
         //Inicjalizowanie zmiennych
         this._baseContainer = document.createElement('div');
@@ -44,9 +45,9 @@ export class StartPageModules extends BaseAbstractTemplate {
     bindHandlers(): void {
         this._startBtn.addEventListener('click', (evt: Event) => this.startBtnNodeHandler(evt));
         this._startBtn.addEventListener('start-game', () => this.loadGameContentHandler());
-        this._showInfoButton.addEventListener('click',(evt: Event)=> this.showInfoContentHandler(evt));    
+        this._showInfoButton.addEventListener('click', (evt: Event) => this.showInfoContentHandler(evt));
         this._exitInfoButton.addEventListener('click', (evt: Event) => this.exitInfoContentHandler(evt));
-    
+
         document.addEventListener('keydown', this.boundEnterHandler);
         this._usernameNode.addEventListener('input', (evt: Event) => this.usernameNodeHandler(evt));
         eventBus.on('endGame', this.showStatistic);
@@ -61,7 +62,6 @@ export class StartPageModules extends BaseAbstractTemplate {
     //Też tworzy strone
     async createPage() {
         this._testInfo.id = 'test-info';
-        //FIXME: I need some resolution because this text is not showing on this container and I don't know why
         const textFromFile: string[] = (await this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
 
         for (let i = 0; i < textFromFile.length; i++) {
@@ -82,7 +82,7 @@ export class StartPageModules extends BaseAbstractTemplate {
 
         this._showInfoButton.id = 'show-info-startPage';
         this._showInfoButton.innerHTML = "Informacje o teście";
-        
+
         this._testInfo.style.display = "none";
         this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn, this._showInfoButton);
 
@@ -169,13 +169,13 @@ export class StartPageModules extends BaseAbstractTemplate {
         //i wyswietla statystyki(Jeszcze ich nie wyświetla bo zapierdol w robocie i nie dodałem XD)
         (evt.detail.mainContainer as HTMLDivElement).innerHTML = '';
     }
-    
+
     //Show info button
-    private showInfoContentHandler(evt: Event){
+    private showInfoContentHandler(evt: Event) {
         this._testInfo.style.display = "block";
     }
 
-    private exitInfoContentHandler(evt: Event){
+    private exitInfoContentHandler(evt: Event) {
         this._testInfo.style.display = "none";
     }
 }

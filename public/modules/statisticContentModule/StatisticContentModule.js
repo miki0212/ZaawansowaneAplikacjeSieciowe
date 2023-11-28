@@ -1,6 +1,7 @@
 import { BaseAbstractTemplate } from "../../baseTemplate/BaseAbstractTemplate.js";
 import { createElement } from "../../createElements/CreateElements.js";
 import { getLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
+import { StartPageModules } from "../startPageModule/StartPageModule.js";
 export class StatisticContentModule extends BaseAbstractTemplate {
     constructor(mainContainer) {
         super();
@@ -39,10 +40,20 @@ export class StatisticContentModule extends BaseAbstractTemplate {
                     userAnswerDiv.classList.add('incorrect');
                 }
             }
-            this._againTest.id = 'again-test';
-            this._againTest.innerHTML = 'Rozwiąż ponownie test';
+            // this._againTest.id = 'again-test';
+            // this._againTest.innerHTML = 'Rozwiąż ponownie test';
             document.body.appendChild(this._againTest);
             this._againTest.addEventListener('click', (evt) => {
+                //uj wie czmu działa ale działa
+                evt.preventDefault();
+                evt.stopImmediatePropagation();
+                evt.stopPropagation();
+                // const startPageModules = new StartPageModules(this._mainContainer);
+                this._mainContainer.innerHTML = '';
+                this._againTest.style.display = 'none';
+                localStorage.clear();
+                new StartPageModules(document.querySelector('#main-container')).render();
+                // startPageModules.render();
                 //FIXME: Add functionality when after click we can solve test one more time
                 //Event needs to switch user to page when user can enter user's name
             });
@@ -63,8 +74,9 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._allQuestionData = JSON.parse(getLocalStorageItem('question-data'));
         this._endBtn = document.querySelector('#end-btn');
         this._endBtn.style.display = 'none';
-        this._againTest = document.createElement('button');
-        this._againTest.style.display = 'block';
+        this._againTest = document.querySelector('#again-test');
+        // this._againTest = document.createElement('button') as HTMLButtonElement;
+        // this._againTest.style.display = 'block';
         this._baseContainer = createElement('div', 'base-statistic-container');
         this._usernameContainer = createElement('div', 'username-statistic-container');
         this._questionStatisticContainer = createElement('div', 'question-statistic-container');
@@ -81,8 +93,9 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._usernameContainer.innerHTML = 'Użytkownik ' + getLocalStorageItem('username');
         //Statistic
         this.createStatistic();
+        const questionL = parseInt(getLocalStorageItem('question-length'));
         //User points
-        this._pointsQuestionContainer.innerHTML = 'Gratulacje, masz  ' + this.countUserPoints() + ' pkt!';
+        this._pointsQuestionContainer.innerHTML = 'Gratulacje, masz  ' + this.countUserPoints() + ' / ' + questionL + ' pkt!';
     }
     bindHandlers() {
         throw new Error("Method not implemented.");

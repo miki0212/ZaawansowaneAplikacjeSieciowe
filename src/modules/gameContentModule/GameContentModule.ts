@@ -37,6 +37,8 @@ export class GameContentModule extends BaseAbstractTemplate {
     private _actualPage: number;
     private _maxPage: number;
 
+    private _againTest: HTMLButtonElement;
+
     private _questionContent!: IQuestionDataArray[];
 
     private _totalTimeCounterId: number;
@@ -71,6 +73,8 @@ export class GameContentModule extends BaseAbstractTemplate {
 
         this._totalTimeCenterContainer = document.createElement('div') as HTMLDivElement;
         this._totalTimeContainer = document.createElement('div') as HTMLDivElement;
+
+        this._againTest = document.querySelector('#again-test') as HTMLButtonElement;
 
         const questionData = getLocalStorageItem('question-data');
         if (questionData) {
@@ -287,13 +291,14 @@ export class GameContentModule extends BaseAbstractTemplate {
 
         //Sprawdza czy użytkownik udzielił odpowiedzi na wszystkie pytania
         if (questionLength === userAnswerLength) {
+            this._againTest.style.display = 'block';
             //Zatrzymuje licznik czasu
             window.clearInterval(this._totalTimeCounterId);
-
+            window.clearInterval(this._oneQuestionTimeCounterId);
             //Wywołuje event endGame - który wczytuje okno statystyk(Bedzie dodane no ale no zapierdol w robocie)
             // eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
             this._mainContainer.innerHTML = '';
-            new StatisticContentModule(this._mainContainer).render();
+            new StatisticContentModule(document.querySelector('#main-container') as HTMLDivElement).render();
         }
     }
 

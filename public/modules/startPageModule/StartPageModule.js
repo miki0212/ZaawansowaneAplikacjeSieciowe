@@ -36,6 +36,7 @@ export class StartPageModules extends BaseAbstractTemplate {
         //Bo jak sie nie remowuje to potem przy pytanach dalej ten Enter dziala
         this.boundEnterHandler = this.enterHandler.bind(this);
         this._mainContainer = mainContainer;
+        this._mainContainer.innerHTML = '';
         //Inicjalizowanie zmiennych
         this._baseContainer = document.createElement('div');
         this._testInfo = document.createElement('div');
@@ -60,7 +61,6 @@ export class StartPageModules extends BaseAbstractTemplate {
     createPage() {
         return __awaiter(this, void 0, void 0, function* () {
             this._testInfo.id = 'test-info';
-            //FIXME: I need some resolution because this text is not showing on this container and I don't know why
             const textFromFile = (yield this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
             for (let i = 0; i < textFromFile.length; i++) {
                 const p = document.createElement('p');

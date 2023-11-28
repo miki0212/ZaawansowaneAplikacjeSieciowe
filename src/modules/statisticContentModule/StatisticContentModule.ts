@@ -29,15 +29,16 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
         this._endBtn.style.display = 'none';
 
-        this._againTest = document.createElement('button') as HTMLButtonElement;
-        this._againTest.style.display = 'block';
+        this._againTest = document.querySelector('#again-test') as HTMLButtonElement;
+        // this._againTest = document.createElement('button') as HTMLButtonElement;
+        // this._againTest.style.display = 'block';
 
         this._baseContainer = createElement('div', 'base-statistic-container') as HTMLDivElement;
         this._usernameContainer = createElement('div', 'username-statistic-container') as HTMLDivElement;
         this._questionStatisticContainer = createElement('div', 'question-statistic-container') as HTMLDivElement;
         this._pointsQuestionContainer = createElement('div', 'points-question-container') as HTMLDivElement;
 
-        this._totalTimeContainer = createElement('div', 'total-time-container') as HTMLDivElement; 
+        this._totalTimeContainer = createElement('div', 'total-time-container') as HTMLDivElement;
     }
 
     public render(): void {
@@ -55,8 +56,10 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         //Statistic
         this.createStatistic();
 
+        const questionL: number = parseInt(getLocalStorageItem('question-length'));
+
         //User points
-        this._pointsQuestionContainer.innerHTML = 'Gratulacje, masz  ' + this.countUserPoints() + ' pkt!';
+        this._pointsQuestionContainer.innerHTML = 'Gratulacje, masz  ' + this.countUserPoints() + ' / ' + questionL + ' pkt!';
 
     }
 
@@ -65,7 +68,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
     }
     createStatistic = (): void => {
         //Total Time 
-        this._totalTimeContainer.innerHTML = "Całkowity czas testu: " + parseInt(getLocalStorageItem("user-total-time"))/10 + " s";
+        this._totalTimeContainer.innerHTML = "Całkowity czas testu: " + parseInt(getLocalStorageItem("user-total-time")) / 10 + " s";
 
         const questionLength: number = parseInt(getLocalStorageItem('question-length'));
         const randomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
@@ -84,7 +87,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
 
             const questionTimeDiv = createElement('div', 'question-time-container') as HTMLDivElement;
 
-            let questionPosition = i+1;
+            let questionPosition = i + 1;
             lpAnswer.id = 'lp-answer';
             lpAnswer.innerHTML = '' + questionPosition;
 
@@ -110,11 +113,22 @@ export class StatisticContentModule extends BaseAbstractTemplate {
             }
         }
 
-        this._againTest.id = 'again-test';
-        this._againTest.innerHTML = 'Rozwiąż ponownie test';
+        // this._againTest.id = 'again-test';
+        // this._againTest.innerHTML = 'Rozwiąż ponownie test';
         document.body.appendChild(this._againTest);
 
         this._againTest.addEventListener('click', (evt: Event) => {
+            //uj wie czmu działa ale działa
+            evt.preventDefault();
+            evt.stopImmediatePropagation();
+            evt.stopPropagation();
+            // const startPageModules = new StartPageModules(this._mainContainer);
+            this._mainContainer.innerHTML = '';
+            this._againTest.style.display = 'none';
+            localStorage.clear();
+            new StartPageModules(document.querySelector('#main-container') as HTMLDivElement).render();
+
+            // startPageModules.render();
             //FIXME: Add functionality when after click we can solve test one more time
             //Event needs to switch user to page when user can enter user's name
         })
