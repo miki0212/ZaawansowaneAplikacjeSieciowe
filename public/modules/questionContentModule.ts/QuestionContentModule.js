@@ -42,7 +42,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             this._answers = [];
         }
     }
-
     //FIXME: Add events
     bindHandlers() {
     }
@@ -67,26 +66,15 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             }
             item.append(radioBtnAnswer);
             item.append(radioBtnAnswerLabel);
-
-            radioBtnAnswer.addEventListener('click', (evt) => {
-                this._allQuestions.questions[this._currentRandomIndex].userAnswer = evt.target.value;
-                if (this._question.userAnswer == '' && this._userAnswerHelper == '') {
-                    this._userAnswerHelper = evt.target.value;
-                    const questionAnswered = parseInt(getLocalStorageItem('answers-user-provided')) + 1;
-                    setLocalStorageItem('answers-user-provided', questionAnswered.toString());
-                    //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
-                    const questionLength = parseInt(getLocalStorageItem('question-length'));
-                    if (questionLength === questionAnswered) {
-                        // this._endBtn.classList.add('end');
-                        this._endBtn.style.display = 'block';
-                    }
-                }
-                setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
-            });
-
             this.updateUserAnswer(radioBtnAnswer);
             this._questionContainer.append(item);
         });
+        //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
+        // const questionLength: number = parseInt(getLocalStorageItem('question-length'));
+        // if (questionLength === questionAnswered) {
+        //     // this._endBtn.classList.add('end');
+        //     this._endBtn.style.display = 'block';
+        // }
     }
     updateUserAnswer(radioBtnAnswer) {
         radioBtnAnswer.addEventListener('click', (evt) => {
@@ -103,5 +91,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             }
             setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
         });
+        // this._questionContainer.append(item);
+        setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
     }
 }

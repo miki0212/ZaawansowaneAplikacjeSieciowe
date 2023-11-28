@@ -22,7 +22,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
     private _oneQuestionTimerId: number;
     private _actualQuestionTime!: number;
-    
+
     constructor(questionContainer: HTMLDivElement, endGame: HTMLButtonElement) {
         super();
 
@@ -54,7 +54,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         }
         this._answerContainer = [];
     }
-    
+
     loadDataFromLocalStorage(data: string) {
         if (data) {
             this._allQuestions = JSON.parse(data);
@@ -87,7 +87,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         this._answerContainer.forEach((item, index) => {
             const radioBtnAnswer = createElement('input', `answer-${index}`, 'radio', `${this._answers[index].content}`) as HTMLInputElement;
             const radioBtnAnswerLabel = document.createElement('label') as HTMLLabelElement;
-            
+
             radioBtnAnswer.name = `answer-radio-group`;
             radioBtnAnswerLabel.htmlFor = `answer-${index}`;
             radioBtnAnswerLabel.innerHTML = `${this._answers[index].content}`;
@@ -109,12 +109,12 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
             this._questionContainer.append(item);
         })
-                    //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
-                    const questionLength: number = parseInt(getLocalStorageItem('question-length'));
-                    if (questionLength === questionAnswered) {
-                        // this._endBtn.classList.add('end');
-                        this._endBtn.style.display = 'block';
-                    }
+        //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
+        // const questionLength: number = parseInt(getLocalStorageItem('question-length'));
+        // if (questionLength === questionAnswered) {
+        //     // this._endBtn.classList.add('end');
+        //     this._endBtn.style.display = 'block';
+        // }
     }
     updateUserAnswer(radioBtnAnswer: HTMLInputElement) {
         radioBtnAnswer.addEventListener('click', (evt: Event) => {
@@ -132,12 +132,11 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                 }
             }
 
-                setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
-            })
-
-            this._questionContainer.append(item);
-
             setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
         })
+
+        // this._questionContainer.append(item);
+
+        setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
     }
 }
