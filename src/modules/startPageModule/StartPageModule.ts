@@ -13,6 +13,8 @@ export class StartPageModules extends BaseAbstractTemplate {
     private _usernameLabel: HTMLLabelElement;
     private _usernameNode: HTMLInputElement;
     private _startBtn: HTMLButtonElement;
+    private _showInfoButton: HTMLButtonElement;
+    private _exitInfoButton: HTMLButtonElement;
 
     private boundEnterHandler: (evt: KeyboardEvent) => void;
 
@@ -32,6 +34,9 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._usernameNode = document.createElement('input');
         this._startBtn = document.createElement('button');
 
+        this._showInfoButton = document.createElement('button');
+        this._exitInfoButton = document.createElement('button');
+
         //Tworzenie Handlerow
         this.bindHandlers();
     }
@@ -39,7 +44,9 @@ export class StartPageModules extends BaseAbstractTemplate {
     bindHandlers(): void {
         this._startBtn.addEventListener('click', (evt: Event) => this.startBtnNodeHandler(evt));
         this._startBtn.addEventListener('start-game', () => this.loadGameContentHandler());
-
+        this._showInfoButton.addEventListener('click',(evt: Event)=> this.showInfoContentHandler(evt));    
+        this._exitInfoButton.addEventListener('click', (evt: Event) => this.exitInfoContentHandler(evt));
+    
         document.addEventListener('keydown', this.boundEnterHandler);
         this._usernameNode.addEventListener('input', (evt: Event) => this.usernameNodeHandler(evt));
         eventBus.on('endGame', this.showStatistic);
@@ -73,7 +80,15 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._startBtn.id = 'start';
         this._startBtn.innerHTML = 'Rozpocznij Test';
 
-        this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
+        this._showInfoButton.id = 'show-info-startPage';
+        this._showInfoButton.innerHTML = "Informacje o teście";
+        
+        this._testInfo.style.display = "none";
+        this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn, this._showInfoButton);
+
+        this._exitInfoButton.id = 'exit-info-startPage';
+        this._exitInfoButton.innerHTML = "Zamknij";
+        this._testInfo.append(this._exitInfoButton);
     }
 
     //Reading text about test from file
@@ -153,5 +168,14 @@ export class StartPageModules extends BaseAbstractTemplate {
         //Kończy gre 
         //i wyswietla statystyki(Jeszcze ich nie wyświetla bo zapierdol w robocie i nie dodałem XD)
         (evt.detail.mainContainer as HTMLDivElement).innerHTML = '';
+    }
+    
+    //Show info button
+    private showInfoContentHandler(evt: Event){
+        this._testInfo.style.display = "block";
+    }
+
+    private exitInfoContentHandler(evt: Event){
+        this._testInfo.style.display = "none";
     }
 }

@@ -42,12 +42,16 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._usernameLabel = document.createElement('label');
         this._usernameNode = document.createElement('input');
         this._startBtn = document.createElement('button');
+        this._showInfoButton = document.createElement('button');
+        this._exitInfoButton = document.createElement('button');
         //Tworzenie Handlerow
         this.bindHandlers();
     }
     bindHandlers() {
         this._startBtn.addEventListener('click', (evt) => this.startBtnNodeHandler(evt));
         this._startBtn.addEventListener('start-game', () => this.loadGameContentHandler());
+        this._showInfoButton.addEventListener('click', (evt) => this.showInfoContentHandler(evt));
+        this._exitInfoButton.addEventListener('click', (evt) => this.exitInfoContentHandler(evt));
         document.addEventListener('keydown', this.boundEnterHandler);
         this._usernameNode.addEventListener('input', (evt) => this.usernameNodeHandler(evt));
         eventBus.on('endGame', this.showStatistic);
@@ -70,7 +74,13 @@ export class StartPageModules extends BaseAbstractTemplate {
             this._usernameNode.placeholder = 'Username';
             this._startBtn.id = 'start';
             this._startBtn.innerHTML = 'Rozpocznij Test';
-            this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
+            this._showInfoButton.id = 'show-info-startPage';
+            this._showInfoButton.innerHTML = "Informacje o teście";
+            this._testInfo.style.display = "none";
+            this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn, this._showInfoButton);
+            this._exitInfoButton.id = 'exit-info-startPage';
+            this._exitInfoButton.innerHTML = "Zamknij";
+            this._testInfo.append(this._exitInfoButton);
         });
     }
     //Reading text about test from file
@@ -133,5 +143,12 @@ export class StartPageModules extends BaseAbstractTemplate {
         //Kończy gre 
         //i wyswietla statystyki(Jeszcze ich nie wyświetla bo zapierdol w robocie i nie dodałem XD)
         evt.detail.mainContainer.innerHTML = '';
+    }
+    //Show info button
+    showInfoContentHandler(evt) {
+        this._testInfo.style.display = "block";
+    }
+    exitInfoContentHandler(evt) {
+        this._testInfo.style.display = "none";
     }
 }

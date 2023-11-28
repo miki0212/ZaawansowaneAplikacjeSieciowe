@@ -83,8 +83,9 @@ export class StatisticContentModule extends BaseAbstractTemplate {
 
             const questionTimeDiv = createElement('div', 'question-time-container') as HTMLDivElement;
 
+            let questionPosition = i+1;
             lpAnswer.id = 'lp-answer';
-            lpAnswer.innerHTML = '' + i;
+            lpAnswer.innerHTML = '' + questionPosition;
 
             correctAnswerDiv.id = 'correct-answer';
             correctAnswerDiv.innerHTML = questions[randomIndex[i]].correctAnswer;
