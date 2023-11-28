@@ -16,18 +16,21 @@ export class StatisticContentModule extends BaseAbstractTemplate {
                 const answerDiv = document.createElement('div');
                 answerDiv.id = 'answerDiv';
                 const lpAnswer = document.createElement('div');
+                const questionDiv = document.createElement('div');
                 const userAnswerDiv = document.createElement('div');
                 const correctAnswerDiv = document.createElement('div');
                 const questionTimeDiv = createElement('div', 'question-time-container');
                 let questionPosition = i + 1;
                 lpAnswer.id = 'lp-answer';
                 lpAnswer.innerHTML = '' + questionPosition;
+                questionDiv.id = 'question';
+                questionDiv.innerHTML = questions[randomIndex[i]].question;
                 correctAnswerDiv.id = 'correct-answer';
                 correctAnswerDiv.innerHTML = questions[randomIndex[i]].correctAnswer;
                 userAnswerDiv.id = 'user-answer';
                 userAnswerDiv.innerHTML = questions[randomIndex[i]].userAnswer;
                 questionTimeDiv.innerHTML = '' + (questionTimes[randomIndex[i]] % 10 == 0 ? questionTimes[randomIndex[i]] / 10 + '.0 s' : questionTimes[randomIndex[i]] / 10 + ' s');
-                answerDiv.append(lpAnswer, correctAnswerDiv, userAnswerDiv, questionTimeDiv);
+                answerDiv.append(lpAnswer, questionDiv, correctAnswerDiv, userAnswerDiv, questionTimeDiv);
                 this._questionStatisticContainer.append(answerDiv);
                 if (questions[randomIndex[i]].correctAnswer === questions[randomIndex[i]].userAnswer) {
                     userAnswerDiv.classList.add('correct');
