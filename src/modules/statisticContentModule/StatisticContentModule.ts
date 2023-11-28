@@ -3,13 +3,14 @@ import { createElement } from "../../createElements/CreateElements.js";
 import { IQuestionDataArray } from "../../interface/IQuestionDataArray";
 import { IQuestions } from "../../interface/IQuestions";
 import { getLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
-
+import { StartPageModules } from "../startPageModule/StartPageModule.js";
 
 export class StatisticContentModule extends BaseAbstractTemplate {
 
     private _mainContainer: HTMLDivElement;
     private _allQuestionData: IQuestions;
     private _endBtn: HTMLButtonElement;
+    private _againTest: HTMLButtonElement;
 
     //Containers
     private _baseContainer: HTMLDivElement;
@@ -23,8 +24,12 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._mainContainer = mainContainer;
 
         this._allQuestionData = JSON.parse(getLocalStorageItem('question-data')) as IQuestions;
+
         this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
         this._endBtn.style.display = 'none';
+
+        this._againTest = document.createElement('button') as HTMLButtonElement;
+        this._againTest.style.display = 'block';
 
         this._baseContainer = createElement('div', 'base-statistic-container') as HTMLDivElement;
         this._usernameContainer = createElement('div', 'username-statistic-container') as HTMLDivElement;
@@ -41,7 +46,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._mainContainer.append(this._baseContainer);
 
         //Get username
-        this._usernameContainer.innerHTML = 'Użytkownik ' +getLocalStorageItem('username');
+        this._usernameContainer.innerHTML = 'Użytkownik ' + getLocalStorageItem('username');
 
         //Statistic
         this.createStatistic();
@@ -91,6 +96,15 @@ export class StatisticContentModule extends BaseAbstractTemplate {
                 userAnswerDiv.classList.add('incorrect')
             }
         }
+
+        this._againTest.id = 'again-test';
+        this._againTest.innerHTML = 'Rozwiąż ponownie test';
+        document.body.appendChild(this._againTest);
+
+        this._againTest.addEventListener('click', (evt: Event) => {
+            //FIXME: Add functionality when after click we can solve test one more time
+            //Event needs to switch user to page when user can enter user's name
+        })
     }
 
     //Można przenieść do helpera

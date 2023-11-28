@@ -234,6 +234,40 @@ input[type="radio"] {
   transform: translate(-100%);
 }
 
+#again-test {
+  padding: 10px;
+  width: 450px;
+  /* height: 20px; */
+  border-radius: 10px;
+  overflow: hidden;
+  position: fixed;
+  font-weight: 900;
+  font-size: 20px;
+  bottom: 50px;
+}
+
+#again-test::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  width: 50%;
+  height: 100%;
+  background-color: #b9bade86;
+  transition: all 2s;
+}
+
+#again-test::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  content: "";
+  width: 50%;
+  height: 100%;
+  background-color: #b9bade86;
+  transition: all 2s;
+}
+
 #start {
   padding: 10px;
   /* width: 300px; */

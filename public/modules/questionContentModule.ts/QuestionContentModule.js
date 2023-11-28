@@ -31,7 +31,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         }
         this._answerContainer = [];
     }
-    //Tworzy eventy - których tu ni ma :)
+    //FIXME: Add events
     bindHandlers() {
     }
     createPage() {

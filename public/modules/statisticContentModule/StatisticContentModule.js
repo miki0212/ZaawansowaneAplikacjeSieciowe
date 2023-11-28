@@ -33,6 +33,13 @@ export class StatisticContentModule extends BaseAbstractTemplate {
                     userAnswerDiv.classList.add('incorrect');
                 }
             }
+            this._againTest.id = 'again-test';
+            this._againTest.innerHTML = 'Rozwiąż ponownie test';
+            document.body.appendChild(this._againTest);
+            this._againTest.addEventListener('click', (evt) => {
+                //FIXME: Add functionality when after click we can solve test one more time
+                //Event needs to switch user to page when user can enter user's name
+            });
         };
         //Można przenieść do helpera
         this.countUserPoints = () => {
@@ -50,6 +57,8 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._allQuestionData = JSON.parse(getLocalStorageItem('question-data'));
         this._endBtn = document.querySelector('#end-btn');
         this._endBtn.style.display = 'none';
+        this._againTest = document.createElement('button');
+        this._againTest.style.display = 'block';
         this._baseContainer = createElement('div', 'base-statistic-container');
         this._usernameContainer = createElement('div', 'username-statistic-container');
         this._questionStatisticContainer = createElement('div', 'question-statistic-container');

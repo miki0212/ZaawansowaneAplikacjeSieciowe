@@ -22,7 +22,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
     private _oneQuestionTimerId: number;
     private _actualQuestionTime!: number;
-
+    
     constructor(questionContainer: HTMLDivElement, endGame: HTMLButtonElement) {
         super();
 
@@ -54,7 +54,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         }
 
         this._answerContainer = [];
-
     }
 
     render = () => {
@@ -62,7 +61,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         this.createPage();
     }
 
-    //Tworzy eventy - których tu ni ma :)
+    //FIXME: Add events
     bindHandlers(): void {
 
     }
@@ -91,7 +90,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                 radioBtnAnswer.checked = true;
             }
 
-
             item.append(radioBtnAnswer)
             item.append(radioBtnAnswerLabel)
 
@@ -114,8 +112,8 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                 setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
             })
 
-
             this._questionContainer.append(item);
+
         })
 
     }
