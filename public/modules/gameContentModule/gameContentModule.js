@@ -3,9 +3,8 @@ import { createElement } from "../../createElements/CreateElements.js";
 import { getLocalStorageItem, setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 import { QuestionContentModule } from "../questionContentModule.ts/QuestionContentModule.js";
 import * as LocalStorageInitializ from "../../localStorageItems/LocalStorageInitialize.js";
-//Magistrala
-import eventBus from "../../bus/EventBus.js";
 import { getAllQuestionData } from "../../helper.js";
+import { StatisticContentModule } from "../statisticContentModule/StatisticContentModule.js";
 export class GameContentModule extends BaseAbstractTemplate {
     //Handler Function Bind - Potrzebne, bo inaczej nie działa odłączanie Handlera, kij wie czemu
     // private boundEnterHandler: (evt: KeyboardEvent) => void;
@@ -122,8 +121,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._oneQuestionTimeCenterContainer = document.createElement('div');
         this._oneQuestionTimeSpan = document.createElement('div');
         this._oneQuestionTimeSpanContent = document.createElement('span');
-        //FIXME : 'xyz' - trza usunąc argument tej funkcji bo raczej niepotrzebne
-        LocalStorageInitializ.localStoriageInitialize('xyz');
+        LocalStorageInitializ.localStoriageInitialize();
         this._totalTimeCenterContainer = document.createElement('div');
         this._totalTimeContainer = document.createElement('div');
         const questionData = getLocalStorageItem('question-data');
@@ -156,7 +154,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._totalTimeSpanContent.innerHTML = 'Całkowity czas';
         this._totalTimeCenterContainer.append(this._totalTimeSpanContent, this._totalTimeSpan);
         this._totalTimeContainer.append(this._totalTimeCenterContainer);
-        //Czas dla pojedńczego pytania
+        //Czas dla pojedynczego pytania
         this._oneQuestionTimeContainer.id = 'one-question-time-container';
         this._oneQuestionTimeCenterContainer.id = 'one-question-center-container';
         this._oneQuestionTimeSpanContent.id = 'one-question-time-content';
@@ -203,7 +201,9 @@ export class GameContentModule extends BaseAbstractTemplate {
             //Zatrzymuje licznik czasu
             window.clearInterval(this._totalTimeCounterId);
             //Wywołuje event endGame - który wczytuje okno statystyk(Bedzie dodane no ale no zapierdol w robocie)
-            eventBus.dispatch('endGame', { mainContainer: this._mainContainer });
+            // eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
+            this._mainContainer.innerHTML = '';
+            new StatisticContentModule(this._mainContainer).render();
         }
     }
     //Aktualizuje aktualny numer pytania

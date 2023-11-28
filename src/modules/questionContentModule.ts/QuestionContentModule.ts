@@ -22,7 +22,7 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
     private _oneQuestionTimerId: number;
     private _actualQuestionTime!: number;
-
+    
     constructor(questionContainer: HTMLDivElement, endGame: HTMLButtonElement) {
         super();
 
@@ -53,7 +53,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             this._answers = [];
         }
         this._answerContainer = [];
-
     }
     
     loadDataFromLocalStorage(data: string) {
@@ -103,7 +102,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                 radioBtnAnswer.checked = true;
             }
 
-
             item.append(radioBtnAnswer)
             item.append(radioBtnAnswerLabel)
 
@@ -111,7 +109,12 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
             this._questionContainer.append(item);
         })
-
+                    //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
+                    const questionLength: number = parseInt(getLocalStorageItem('question-length'));
+                    if (questionLength === questionAnswered) {
+                        // this._endBtn.classList.add('end');
+                        this._endBtn.style.display = 'block';
+                    }
     }
     updateUserAnswer(radioBtnAnswer: HTMLInputElement) {
         radioBtnAnswer.addEventListener('click', (evt: Event) => {
@@ -128,6 +131,11 @@ export class QuestionContentModule extends BaseAbstractTemplate {
                     this._endBtn.style.display = 'block';
                 }
             }
+
+                setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
+            })
+
+            this._questionContainer.append(item);
 
             setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
         })

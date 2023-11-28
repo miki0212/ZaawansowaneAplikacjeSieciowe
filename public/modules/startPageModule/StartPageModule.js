@@ -1,6 +1,16 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { BaseAbstractTemplate } from "../../baseTemplate/BaseAbstractTemplate.js";
 import eventBus from "../../bus/EventBus.js";
 import { StartGameEvent } from "../../events/StartGameEvent.js";
+import { setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 import { GameContentModule } from "../gameContentModule/GameContentModule.js";
 export class StartPageModules extends BaseAbstractTemplate {
     constructor(mainContainer) {
@@ -14,6 +24,7 @@ export class StartPageModules extends BaseAbstractTemplate {
         this.startBtnNodeHandler = (evt) => {
             if (this._startBtn.classList.contains('start-enable')) {
                 this._startBtn.dispatchEvent(new StartGameEvent('start-game'));
+                this.saveUserNameToLocalStorage();
             }
             else {
                 //Dodaje czerwoną ramke do labela z username
@@ -27,6 +38,7 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._mainContainer = mainContainer;
         //Inicjalizowanie zmiennych
         this._baseContainer = document.createElement('div');
+        this._testInfo = document.createElement('div');
         this._usernameLabel = document.createElement('label');
         this._usernameNode = document.createElement('input');
         this._startBtn = document.createElement('button');
@@ -42,13 +54,53 @@ export class StartPageModules extends BaseAbstractTemplate {
     }
     //Też tworzy strone
     createPage() {
-        this._usernameLabel.id = 'user-name';
-        this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika';
-        this._usernameNode.id = 'user-name-input';
-        this._usernameNode.placeholder = 'Username';
-        this._startBtn.id = 'start';
-        this._startBtn.innerHTML = 'Rozpocznij Test';
-        this._mainContainer.append(this._usernameLabel, this._usernameNode, this._startBtn);
+        return __awaiter(this, void 0, void 0, function* () {
+            this._testInfo.id = 'test-info';
+            //FIXME: I need some resolution because this text is not showing on this container and I don't know why
+            const textFromFile = (yield this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
+            for (let i = 0; i < textFromFile.length; i++) {
+                const p = document.createElement('p');
+                p.innerHTML = textFromFile[i];
+                p.id = 'test-info-p';
+                this._testInfo.append(p);
+            }
+            this._usernameLabel.id = 'user-name';
+            this._usernameLabel.innerHTML = 'Podaj nazwę użytkownika';
+            this._usernameNode.id = 'user-name-input';
+            this._usernameNode.placeholder = 'Username';
+            this._startBtn.id = 'start';
+            this._startBtn.innerHTML = 'Rozpocznij Test';
+            this._mainContainer.append(this._testInfo, this._usernameLabel, this._usernameNode, this._startBtn);
+        });
+    }
+    //Reading text about test from file
+    readTestInfoFile(file) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                let testInfoFile = new XMLHttpRequest();
+                testInfoFile.open("GET", file, true);
+                testInfoFile.onreadystatechange = function () {
+                    if (testInfoFile.readyState === 4) {
+                        if (testInfoFile.status === 200 || testInfoFile.status === 0) {
+                            const text = testInfoFile.responseText.split('//');
+                            resolve(text);
+                            //Here text from file is reading and it is working
+                            console.log(text);
+                        }
+                        else {
+                            reject(new Error('Read from file is failed'));
+                        }
+                    }
+                };
+                testInfoFile.send(null);
+            });
+        });
+    }
+    //Adding username to localStorage
+    saveUserNameToLocalStorage() {
+        const userNameInputValue = this._usernameNode.value;
+        setLocalStorageItem('username', userNameInputValue);
+        return userNameInputValue;
     }
     //Czysci main content i ładuje gameContent
     loadGameContentHandler() {

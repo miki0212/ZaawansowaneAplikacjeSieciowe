@@ -11,6 +11,3 @@ const loadStartContent = () => {
 }
 
 loadStartContent();
-
-
-

@@ -9,7 +9,7 @@ import * as LocalStorageInitializ from "../../localStorageItems/LocalStorageInit
 //Magistrala
 import eventBus from "../../bus/EventBus.js";
 import { getAllQuestionData } from "../../helper.js";
-
+import { StatisticContentModule } from "../statisticContentModule/StatisticContentModule.js";
 
 export class GameContentModule extends BaseAbstractTemplate {
     private _mainContainer: HTMLDivElement;
@@ -24,7 +24,7 @@ export class GameContentModule extends BaseAbstractTemplate {
     private _totalTimeSpan: HTMLSpanElement;
     private _totalTimeSpanContent: HTMLSpanElement;
 
-    //Trza zmienić nazwy tych zmiennych bo są ujowe
+    //FIXME: Change names of this variables
     private _oneQuestionTimeContainer: HTMLDivElement;
     private _oneQuestionTimeSpan: HTMLDivElement;
     private _oneQuestionTimeSpanContent: HTMLSpanElement;
@@ -67,8 +67,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._oneQuestionTimeSpan = document.createElement('div') as HTMLDivElement;
         this._oneQuestionTimeSpanContent = document.createElement('span') as HTMLSpanElement;
 
-        //FIXME : 'xyz' - trza usunąc argument tej funkcji bo raczej niepotrzebne
-        LocalStorageInitializ.localStoriageInitialize('xyz');
+        LocalStorageInitializ.localStoriageInitialize();
 
         this._totalTimeCenterContainer = document.createElement('div') as HTMLDivElement;
         this._totalTimeContainer = document.createElement('div') as HTMLDivElement;
@@ -94,8 +93,6 @@ export class GameContentModule extends BaseAbstractTemplate {
 
         this._nextBtn = createElement('input', 'next', 'button', 'Next Question') as HTMLInputElement;
         this._prevBtn = createElement('input', 'back', 'button', 'Prev Question') as HTMLInputElement;
-
-
     }
 
     //Tworzy strone
@@ -121,7 +118,7 @@ export class GameContentModule extends BaseAbstractTemplate {
         this._totalTimeCenterContainer.append(this._totalTimeSpanContent, this._totalTimeSpan)
         this._totalTimeContainer.append(this._totalTimeCenterContainer);
 
-        //Czas dla pojedńczego pytania
+        //Czas dla pojedynczego pytania
         this._oneQuestionTimeContainer.id = 'one-question-time-container';
         this._oneQuestionTimeCenterContainer.id = 'one-question-center-container';
         this._oneQuestionTimeSpanContent.id = 'one-question-time-content';
@@ -294,7 +291,9 @@ export class GameContentModule extends BaseAbstractTemplate {
             window.clearInterval(this._totalTimeCounterId);
 
             //Wywołuje event endGame - który wczytuje okno statystyk(Bedzie dodane no ale no zapierdol w robocie)
-            eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
+            // eventBus.dispatch('endGame', { mainContainer: this._mainContainer })
+            this._mainContainer.innerHTML = '';
+            new StatisticContentModule(this._mainContainer).render();
         }
     }
 
