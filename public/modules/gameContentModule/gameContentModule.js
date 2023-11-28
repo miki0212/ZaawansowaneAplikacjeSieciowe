@@ -197,6 +197,7 @@ export class GameContentModule extends BaseAbstractTemplate {
     endGameHandler(evt) {
         const questionLength = parseInt(getLocalStorageItem('question-length'));
         const userAnswerLength = parseInt(getLocalStorageItem('answers-user-provided'));
+        this._endBtn.style.display = 'none';
         //Sprawdza czy użytkownik udzielił odpowiedzi na wszystkie pytania
         if (questionLength === userAnswerLength) {
             this._againTest.style.display = 'block';

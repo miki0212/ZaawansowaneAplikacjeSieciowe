@@ -15,7 +15,13 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         //This is probably remembered by the user who already has some question
         this._userAnswerHelper = '';
         this._endBtn = document.querySelector('#end-btn');
-        this._endBtn.style.display = 'none';
+        const l = parseInt(getLocalStorageItem('answers-user-provided'));
+        const questionLength = parseInt(getLocalStorageItem('question-length'));
+        if (l === questionLength) {
+        }
+        else {
+            this._endBtn.style.display = 'none';
+        }
         this._questionContainer = questionContainer;
         this._currentIndex = parseInt(getLocalStorageItem('current-question-idx'));
         this._currentRandomIndex = parseInt(getLocalStorageItem('random-questions-index-array').split(',')[this._currentIndex]);
@@ -69,12 +75,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             this.updateUserAnswer(radioBtnAnswer);
             this._questionContainer.append(item);
         });
-        //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
-        // const questionLength: number = parseInt(getLocalStorageItem('question-length'));
-        // if (questionLength === questionAnswered) {
-        //     // this._endBtn.classList.add('end');
-        //     this._endBtn.style.display = 'block';
-        // }
     }
     updateUserAnswer(radioBtnAnswer) {
         radioBtnAnswer.addEventListener('click', (evt) => {

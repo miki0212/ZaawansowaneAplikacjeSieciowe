@@ -36,7 +36,15 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         this._userAnswerHelper = '';
 
         this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
-        this._endBtn.style.display = 'none';
+
+        const l = parseInt(getLocalStorageItem('answers-user-provided'))
+        const questionLength = parseInt(getLocalStorageItem('question-length'))
+
+        if (l === questionLength) {
+
+        } else {
+            this._endBtn.style.display = 'none';
+        }
 
         this._questionContainer = questionContainer;
 
@@ -109,12 +117,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
             this._questionContainer.append(item);
         })
-        //Sprawdzanie czy liczba udzielonych odpowiedzi jest taka sama jak liczba pytań
-        // const questionLength: number = parseInt(getLocalStorageItem('question-length'));
-        // if (questionLength === questionAnswered) {
-        //     // this._endBtn.classList.add('end');
-        //     this._endBtn.style.display = 'block';
-        // }
     }
     updateUserAnswer(radioBtnAnswer: HTMLInputElement) {
         radioBtnAnswer.addEventListener('click', (evt: Event) => {

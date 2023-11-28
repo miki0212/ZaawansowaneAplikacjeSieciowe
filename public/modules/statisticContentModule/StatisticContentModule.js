@@ -73,7 +73,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._mainContainer = mainContainer;
         this._allQuestionData = JSON.parse(getLocalStorageItem('question-data'));
         this._endBtn = document.querySelector('#end-btn');
-        this._endBtn.style.display = 'none';
+        // this._endBtn.style.display = 'none';
         this._againTest = document.querySelector('#again-test');
         // this._againTest = document.createElement('button') as HTMLButtonElement;
         // this._againTest.style.display = 'block';
