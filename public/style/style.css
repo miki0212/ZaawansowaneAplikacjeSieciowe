@@ -722,3 +722,15 @@ body {
   padding: 2px;
   margin: 0;
 }
+
+/*
+  Total time
+*/
+#total-time-container {
+  padding: 15px 0;
+  font-weight: 700;
+  font-size: 18px;
+  background-color: #6b6daa;
+  width: 100%;
+  text-align: center;
+}

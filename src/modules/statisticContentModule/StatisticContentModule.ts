@@ -17,6 +17,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
     private _usernameContainer: HTMLDivElement;
     private _questionStatisticContainer: HTMLDivElement;
     private _pointsQuestionContainer: HTMLDivElement;
+    private _totalTimeContainer: HTMLDivElement;
 
     constructor(mainContainer: HTMLDivElement) {
         super();
@@ -35,6 +36,8 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._usernameContainer = createElement('div', 'username-statistic-container') as HTMLDivElement;
         this._questionStatisticContainer = createElement('div', 'question-statistic-container') as HTMLDivElement;
         this._pointsQuestionContainer = createElement('div', 'points-question-container') as HTMLDivElement;
+
+        this._totalTimeContainer = createElement('div', 'total-time-container') as HTMLDivElement; 
     }
 
     public render(): void {
@@ -42,8 +45,9 @@ export class StatisticContentModule extends BaseAbstractTemplate {
     }
 
     createPage(): void {
-        this._baseContainer.append(this._usernameContainer, this._questionStatisticContainer, this._pointsQuestionContainer);
+        this._baseContainer.append(this._usernameContainer, this._questionStatisticContainer, this._pointsQuestionContainer, this._totalTimeContainer);
         this._mainContainer.append(this._baseContainer);
+
 
         //Get username
         this._usernameContainer.innerHTML = 'Użytkownik ' + getLocalStorageItem('username');
@@ -53,12 +57,16 @@ export class StatisticContentModule extends BaseAbstractTemplate {
 
         //User points
         this._pointsQuestionContainer.innerHTML = 'Gratulacje, masz  ' + this.countUserPoints() + ' pkt!';
+
     }
 
     bindHandlers(): void {
         throw new Error("Method not implemented.");
     }
     createStatistic = (): void => {
+        //Total Time 
+        this._totalTimeContainer.innerHTML = "Całkowity czas testu: " + parseInt(getLocalStorageItem("user-total-time"))/10 + " s";
+
         const questionLength: number = parseInt(getLocalStorageItem('question-length'));
         const randomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
 

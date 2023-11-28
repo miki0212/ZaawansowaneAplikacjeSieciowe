@@ -5,6 +5,8 @@ export class StatisticContentModule extends BaseAbstractTemplate {
     constructor(mainContainer) {
         super();
         this.createStatistic = () => {
+            //Total Time 
+            this._totalTimeContainer.innerHTML = "Całkowity czas testu: " + parseInt(getLocalStorageItem("user-total-time")) / 10 + " s";
             const questionLength = parseInt(getLocalStorageItem('question-length'));
             const randomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
             const questions = this._allQuestionData.questions;
@@ -63,12 +65,13 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._usernameContainer = createElement('div', 'username-statistic-container');
         this._questionStatisticContainer = createElement('div', 'question-statistic-container');
         this._pointsQuestionContainer = createElement('div', 'points-question-container');
+        this._totalTimeContainer = createElement('div', 'total-time-container');
     }
     render() {
         this.createPage();
     }
     createPage() {
-        this._baseContainer.append(this._usernameContainer, this._questionStatisticContainer, this._pointsQuestionContainer);
+        this._baseContainer.append(this._usernameContainer, this._questionStatisticContainer, this._pointsQuestionContainer, this._totalTimeContainer);
         this._mainContainer.append(this._baseContainer);
         //Get username
         this._usernameContainer.innerHTML = 'Użytkownik ' + getLocalStorageItem('username');
