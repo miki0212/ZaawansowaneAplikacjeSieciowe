@@ -3,10 +3,8 @@ import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/Lo
 
 export function counterUserPoints(): string {
     const correctAnswers: string[] = getLocalStorageItem('correct-answers').split(',');
-    //FIXME : Do usuniecia - // const correctAnswers: string[] = localStorage.getItem('correctAnswers')!.split(',');
 
     const userAnswers: string[] = getLocalStorageItem('user-answers').split(',');
-    //FIXME : Do usuniecia - // const userAnswers: string[] = localStorage.getItem('user-answers')!.split(',');
     let points = 0;
 
     correctAnswers.forEach((item, index) => {
@@ -55,12 +53,13 @@ export function startCounter(currentIdx: number, currentIntervalId: number | nul
     if (currentIntervalId !== null) {
         clearInterval(currentIntervalId);
     }
-    console.log("Current : " + currentIntervalId)
+
     const currendRandomIndex: number = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
 
     let time: number = parseInt(
         getTimeArray(currendRandomIndex).toString() || '0', 10
     );
+
     questionTimeNode.innerHTML = `${time}`;
 
     currentIntervalId = window.setInterval(() => {
@@ -71,6 +70,7 @@ export function startCounter(currentIdx: number, currentIntervalId: number | nul
         } else {
             questionTimeNode.innerHTML = `${time / 10}`;
         }
+
         setTimeArray(currendRandomIndex, time);
     }, 100);
 
@@ -93,11 +93,13 @@ export function getQuestionLength(): number {
 export function setAnswerArray(index: number, answer: string) {
     let answerArray: string[] = localStorage.getItem('user-answers')?.split(',')!;
     answerArray[index] = answer;
+
     setLocalStorageItem('user-answers', answerArray.toString())
 }
 
 export function showCorrectAnswers(correctAnswersNode: HTMLDivElement) {
-    //Pobieranie indeksow pytan - tych losowych
+
+    //Get index random questions
     const randomIndex: number[] = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
     const correctAnswers: string[] = getLocalStorageItem('correct-answers').split(',');
     const userAnswers: string[] = getLocalStorageItem('user-answers').split(',');
@@ -117,19 +119,12 @@ export function showCorrectAnswers(correctAnswersNode: HTMLDivElement) {
     correctAnswersNode.innerHTML = answers;
 }
 
-// ----------------------------------------------------------------------------------
-//New Version
-// ----------------------------------------------------------------------------------
-
 export function getAllQuestionData(): IQuestions {
     const questionData = getLocalStorageItem('question-data');
 
     if (questionData) {
         const allData: IQuestions = (JSON.parse(questionData) as IQuestions);
-        // this._questionContent = allData.questions;
         return allData;
     }
     return {} as IQuestions;
 }
-
-

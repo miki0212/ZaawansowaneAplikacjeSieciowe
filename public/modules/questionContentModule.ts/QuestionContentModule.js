@@ -30,7 +30,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             this._allQuestions = JSON.parse(data);
             this._question = JSON.parse(data).questions[this._currentRandomIndex];
             this._answers = this._question.answers;
-            console.log(this._allQuestions);
         }
         else {
             this._answers = [];
@@ -42,14 +41,13 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             this._allQuestions = JSON.parse(data);
             this._question = JSON.parse(data).questions[this._currentRandomIndex];
             this._answers = this._question.answers;
-            console.log(this._allQuestions);
         }
         else {
             this._answers = [];
         }
     }
-    //FIXME: Add events
     bindHandlers() {
+        throw new Error("Method not implemented");
     }
     createPage() {
         //Answers Container
@@ -91,7 +89,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             }
             setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
         });
-        // this._questionContainer.append(item);
         setLocalStorageItem('question-data', JSON.stringify(this._allQuestions));
     }
 }

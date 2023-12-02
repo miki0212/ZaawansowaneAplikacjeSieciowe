@@ -1,23 +1,23 @@
 import questionData from "../data/questions-data.js";
 import { getLocalStorageItem, setLocalStorageItem } from "./LocalStorageItems.js";
 export function localStoriageInitialize() {
-    //Czyszczenie localStorage
+    //Cleaning localStorage
     localStorage.clear();
-    //Zlicza na ile pytań użytkownik już odpowiedział
+    //Counts how many questions the user has already answered
     setLocalStorageItem('answers-user-provided', '0');
-    //Pobranie pytani i odpowiedzi
+    //Get questions and answers
     setLocalStorageItem('question-data', JSON.stringify(questionData));
-    //Wartośc początkowa indeksu
+    //First index value
     setLocalStorageItem('current-question-idx', '0');
-    //Ustawia Liczbe pytan
+    //Set number of questions
     setLocalStorageItem('question-length', questionData.questions.length.toString());
-    //Tworzy pustą tablice czasów dla pytań
+    //Do empty time array for questions
     createEmptyTimeArray();
-    //Tworzy pustą tablicę odpowiedzi użytkownika
+    //Do empty array for user answers
     createEmptyQuestionArray();
-    //Tworzy tablicę poprawnych odpowiedzi
+    //Do empty array for correct answers
     createCorrectAnswersArray(questionData);
-    //Tworzy tablice xd - losowe elementy
+    //Do array for random elements
     createRandomArray();
 }
 const createEmptyTimeArray = () => {
@@ -42,6 +42,6 @@ function createRandomArray() {
         const j = Math.floor(Math.random() * (i + 1));
         [defaultArray[i], defaultArray[j]] = [defaultArray[j], defaultArray[i]];
     }
-    //Tworzy tablice losowych indeksow dla pytan - w sensie że to umożliwia pobieranie pytań w losowej kolejności - rozumiesz ?
+    //Create array with random index for questions - get questions in random order
     setLocalStorageItem('random-questions-index-array', defaultArray.toString());
 }

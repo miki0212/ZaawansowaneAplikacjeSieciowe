@@ -40,29 +40,20 @@ export class StatisticContentModule extends BaseAbstractTemplate {
                     userAnswerDiv.classList.add('incorrect');
                 }
             }
-            // this._againTest.id = 'again-test';
-            // this._againTest.innerHTML = 'Rozwiąż ponownie test';
             document.body.appendChild(this._againTest);
             this._againTest.addEventListener('click', (evt) => {
-                //uj wie czmu działa ale działa
                 evt.preventDefault();
                 evt.stopImmediatePropagation();
                 evt.stopPropagation();
-                // const startPageModules = new StartPageModules(this._mainContainer);
                 this._mainContainer.innerHTML = '';
                 this._againTest.style.display = 'none';
                 localStorage.clear();
                 new StartPageModules(document.querySelector('#main-container')).render();
-                // startPageModules.render();
-                //FIXME: Add functionality when after click we can solve test one more time
-                //Event needs to switch user to page when user can enter user's name
             });
         };
-        //Można przenieść do helpera
         this.countUserPoints = () => {
             const questions = this._allQuestionData.questions;
             let userPoints = 0;
-            //Zlicza punkty użytkownika
             questions.forEach((item) => {
                 if (item.userAnswer === item.correctAnswer) {
                     userPoints++;
@@ -73,10 +64,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._mainContainer = mainContainer;
         this._allQuestionData = JSON.parse(getLocalStorageItem('question-data'));
         this._endBtn = document.querySelector('#end-btn');
-        // this._endBtn.style.display = 'none';
         this._againTest = document.querySelector('#again-test');
-        // this._againTest = document.createElement('button') as HTMLButtonElement;
-        // this._againTest.style.display = 'block';
         this._baseContainer = createElement('div', 'base-statistic-container');
         this._usernameContainer = createElement('div', 'username-statistic-container');
         this._questionStatisticContainer = createElement('div', 'question-statistic-container');

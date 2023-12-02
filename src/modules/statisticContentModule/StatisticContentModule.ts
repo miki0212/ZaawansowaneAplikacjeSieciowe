@@ -27,11 +27,8 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         this._allQuestionData = JSON.parse(getLocalStorageItem('question-data')) as IQuestions;
 
         this._endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
-        // this._endBtn.style.display = 'none';
 
         this._againTest = document.querySelector('#again-test') as HTMLButtonElement;
-        // this._againTest = document.createElement('button') as HTMLButtonElement;
-        // this._againTest.style.display = 'block';
 
         this._baseContainer = createElement('div', 'base-statistic-container') as HTMLDivElement;
         this._usernameContainer = createElement('div', 'username-statistic-container') as HTMLDivElement;
@@ -48,7 +45,6 @@ export class StatisticContentModule extends BaseAbstractTemplate {
     createPage(): void {
         this._baseContainer.append(this._usernameContainer, this._questionStatisticContainer, this._pointsQuestionContainer, this._totalTimeContainer);
         this._mainContainer.append(this._baseContainer);
-
 
         //Get username
         this._usernameContainer.innerHTML = 'Użytkownik ' + getLocalStorageItem('username');
@@ -75,6 +71,7 @@ export class StatisticContentModule extends BaseAbstractTemplate {
 
         const questions: IQuestionDataArray[] = this._allQuestionData.questions as IQuestionDataArray[];
         const questionTimes: number[] = getLocalStorageItem('question-times-array').split(',').map(Number);
+
         //Statistic
         for (let i = 0; i < questionLength; i++) {
             const answerDiv = document.createElement('div');
@@ -113,33 +110,24 @@ export class StatisticContentModule extends BaseAbstractTemplate {
             }
         }
 
-        // this._againTest.id = 'again-test';
-        // this._againTest.innerHTML = 'Rozwiąż ponownie test';
         document.body.appendChild(this._againTest);
 
         this._againTest.addEventListener('click', (evt: Event) => {
-            //uj wie czmu działa ale działa
             evt.preventDefault();
             evt.stopImmediatePropagation();
             evt.stopPropagation();
-            // const startPageModules = new StartPageModules(this._mainContainer);
+
             this._mainContainer.innerHTML = '';
             this._againTest.style.display = 'none';
             localStorage.clear();
             new StartPageModules(document.querySelector('#main-container') as HTMLDivElement).render();
-
-            // startPageModules.render();
-            //FIXME: Add functionality when after click we can solve test one more time
-            //Event needs to switch user to page when user can enter user's name
         })
     }
 
-    //Można przenieść do helpera
     countUserPoints = (): string => {
         const questions: IQuestionDataArray[] = this._allQuestionData.questions as IQuestionDataArray[];
         let userPoints: number = 0;
 
-        //Zlicza punkty użytkownika
         questions.forEach((item) => {
             if (item.userAnswer === item.correctAnswer) {
                 userPoints++;
@@ -147,5 +135,4 @@ export class StatisticContentModule extends BaseAbstractTemplate {
         })
         return userPoints.toString();
     }
-
 }

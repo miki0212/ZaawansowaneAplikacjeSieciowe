@@ -21,14 +21,12 @@ export class StartPageModules extends BaseAbstractTemplate {
     constructor(mainContainer: HTMLDivElement) {
         super();
 
-        //Przypisanie enterHandlera do tej zmiennej, żeby sie dalo to potem remowowac
-        //Bo jak sie nie remowuje to potem przy pytanach dalej ten Enter dziala
+        //Assigning enterHandler to a variable so that it can be removed - if not, enter works when prompted
         this.boundEnterHandler = this.enterHandler.bind(this);
 
         this._mainContainer = mainContainer;
         this._mainContainer.innerHTML = '';
 
-        //Inicjalizowanie zmiennych
         this._baseContainer = document.createElement('div');
         this._testInfo = document.createElement('div');
         this._usernameLabel = document.createElement('label');
@@ -38,7 +36,6 @@ export class StartPageModules extends BaseAbstractTemplate {
         this._showInfoButton = document.createElement('button');
         this._exitInfoButton = document.createElement('button');
 
-        //Tworzenie Handlerow
         this.bindHandlers();
     }
 
@@ -53,13 +50,11 @@ export class StartPageModules extends BaseAbstractTemplate {
         eventBus.on('endGame', this.showStatistic);
     }
 
-    //Tworzy strone
     render = (): void => {
         this.createPage();
         this._mainContainer.append(this._baseContainer);
     }
 
-    //Też tworzy strone
     async createPage() {
         this._testInfo.id = 'test-info';
         const textFromFile: string[] = (await this.readTestInfoFile("http://127.0.0.1:5501/public/data/testInfo.txt"));
@@ -96,13 +91,12 @@ export class StartPageModules extends BaseAbstractTemplate {
         return new Promise((resolve, reject) => {
             let testInfoFile = new XMLHttpRequest();
             testInfoFile.open("GET", file, true);
+
             testInfoFile.onreadystatechange = function () {
                 if (testInfoFile.readyState === 4) {
                     if (testInfoFile.status === 200 || testInfoFile.status === 0) {
                         const text: string[] = testInfoFile.responseText.split('//');
                         resolve(text);
-                        //Here text from file is reading and it is working
-                        console.log(text);
                     } else {
                         reject(new Error('Read from file is failed'))
                     }
@@ -122,7 +116,6 @@ export class StartPageModules extends BaseAbstractTemplate {
         return userNameInputValue;
     }
 
-    //Handlers
     private startBtnNodeHandler = (evt: Event): void => {
 
         if (this._startBtn.classList.contains('start-enable')) {
@@ -130,21 +123,20 @@ export class StartPageModules extends BaseAbstractTemplate {
             this.saveUserNameToLocalStorage();
         }
         else {
-            //Dodaje czerwoną ramke do labela z username
-            //jak użytkownik kliknie se entera ale nie poda username
+            //Adds a red frame to the label with username when the user clicks enter but does not provide username
             this._usernameNode.style.border = '2px solid red'
         }
     }
 
-    //Czysci main content i ładuje gameContent
+    //Clear main content and load gameContent
     private loadGameContentHandler() {
         this._mainContainer.innerHTML = '';
         new GameContentModule(this._mainContainer, 1, 7).render();
     }
 
     private usernameNodeHandler(evt: Event) {
-        //Dodaje/Usuwa efekt odblokowania przycisku
-        //Dodaje/Usuwa czerwoną/zieloną ramkę przy input username
+        //Add/remove button unlock effect
+        //Add color frame in input username
         if (this._usernameNode.value.length > 0) {
             this._startBtn.classList.add('start-enable');
             this._usernameNode.style.border = '2px solid green';
@@ -154,10 +146,10 @@ export class StartPageModules extends BaseAbstractTemplate {
         }
     }
 
-    //Dodaje obsługe entera
     private enterHandler(evt: KeyboardEvent) {
         if (evt.code.toLowerCase() === 'Enter'.toLocaleLowerCase() && this._usernameNode.value != '') {
             this._startBtn.dispatchEvent(new Event('click'))
+
             document.removeEventListener('keydown', this.boundEnterHandler);
         } else {
             this._usernameNode.style.border = '2px solid red';
@@ -165,8 +157,7 @@ export class StartPageModules extends BaseAbstractTemplate {
     }
 
     public showStatistic(evt: CustomEvent) {
-        //Kończy gre 
-        //i wyswietla statystyki(Jeszcze ich nie wyświetla bo zapierdol w robocie i nie dodałem XD)
+        //End game and display statistics
         (evt.detail.mainContainer as HTMLDivElement).innerHTML = '';
     }
 

@@ -4,7 +4,6 @@ const mainCointainer = document.querySelector('#main-container') as HTMLDivEleme
 const endBtn = document.querySelector('#end-btn') as HTMLButtonElement;
 let startGameModule: StartPageModules = new StartPageModules(mainCointainer);
 
-//Funkcja ładująca startowe okno - Przycisk rozpocznij gre
 const loadStartContent = () => {
     endBtn.style.display = 'none';
     startGameModule.render();

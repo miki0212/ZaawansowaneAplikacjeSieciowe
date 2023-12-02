@@ -5,7 +5,6 @@ import { IQuestionDataArray } from "../../interface/IQuestionDataArray.js";
 import { IQuestions } from "../../interface/IQuestions.js";
 import { getLocalStorageItem, setLocalStorageItem } from "../../localStorageItems/LocalStorageItems.js";
 
-
 export class QuestionContentModule extends BaseAbstractTemplate {
     private _questionContainer: HTMLDivElement;
     private _endBtn: HTMLButtonElement;
@@ -56,7 +55,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             this._allQuestions = (JSON.parse(data) as IQuestions);
             this._question = ((JSON.parse(data) as IQuestions).questions as IQuestionDataArray[])[this._currentRandomIndex];
             this._answers = this._question.answers;
-            console.log(this._allQuestions)
         } else {
             this._answers = [];
         }
@@ -68,8 +66,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
             this._allQuestions = JSON.parse(data);
             this._question = JSON.parse(data).questions[this._currentRandomIndex];
             this._answers = this._question.answers;
-
-            console.log(this._allQuestions);
         }
         else {
             this._answers = [];
@@ -81,9 +77,8 @@ export class QuestionContentModule extends BaseAbstractTemplate {
         this.createPage();
     }
 
-    //FIXME: Add events
     bindHandlers(): void {
-
+        throw new Error("Method not implemented")
     }
 
     createPage(): void {
@@ -136,8 +131,6 @@ export class QuestionContentModule extends BaseAbstractTemplate {
 
             setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
         })
-
-        // this._questionContainer.append(item);
 
         setLocalStorageItem('question-data', JSON.stringify(this._allQuestions))
     }

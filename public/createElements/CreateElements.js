@@ -1,6 +1,3 @@
-//Można dodać aby było użyte w każdym możliwym miejscu w aplikacji
-//I dodać jeszcze kilka wariantów funkcji
-//Albo można to po prostu wypierdolic, też dobry pomysł
 export function createElement(elementName, id, type, value) {
     let element;
     if (elementName === 'input') {

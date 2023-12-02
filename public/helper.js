@@ -1,9 +1,7 @@
 import { getLocalStorageItem, setLocalStorageItem } from "./localStorageItems/LocalStorageItems.js";
 export function counterUserPoints() {
     const correctAnswers = getLocalStorageItem('correct-answers').split(',');
-    //FIXME : Do usuniecia - // const correctAnswers: string[] = localStorage.getItem('correctAnswers')!.split(',');
     const userAnswers = getLocalStorageItem('user-answers').split(',');
-    //FIXME : Do usuniecia - // const userAnswers: string[] = localStorage.getItem('user-answers')!.split(',');
     let points = 0;
     correctAnswers.forEach((item, index) => {
         if (item == userAnswers[index]) {
@@ -48,7 +46,6 @@ export function startCounter(currentIdx, currentIntervalId = null, questionTimeN
     if (currentIntervalId !== null) {
         clearInterval(currentIntervalId);
     }
-    console.log("Current : " + currentIntervalId);
     const currendRandomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number)[currentIdx];
     let time = parseInt(getTimeArray(currendRandomIndex).toString() || '0', 10);
     questionTimeNode.innerHTML = `${time}`;
@@ -84,7 +81,7 @@ export function setAnswerArray(index, answer) {
     setLocalStorageItem('user-answers', answerArray.toString());
 }
 export function showCorrectAnswers(correctAnswersNode) {
-    //Pobieranie indeksow pytan - tych losowych
+    //Get index random questions
     const randomIndex = getLocalStorageItem('random-questions-index-array').split(',').map(Number);
     const correctAnswers = getLocalStorageItem('correct-answers').split(',');
     const userAnswers = getLocalStorageItem('user-answers').split(',');
@@ -101,14 +98,10 @@ export function showCorrectAnswers(correctAnswersNode) {
     }).join('');
     correctAnswersNode.innerHTML = answers;
 }
-// ----------------------------------------------------------------------------------
-//New Version
-// ----------------------------------------------------------------------------------
 export function getAllQuestionData() {
     const questionData = getLocalStorageItem('question-data');
     if (questionData) {
         const allData = JSON.parse(questionData);
-        // this._questionContent = allData.questions;
         return allData;
     }
     return {};

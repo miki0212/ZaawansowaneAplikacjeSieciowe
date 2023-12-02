@@ -1,4 +1,3 @@
-//Magistralalalalala XD
 const eventBus = {
     on(event: string, callback: any) {
         document.addEventListener(event, (e) => callback(e));
